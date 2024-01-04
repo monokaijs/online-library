@@ -11,14 +11,21 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
     "antd": "^5.12.7",
+    "bcryptjs": "^2.4.3",
+    "http-status": "^1.7.3",
+    "iron-session": "^6.0.0",
     "mongoose": "^8.0.3",
+    "mongoose-paginate-v2": "^1.7.4",
     "next": "14.0.4",
+    "nprogress": "^0.2.0",
     "react": "^18",
     "react-dom": "^18",
     "react-redux": "^9.0.4"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
+    "@types/nprogress": "^0.2.3",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "typescript": "^5"
