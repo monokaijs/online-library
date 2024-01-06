@@ -2,18 +2,22 @@ import styles from "@/components/pages/Home/SuggestedBooks/styles.module.scss";
 import {Button, Card, Tag, theme, Typography} from "antd";
 import {ArrowRightOutlined, CloseOutlined} from "@ant-design/icons";
 import {useState} from "react";
-import {setBookQuickViewOpened} from "@/redux/slices/app.slice";
-import {useAppDispatch} from "@/redux/store";
+import {setQuickView} from "@/redux/slices/app.slice";
+import {useAppDispatch, useAppSelector} from "@/redux/store";
 
-export default function SuggestedBookItem() {
+export default function SuggestedBookItem({book}: any) {
   const {token: {
     colorPrimary
   }} = theme.useToken();
-  const [selected, setSelected] = useState(false);
+  const {quickView} = useAppSelector(state => state.app);
+  const selected = quickView.selectedBook?.id === book.id;
   const dispatch = useAppDispatch();
 
   return <Card
     bordered={false}
+    style={{
+      borderRadius: 32
+    }}
   >
     <div className={styles.item}>
       <div className={styles.figure}>
@@ -23,17 +27,17 @@ export default function SuggestedBookItem() {
         <div
           className={styles.artwork}
           style={{
-            backgroundImage: `url('https://marketplace.canva.com/EAFaQMYuZbo/1/0/1003w/canva-brown-rusty-mystery-novel-book-cover-hG1QhA7BiBU.jpg')`
+            backgroundImage: `url('${book.volumeInfo.imageLinks?.thumbnail}')`
           }}
         ></div>
       </div>
       <div className={styles.metadata}>
         <div className={styles.info}>
           <Typography.Title level={5} className={styles.title}>
-            The Birth of the Clinics
+            {book.volumeInfo.title}
           </Typography.Title>
           <Typography.Text className={styles.author}>
-            Michael Foucalt
+            {book.volumeInfo?.authors?.join(', ') || 'Unknown'}
           </Typography.Text>
           <div className={styles.tags}>
             <Tag>
@@ -46,8 +50,10 @@ export default function SuggestedBookItem() {
         </div>
         <div className={styles.controls}>
           <Button type={!selected ? 'primary' : undefined} onClick={() => {
-            setSelected(!selected);
-            dispatch(setBookQuickViewOpened(true));
+            dispatch(setQuickView({
+              opened: true,
+              selectedBook: book,
+            }));
           }}>
             {!selected ? <>
               Preview <ArrowRightOutlined/>

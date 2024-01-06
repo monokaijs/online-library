@@ -7,6 +7,14 @@ import SectionTitle from "@/components/shared/SectionTitle";
 export default function SuggestedBooks() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [itemsPerRow, setItemsPerRow] = useState(4);
+  const [books, setBooks] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch(`https://www.googleapis.com/books/v1/volumes?q=agatha christie`).then(r => r.json()).then(response => {
+      const items = response.items;
+      setBooks(items);
+    })
+  }, []);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -35,18 +43,11 @@ export default function SuggestedBooks() {
     />
     <div className={styles.cards} ref={containerRef}>
       <Row gutter={[24, 24]}>
-        <Col xs={24/itemsPerRow}>
-          <SuggestedBookItem/>
-        </Col>
-        <Col xs={24 / itemsPerRow}>
-          <SuggestedBookItem/>
-        </Col>
-        <Col xs={24 / itemsPerRow}>
-          <SuggestedBookItem/>
-        </Col>
-        <Col xs={24 / itemsPerRow}>
-          <SuggestedBookItem/>
-        </Col>
+        {books.map(book => (
+          <Col xs={24/itemsPerRow}>
+            <SuggestedBookItem book={book} key={book.id}/>
+          </Col>
+        ))}
       </Row>
     </div>
   </>

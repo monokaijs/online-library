@@ -3,18 +3,26 @@ import styles from "./styles.module.scss";
 import {Button, Typography} from "antd";
 import {StarOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
-import {useAppDispatch} from "@/redux/store";
-import {setBookQuickViewOpened} from "@/redux/slices/app.slice";
+import {useAppDispatch, useAppSelector} from "@/redux/store";
+import {setQuickView} from "@/redux/slices/app.slice";
 
 function BookItem({book}: any) {
   if (!book.volumeInfo.imageLinks?.thumbnail) return <></>;
+  const {quickView} = useAppSelector(state => state.app);
   const dispatch = useAppDispatch();
-  const [selected, setSelected] = useState(false);
+  const selected = quickView.selectedBook?.id === book.id;
   return <div
     className={`${styles.item} ${selected ? styles.selected : styles.notSelected}`}
     onClick={() => {
-      setSelected(!selected);
-      dispatch(setBookQuickViewOpened(true));
+      if (quickView.selectedBook?.id === book.id) {
+        dispatch(setQuickView({
+          opened: false,
+          selectedBook: null,
+        }));
+      } else dispatch(setQuickView({
+        opened: true,
+        selectedBook: book,
+      }));
     }}
   >
     <div

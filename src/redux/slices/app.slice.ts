@@ -3,21 +3,26 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 export interface AppSliceState {
   appLoading: boolean;
   theme: 'light' | 'dark';
-  bookQuickViewOpened: boolean;
+  quickView: {
+    opened: boolean;
+    selectedBook?: any;
+  };
 }
 
 const initialState: AppSliceState = {
   appLoading: true,
   theme: 'light',
-  bookQuickViewOpened: false,
+  quickView: {
+    opened: false,
+  }
 };
 
 export const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    setBookQuickViewOpened(state, action: PayloadAction<boolean>) {
-      state.bookQuickViewOpened = action.payload;
+    setQuickView(state, action: PayloadAction<AppSliceState['quickView']>) {
+      state.quickView = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -26,5 +31,5 @@ export const appSlice = createSlice({
 });
 
 export const {
-  setBookQuickViewOpened,
+  setQuickView,
 } = appSlice.actions;

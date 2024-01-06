@@ -49,7 +49,7 @@ export default function LibraryLayout({children}: LibraryLayoutProps) {
           />
         </div>
       </div>
-      <Layout>
+      <Layout className={styles.contentWrapper}>
         <div className={styles.content}>
           {children}
         </div>

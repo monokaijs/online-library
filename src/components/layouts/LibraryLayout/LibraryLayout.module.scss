@@ -1,6 +1,5 @@
 .libraryLayout {
   height: 100%;
-  overflow-y: auto;
 
   .header {
     display: flex;
@@ -20,8 +19,10 @@
       padding-right: 16px;
     }
   }
-
-  .content {
-    padding: 32px 0;
+  .contentWrapper {
+    overflow-y: auto;
+    .content {
+      padding: 32px 0;
+    }
   }
 }
