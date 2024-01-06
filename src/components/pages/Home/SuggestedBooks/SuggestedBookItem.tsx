@@ -1,10 +1,14 @@
 import styles from "@/components/pages/Home/SuggestedBooks/styles.module.scss";
-import {Card, Tag, theme, Typography} from "antd";
+import {Button, Card, Tag, theme, Typography} from "antd";
+import {ArrowRightOutlined, CloseOutlined} from "@ant-design/icons";
+import {useState} from "react";
 
 export default function SuggestedBookItem() {
   const {token: {
     colorPrimary
   }} = theme.useToken();
+  const [selected, setSelected] = useState(false);
+
   return <Card
     bordered={false}
   >
@@ -25,17 +29,26 @@ export default function SuggestedBookItem() {
           <Typography.Title level={5} className={styles.title}>
             The Birth of the Clinics
           </Typography.Title>
-          <Typography.Text>
+          <Typography.Text className={styles.author}>
             Michael Foucalt
           </Typography.Text>
+          <div className={styles.tags}>
+            <Tag>
+              Literature
+            </Tag>
+            <Tag>
+              Science
+            </Tag>
+          </div>
         </div>
-        <div className={styles.tags}>
-          <Tag>
-            Literature
-          </Tag>
-          <Tag>
-            Science
-          </Tag>
+        <div className={styles.controls}>
+          <Button type={!selected ? 'primary' : undefined} onClick={() => setSelected(!selected)}>
+            {!selected ? <>
+              Preview <ArrowRightOutlined/>
+            </>: <>
+              <CloseOutlined/> Close
+            </>}
+          </Button>
         </div>
       </div>
     </div>

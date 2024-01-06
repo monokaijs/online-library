@@ -12,12 +12,11 @@ export default function SuggestedBooks() {
       const resizeObserver = new ResizeObserver(entries => {
         for (let entry of entries) {
           const rect = entry.contentRect;
-          if (rect.width < 1600 && rect.width >= 1000) {
+          if (rect.width < 1600 && rect.width >= 1200) {
             setItemsPerRow(3);
-          } else if (rect.width < 1000 && rect.width >= 600) {
-            console.log('ok');
+          } else if (rect.width < 1200 && rect.width >= 920) {
             setItemsPerRow(2);
-          } else if (rect.width < 600) {
+          } else if (rect.width < 920) {
             setItemsPerRow(1);
           } else {
             setItemsPerRow(4);
