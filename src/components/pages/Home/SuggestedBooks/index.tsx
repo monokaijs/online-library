@@ -2,6 +2,7 @@ import {Card, Col, Row, Tag, theme, Typography} from "antd";
 import styles from "./styles.module.scss";
 import {useEffect, useRef, useState} from "react";
 import SuggestedBookItem from "@/components/pages/Home/SuggestedBooks/SuggestedBookItem";
+import SectionTitle from "@/components/shared/SectionTitle";
 
 export default function SuggestedBooks() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,9 +30,9 @@ export default function SuggestedBooks() {
   }, [containerRef]);
 
   return <>
-    <Typography.Title level={4}>
-      New books
-    </Typography.Title>
+    <SectionTitle
+      title={'New books'}
+    />
     <div className={styles.cards} ref={containerRef}>
       <Row gutter={[24, 24]}>
         <Col xs={24/itemsPerRow}>

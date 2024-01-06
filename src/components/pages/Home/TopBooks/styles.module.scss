@@ -1,0 +1,88 @@
+.topBooks {
+  margin-top: 32px;
+  position: relative;
+
+  .horizontalList {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    white-space: nowrap;
+    overflow-x: scroll;
+    padding: 0 16px;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .item {
+      display: inline-flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+      padding: 14px;
+      border-radius: 28px;
+      cursor: pointer;
+      align-items: flex-start;
+
+      &.selected {
+        background-color: #1349FF;
+        .metadata {
+          .title {
+            color: white;
+          }
+          .author {
+            color: white;
+          }
+        }
+        &:hover {
+          background-color: #0b33cb;
+        }
+      }
+      &.notSelected {
+        &:hover {
+          background-color: #1349FF22;
+        }
+      }
+
+      .cover {
+        width: 200px;
+        background-size: cover;
+        background-position: center;
+        aspect-ratio: 1/1.5;
+        border-radius: 16px;
+        position: relative;
+
+        .favoriteBtn {
+          position: absolute;
+          right: 8px;
+          top: 8px;
+        }
+      }
+
+      .metadata {
+        display: flex;
+        flex-direction: column;
+        margin-top: 16px;
+        align-items: flex-start;
+        width: 200px;
+
+        .title {
+          font-weight: 500;
+          font-size: 16px;
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .author {
+          opacity: .8;
+          font-weight: 300;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 100%;
+        }
+      }
+    }
+  }
+}

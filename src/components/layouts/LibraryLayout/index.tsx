@@ -50,9 +50,9 @@ export default function LibraryLayout({children}: LibraryLayoutProps) {
         </div>
       </div>
       <Layout>
-        <Layout.Content className={styles.content}>
+        <div className={styles.content}>
           {children}
-        </Layout.Content>
+        </div>
       </Layout>
     </Layout>
     <BookQuickView/>

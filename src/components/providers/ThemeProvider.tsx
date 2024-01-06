@@ -18,6 +18,7 @@ export default function ThemeProvider({children}: ThemeProviderProps) {
         colorPrimary: '#1349FF',
         fontFamily: lexendDeca.style.fontFamily,
         colorText: '#01002E',
+        colorLink: '#1349FF',
       }
     }}
   >
