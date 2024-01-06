@@ -7,7 +7,7 @@ interface ThemeProviderProps {
 }
 
 const lexendDeca = Lexend_Deca({
-  weight: ['400', '500', '600'],
+  weight: ['300', '400', '500', '600'],
   subsets: ['latin'],
 })
 
