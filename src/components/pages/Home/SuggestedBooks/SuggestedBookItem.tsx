@@ -2,12 +2,15 @@ import styles from "@/components/pages/Home/SuggestedBooks/styles.module.scss";
 import {Button, Card, Tag, theme, Typography} from "antd";
 import {ArrowRightOutlined, CloseOutlined} from "@ant-design/icons";
 import {useState} from "react";
+import {setBookQuickViewOpened} from "@/redux/slices/app.slice";
+import {useAppDispatch} from "@/redux/store";
 
 export default function SuggestedBookItem() {
   const {token: {
     colorPrimary
   }} = theme.useToken();
   const [selected, setSelected] = useState(false);
+  const dispatch = useAppDispatch();
 
   return <Card
     bordered={false}
@@ -42,7 +45,10 @@ export default function SuggestedBookItem() {
           </div>
         </div>
         <div className={styles.controls}>
-          <Button type={!selected ? 'primary' : undefined} onClick={() => setSelected(!selected)}>
+          <Button type={!selected ? 'primary' : undefined} onClick={() => {
+            setSelected(!selected);
+            dispatch(setBookQuickViewOpened(true));
+          }}>
             {!selected ? <>
               Preview <ArrowRightOutlined/>
             </>: <>

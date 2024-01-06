@@ -5,6 +5,8 @@ import {ReactElement, ReactNode, useEffect, useState} from "react";
 import {NextPage} from "next";
 import NProgress from 'nprogress';
 import ThemeProvider from "@/components/providers/ThemeProvider";
+import {Provider} from "react-redux";
+import {store} from "@/redux/store";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -35,8 +37,10 @@ export default function App({ Component, pageProps }: MyAppProps) {
     };
   }, [router.events]);
 
-  return <ThemeProvider>
-    {getLayout(<Component {...pageProps} />)}
-  </ThemeProvider>
+  return <Provider store={store}>
+    <ThemeProvider>
+      {getLayout(<Component {...pageProps} />)}
+    </ThemeProvider>
+  </Provider>
 
 }
