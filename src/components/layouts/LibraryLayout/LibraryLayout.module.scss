@@ -1,0 +1,26 @@
+.libraryLayout {
+  height: 100%;
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #FFFFFF;
+    height: 70px;
+
+    .menu {
+      flex: 1;
+    }
+
+    .searchInputWrapper {
+      .searchInput {
+        border-radius: 99px;
+      }
+      padding-right: 16px;
+    }
+  }
+
+  .content {
+    padding: 32px;
+  }
+}
