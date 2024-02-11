@@ -1,0 +1,23 @@
+.registerForm {
+  .item {
+    margin-bottom: 8px;
+  }
+
+  .registerBtn {
+    margin-top: 32px;
+  }
+
+  .resetPassword {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    a {
+      opacity: .4;
+      transition: all 200ms ease-in;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
