@@ -4,7 +4,7 @@ import {Avatar, Badge, Button, Dropdown, Layout, Menu} from "antd";
 import {
   BarChartOutlined,
   BellOutlined,
-  HomeOutlined,
+  HomeOutlined, LockOutlined,
   LogoutOutlined,
   SettingOutlined,
   UserOutlined
@@ -24,7 +24,7 @@ export default function DashboardLayoutContent(props: any) {
       <div className={styles.siderContent}>
         <img src={LogoMain.src} alt={'Logo'} className={styles.logo}/>
         <Menu
-          mode={'vertical'}
+          mode={'inline'}
           className={styles.menu}
           items={[{
             key: 'dashboard',
@@ -34,6 +34,21 @@ export default function DashboardLayoutContent(props: any) {
             key: 'home',
             icon: <HomeOutlined/>,
             label: `Quản lý thư viện`
+          }, {
+            key: 'settings',
+            icon: <SettingOutlined/>,
+            label: `Thiết lập`,
+            children: [{
+              key: 'account',
+              icon: <UserOutlined/>,
+              label: `Tài khoản`,
+              onClick: () => router.push('/dashboard/account'),
+            }, {
+              key: 'security',
+              icon: <LockOutlined/>,
+              label: `Bảo mật`,
+              onClick: () => router.push('/dashboard/security'),
+            }]
           }]}
         />
       </div>

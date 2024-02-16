@@ -5,6 +5,7 @@ import accountService from "@/lib/services/account.service";
 import {AccountVerificationTemplate} from "@/lib/mailing/templates/account.verification.template";
 import {AccountVerificationModel} from "@/lib/models/account-verification.model";
 import {randomString} from "@/lib/utils/string";
+import {accountPasswordValidationSchema} from "@/lib/validations/account.validation";
 
 class SecurityService {
   hashPassword(passwordText: string) {
@@ -13,6 +14,16 @@ class SecurityService {
 
   validatePassword(rawText: string, hash: string) {
     return compareSync(rawText, hash);
+  }
+
+  async changePassword(account: AccountDocument, newPassword: string) {
+    const validation = accountPasswordValidationSchema.safeParse(newPassword);
+    if (validation.success) {
+      account.password = this.hashPassword(newPassword);
+      return account.save();
+    } else {
+      throw new Error(validation.error.message);
+    }
   }
 
   async verifyAccount(code: string) {
