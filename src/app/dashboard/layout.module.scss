@@ -1,0 +1,52 @@
+.dashboardLayout {
+  height: 100%;
+  .sider {
+    background-color: #FFFFFF!important;
+    .siderContent {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+      .logo {
+        width: 140px;
+        align-self: center;
+        margin-top: 24px;
+      }
+      .menu {
+        flex: 1;
+      }
+    }
+  }
+  .content {
+    .header {
+      background-color: #FFFFFF;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      .right {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        align-items: center;
+        justify-content: center;
+
+        .user {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          cursor: pointer;
+          padding: 0 10px;
+
+          &:hover {
+            background-color: #00000011;
+          }
+        }
+      }
+    }
+    .pageContent {
+      padding: 20px;
+    }
+  }
+}

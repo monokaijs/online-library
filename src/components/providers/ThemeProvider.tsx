@@ -15,10 +15,10 @@ export default function ThemeProvider({children}: ThemeProviderProps) {
   return <ConfigProvider
     theme={{
       token: {
-        colorPrimary: '#1349FF',
+        colorPrimary: '#006D75',
         fontFamily: lexendDeca.style.fontFamily,
-        colorText: '#01002E',
-        colorLink: '#1349FF',
+        colorText: '#000e1d',
+        colorLink: '#006D75',
       }
     }}
   >

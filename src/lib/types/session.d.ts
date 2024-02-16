@@ -1,5 +1,5 @@
 interface SessionData {
-  signedIn?: boolean;
-  account: Account;
+  signedIn: boolean;
+  account?: Account;
 }
 
