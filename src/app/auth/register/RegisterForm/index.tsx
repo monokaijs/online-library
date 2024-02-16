@@ -4,14 +4,16 @@ import styles from "./RegisterForm.module.scss";
 import {ArrowRightOutlined, GoogleOutlined} from "@ant-design/icons";
 import {registerAction, RegisterState} from "@/app/auth/register/actions";
 import {useFormState} from "react-dom";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 export default function RegisterForm() {
+  const [loading, setLoading] = useState(false);
   const [state, formAction] = useFormState(registerAction, {
     success: false,
   });
   useEffect(() => {
-    if (state.message) return message[state.success ? 'success' : 'error'](state.message);
+    if (state.message) message[state.success ? 'success' : 'error'](state.message);
+    setLoading(false);
   }, [state]);
 
   if (state.success) return <>
@@ -54,7 +56,7 @@ export default function RegisterForm() {
     <Form.Item className={styles.item} name={'password'}>
       <Checkbox/> Đồng ý với <Link href={'/terms'}>Điều khoản & Thoả thuận</Link>
     </Form.Item>
-    <Button type={'primary'} htmlType={'submit'} block className={styles.registerBtn}>
+    <Button type={'primary'} htmlType={'submit'} block className={styles.registerBtn} loading={loading}>
       Continue <ArrowRightOutlined/>
     </Button>
   </Form>

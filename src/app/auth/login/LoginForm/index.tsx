@@ -3,7 +3,7 @@ import Link from "next/link";
 import styles from "./LoginForm.module.scss";
 import {ArrowRightOutlined, GoogleOutlined} from "@ant-design/icons";
 import {useFormState} from "react-dom";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {loginAction} from "@/app/auth/login/actions";
 
 interface LoginFormProps {
@@ -11,6 +11,7 @@ interface LoginFormProps {
 }
 
 export default function LoginForm(props: LoginFormProps) {
+  const [loading, setLoading] = useState(false);
   const [state, formAction] = useFormState(loginAction, {
     success: false,
   });
@@ -19,12 +20,14 @@ export default function LoginForm(props: LoginFormProps) {
     if (state.success) {
       props.onSuccess && props.onSuccess();
     }
+    setLoading(false);
   }, [state]);
 
   return <Form
     layout={'vertical'}
     className={styles.loginForm}
     onFinish={values => {
+      setLoading(true);
       formAction(values);
     }}
   >
@@ -39,8 +42,11 @@ export default function LoginForm(props: LoginFormProps) {
         Reset Password
       </Link>
     </div>
-    <Button type={'primary'} htmlType={'submit'} block className={styles.signInBtn}>
-      Login <ArrowRightOutlined/>
+    <Button
+      type={'primary'} htmlType={'submit'} block className={styles.signInBtn}
+      loading={loading}
+    >
+      Login
     </Button>
     <Divider>
       Or sign in with
