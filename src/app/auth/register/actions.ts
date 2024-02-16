@@ -16,15 +16,12 @@ export async function registerAction(prevState: RegisterState, form: any): Promi
   if (validate.success) {
     // valid data
     try {
-      const newAccount = await accountService.createAccount({
+      await accountService.createAccount({
         email: form.email,
         password: form.password,
         birthday: form.birthday,
         fullName: form.fullName,
       });
-
-      // send verification email
-      await securityService.sendVerificationEmail(newAccount);
 
       return {
         success: true,

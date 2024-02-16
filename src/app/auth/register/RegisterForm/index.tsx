@@ -1,4 +1,4 @@
-import {Button, Checkbox, DatePicker, Divider, Form, Input, message, Typography} from "antd";
+import {Alert, Button, Checkbox, DatePicker, Divider, Form, Input, message, Typography} from "antd";
 import Link from "next/link";
 import styles from "./RegisterForm.module.scss";
 import {ArrowRightOutlined, GoogleOutlined} from "@ant-design/icons";
@@ -13,6 +13,17 @@ export default function RegisterForm() {
   useEffect(() => {
     if (state.message) return message[state.success ? 'success' : 'error'](state.message);
   }, [state]);
+
+  if (state.success) return <>
+    <Alert
+      type={'success'}
+      message={'Thành công'}
+      description={'Một email đã được gửi tới hòm thư của bạn. Vui lòng kiểm tra và thực hiện theo hướng dẫn để xác minh tài khoản nhé!'}
+    />
+    <Button href={'/auth/login/'} style={{marginTop: 16}} type={'primary'}>
+      Đăng nhập
+    </Button>
+  </>
 
   return <Form
     layout={'vertical'}

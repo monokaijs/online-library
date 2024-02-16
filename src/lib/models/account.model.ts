@@ -46,9 +46,6 @@ export interface AccountDocument extends Document, Account {
 
 AccountSchema.plugin(paginate);
 
-export interface AccountDocument extends Document, Account {
-}
-
 let model;
 
 try {

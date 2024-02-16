@@ -17,3 +17,8 @@ interface Account {
   address: string;
   status: AccountStatus;
 }
+
+interface AccountVerification {
+  code: string;
+  account: Account;
+}
