@@ -18,7 +18,7 @@ export async function loginAction(prevState: LoginState, form: any): Promise<Log
     // valid data
     try {
       const account = await securityService.validateSignIn(form.email, form.password);
-      session.account = account.toJSON();
+      session.account = JSON.parse(JSON.stringify(account));
       session.signedIn = true;
       await session.save();
       return {

@@ -17,7 +17,7 @@ class AccountService {
     });
   }
   getAccountByEmail(email: string, withPassword: boolean = false) {
-    return AccountModel.findOne({email}).select(withPassword ? 'password': '');
+    return AccountModel.findOne({email}).select(withPassword ? '+password': '');
   }
 }
 
