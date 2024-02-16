@@ -12,6 +12,7 @@
     "@ant-design/nextjs-registry": "^1.0.0",
     "@reduxjs/toolkit": "^2.0.1",
     "antd": "^5.12.7",
+    "antd-css-utilities": "^2.0.4",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "http-status": "^1.7.3",

@@ -316,6 +316,11 @@ ansi-regex@^5.0.1:
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-5.0.1.tgz#082cb2c89c9fe8659a311a53bd6a4dc5301db304"
   integrity sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==
 
+antd-css-utilities@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/antd-css-utilities/-/antd-css-utilities-2.0.4.tgz#baa9940a8ba44208060acbfca37873a7eebc74a5"
+  integrity sha512-clrHapj1P3CBhKGlI47VGKk632Gf5G97wEutvNRTuplMGwBvQTX1ZBxY9P/ygRJpb/4ZWQqDdsZqXRse2UVixQ==
+
 antd@^5.12.7:
   version "5.12.7"
   resolved "https://registry.yarnpkg.com/antd/-/antd-5.12.7.tgz#4eaf82044a12c23fc045fecd0cc0e60c06882ab1"
