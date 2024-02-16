@@ -3,6 +3,7 @@
   .sider {
     background-color: #FFFFFF!important;
     .siderContent {
+      border-right: 1px solid rgba(5, 5, 5, 0.06);
       display: flex;
       width: 100%;
       height: 100%;
@@ -23,13 +24,13 @@
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
+      border-bottom: 1px solid #F0F0F0;
       .right {
         display: flex;
         flex-direction: row;
         gap: 16px;
         align-items: center;
         justify-content: center;
-
         .user {
           display: flex;
           flex-direction: row;
@@ -44,6 +45,14 @@
           }
         }
       }
+    }
+
+    .info {
+     .breadcrumb {
+       margin-bottom: 12px;
+     }
+      padding: 12px 24px;
+      background-color: #FFFFFF;
     }
     .pageContent {
       padding: 20px;
