@@ -1,6 +1,7 @@
 
 type AccountStatus = 'not_verified' | 'verified' | 'banned';
 interface Account {
+  _id?: any;
   username: string;
   birthday: Date;
   role: import('@/lib/models/account.model').RoleEnum;
