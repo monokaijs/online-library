@@ -16,8 +16,8 @@ class AccountService {
       role: role || RoleEnum.USER,
     });
   }
-  getAccountByEmail(email: string) {
-    return AccountModel.findOne({email});
+  getAccountByEmail(email: string, withPassword: boolean = false) {
+    return AccountModel.findOne({email}).select(withPassword ? 'password': '');
   }
 }
 

@@ -8,6 +8,11 @@ export interface AccountRegistrationData {
   birthday: Date;
 }
 
+export const accountLoginValidationSchema = z.object({
+  email: z.string().email(`Email không hợp lệ`),
+  password: z.string(),
+})
+
 export const accountRegistrationValidationSchema = z.object({
   email: z.string().email(`Email không hợp lệ`),
   password: z.string()

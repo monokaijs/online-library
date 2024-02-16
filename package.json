@@ -14,7 +14,7 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "http-status": "^1.7.3",
-    "iron-session": "^6.0.0",
+    "iron-session": "^8.0.1",
     "moment": "^2.30.1",
     "mongoose": "^8.0.3",
     "mongoose-paginate-v2": "^1.7.4",

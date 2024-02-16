@@ -2,6 +2,7 @@ import {AccountModel} from "@/lib/models/account.model";
 import {compareSync, hashSync} from "bcryptjs";
 import {Document} from "mongoose";
 import mailingService from "@/lib/services/mailing.service";
+import accountService from "@/lib/services/account.service";
 
 class SecurityService {
   hashPassword(passwordText: string) {
@@ -16,8 +17,12 @@ class SecurityService {
     return {};
   }
 
-  validateSignIn(email: string, password: string) {
-
+  async validateSignIn(email: string, password: string) {
+    const account = await accountService.getAccountByEmail(email, true);
+    if (!account) throw new Error("Invalid account");
+    if (this.validatePassword(password, account.password)) {
+      return account;
+    } else throw new Error("Wrong password");
   }
 
 }
