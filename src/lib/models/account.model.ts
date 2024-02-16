@@ -14,7 +14,9 @@ const AccountSchema = new mongoose.Schema<Account>({
   },
   birthday: Date,
   fullName: String,
-  phoneNumber: String,
+  phoneNumber: {
+    type: String,
+  },
   identityNumber: String,
   gender: String,
   profilePicture: String,
