@@ -1,6 +1,6 @@
 "use client";
 import styles from "./layout.module.scss";
-import {Avatar, Badge, Button, Dropdown, Layout, Menu} from "antd";
+import { Avatar, Badge, Breadcrumb, Button, Dropdown, Layout, Menu, Typography } from "antd";
 import {
   BarChartOutlined,
   BellOutlined,
@@ -13,11 +13,13 @@ import LogoMain from "@/assets/figures/logo-main.png";
 import Link from "next/link";
 import {useContext} from "react";
 import {SessionContext} from "@/components/shared/SessionContext";
-import {useRouter} from "next/navigation";
+import {usePathname,  useRouter} from "next/navigation";
 
 export default function DashboardLayoutContent(props: any) {
   const {account} = useContext(SessionContext);
   const router = useRouter();
+  const pathname = usePathname();
+
 
   return <Layout className={styles.dashboardLayout}>
     <Layout.Sider width={200} className={styles.sider}>
@@ -33,7 +35,8 @@ export default function DashboardLayoutContent(props: any) {
           }, {
             key: 'home',
             icon: <HomeOutlined/>,
-            label: `Quản lý thư viện`
+            label: `Quản lý thư viện`,
+            onClick: () => router.push('/dashboard/manage-libs')
           }, {
             key: 'settings',
             icon: <SettingOutlined/>,
@@ -99,6 +102,26 @@ export default function DashboardLayoutContent(props: any) {
             </Dropdown>
           </div>
         </Layout.Header>
+        <div className={styles.info}>
+          <Breadcrumb
+            className={styles.breadcrumb}
+            items={pathname.split('/').map(( key, index ) => {
+              if (index === 0) {
+                return {
+                  title: <HomeOutlined/>
+                };
+              }
+              return ({
+                title: `tt.${key}`
+              });
+            })}
+          />
+          <Typography.Title
+            className={'mt-2'}
+            level={4}>
+            {`f.${pathname}.name`}
+          </Typography.Title>
+        </div>
         <Layout className={styles.pageContent}>
           {props.children}
         </Layout>
