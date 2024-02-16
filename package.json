@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/nextjs-registry": "^1.0.0",
     "@reduxjs/toolkit": "^2.0.1",
     "antd": "^5.12.7",
     "bcrypt": "^5.1.1",
