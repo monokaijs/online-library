@@ -16,8 +16,6 @@ export default function ThemeProvider({children}: ThemeProviderProps) {
     theme={{
       token: {
         colorPrimary: '#006D75',
-        fontFamily: lexendDeca.style.fontFamily,
-        colorText: '#000e1d',
         colorLink: '#006D75',
       }
     }}
