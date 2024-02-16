@@ -1,3 +1,4 @@
+"use client";
 import {ReactNode} from "react";
 import {ConfigProvider, Input, Layout, Menu} from "antd";
 import BookQuickView from "@/components/layouts/LibraryLayout/BookQuickView";
