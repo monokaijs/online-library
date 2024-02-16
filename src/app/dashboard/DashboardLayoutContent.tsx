@@ -25,7 +25,7 @@ export default function DashboardLayoutContent( props: any ) {
 			<div className={styles.siderContent}>
 				<img src={LogoMain.src} alt={'Logo'} className={styles.logo}/>
 				<Menu
-
+					selectedKeys={[pathname]}
 					mode={'vertical'}
 					className={styles.menu}
 					items={[{
