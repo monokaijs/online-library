@@ -29,10 +29,10 @@ export default function LoginForm(props: LoginFormProps) {
     }}
   >
     <Form.Item label={'Email'} className={styles.item} name={'email'}>
-      <Input/>
+      <Input placeholder={'someone@example.com'}/>
     </Form.Item>
     <Form.Item label={'Password'} className={styles.item} name={'password'}>
-      <Input.Password/>
+      <Input.Password placeholder={'Password...'}/>
     </Form.Item>
     <div className={styles.resetPassword}>
       <Link href={'/auth/reset-password'}>
