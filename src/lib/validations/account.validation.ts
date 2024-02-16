@@ -9,8 +9,12 @@ export interface AccountRegistrationData {
 }
 
 export const accountLoginValidationSchema = z.object({
-  email: z.string().email(`Email không hợp lệ`),
-  password: z.string(),
+  email: z.string({
+    required_error: 'Bạn cần nhập email'
+  }).email(`Email không hợp lệ`),
+  password: z.string({
+    required_error: 'Bạn cần nhập mật khẩu'
+  }),
 })
 
 export const accountRegistrationValidationSchema = z.object({
