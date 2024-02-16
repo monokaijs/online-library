@@ -2,6 +2,7 @@
 import {accountRegistrationValidationSchema} from "@/lib/validations/account.validation";
 import accountService from "@/lib/services/account.service";
 import {dbService} from "@/lib/services/db.service";
+import securityService from "@/lib/services/security.service";
 
 
 export interface RegisterState {
@@ -21,6 +22,10 @@ export async function registerAction(prevState: RegisterState, form: any): Promi
         birthday: form.birthday,
         fullName: form.fullName,
       });
+
+      // send verification email
+      await securityService.sendVerificationEmail(newAccount);
+
       return {
         success: true,
         message: 'Created successfully!',
