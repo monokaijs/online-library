@@ -7,7 +7,6 @@ interface ManageLibsLayoutProps {
 
 function ManageLibsLayout( props: ManageLibsLayoutProps ) {
 	return <div>
-		<ManageLibsHeader/>
 		{props?.children}</div>;
 }
 
