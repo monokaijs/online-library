@@ -14,3 +14,7 @@ body {
 #__next {
   height: 100%;
 }
+
+.color-gray_1 {
+  color: #00000073 !important;
+}
