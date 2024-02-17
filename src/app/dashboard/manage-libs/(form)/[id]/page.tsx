@@ -1,5 +1,7 @@
+import LibForm from "@/app/dashboard/manage-libs/(form)/components/LibForm";
+
 function LibDetailPage() {
-	return <>List Detail Page</>;
+	return <LibForm/>;
 }
 
 export default LibDetailPage;
