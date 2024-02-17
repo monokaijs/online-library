@@ -104,15 +104,17 @@ export default function DashboardLayoutContent( props: any ) {
 							});
 						})}
 					/>
-					<Typography.Title
-						className={'mt-2'}
+					<span
+						className={styles.title}
 						level={4}>
 						{`f.${pathname}.name`}
-					</Typography.Title>
+					</span>
 				</div>
-				<Layout className={styles.pageContent}>
-					{props.children}
-				</Layout>
+				<div className={'px-4'}>
+					<Layout className={styles.pageContent}>
+						{props.children}
+					</Layout>
+				</div>
 			</Layout>
 		</Layout.Content>
 	</Layout>;
