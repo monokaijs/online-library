@@ -15,6 +15,9 @@ export default async function DashboardLayout( {children}: any ) {
 					},
 					DatePicker: {
 						borderRadius: 2
+					},
+					Modal: {
+						borderRadiusLG: 4
 					}
 				}
 			}}>
