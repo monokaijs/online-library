@@ -24,7 +24,6 @@ export default function ThemeProvider( {children}: ThemeProviderProps ) {
 				Card: {
 					paddingLG: 20,
 					borderRadiusLG: 0,
-					boxShadowCard: 'none'
 				},
 				Button: {
 					borderRadius: 2,
