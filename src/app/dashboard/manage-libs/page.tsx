@@ -1,8 +1,8 @@
 "use client";
 import { Button, Table } from "antd";
 import ManageLibsHeader from "@/app/dashboard/manage-libs/components/ManageLibsHeader";
-import Index from "@/app/dashboard/manage-libs/components/ViewLibModal";
 import { useState } from "react";
+import ViewLibModal from "@/app/dashboard/manage-libs/components/ViewLibModal";
 
 function ManageLibs() {
 	const [isOpenViewModal, setIsOpenViewModal] = useState(false);
@@ -16,7 +16,7 @@ function ManageLibs() {
 			View UI
 		</Button>
 		<Table/>
-		<Index
+		<ViewLibModal
 			isOpen={isOpenViewModal}
 			onCancel={() => {
 				setIsOpenViewModal(false);

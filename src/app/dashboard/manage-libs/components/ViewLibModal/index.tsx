@@ -1,8 +1,9 @@
 "use client";
 import { Badge, Button, Col, Modal, Row, Typography } from "antd";
 import styles from './ViewLibModal.module.scss';
-import { CalendarOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { CalendarOutlined, DeleteOutlined, EditOutlined, HomeOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
+import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
 
 interface ViewLibModalProps {
 	isOpen: boolean;
@@ -52,45 +53,63 @@ export default function ViewLibModal( props: ViewLibModalProps ) {
 				Xóa thư viện
 			</Button>
 		</div>
-		<div className={styles.detail}>
-			<Typography className={styles.title}>
-				Thông tin chi tiết
-			</Typography>
-			<div className={'flex flex-col gap-4'}>
-				<div className={'flex'}>
-					<div className={styles.label}>
-						<CalendarOutlined/>
-						<Typography>
-							Ngày thành lập:
-						</Typography>
-					</div>
-					<Typography className={styles.value}>
-						12/02/2020
-					</Typography>
-				</div>
-				<div className={'flex'}>
-					<div className={styles.label}>
-						<CalendarOutlined/>
-						<Typography>
-							Số điện thoại :
-						</Typography>
-					</div>
-					<Typography className={styles.value}>
-						031555648
-					</Typography>
-				</div>
-				<div className={'flex'}>
-					<div className={styles.label}>
-						<CalendarOutlined/>
-						<Typography>
-							Địa chỉ :
-						</Typography>
-					</div>
-					<Typography.Text ellipsis={true} className={styles.value}>
-						254 Hai Bà Trưng, Quận Hoàn Kiếm, P9, Tp. Hà Nội
-					</Typography.Text>
-				</div>
-			</div>
-		</div>
+		{/*<div className={styles.detail}>*/}
+		{/*	<Typography className={styles.title}>*/}
+		{/*		Thông tin chi tiết*/}
+		{/*	</Typography>*/}
+		{/*	<div className={'flex flex-col gap-4'}>*/}
+		{/*		<div className={'flex'}>*/}
+		{/*			<div className={styles.label}>*/}
+		{/*				<CalendarOutlined/>*/}
+		{/*				<Typography>*/}
+		{/*					Ngày thành lập:*/}
+		{/*				</Typography>*/}
+		{/*			</div>*/}
+		{/*			<Typography className={styles.value}>*/}
+		{/*				12/02/2020*/}
+		{/*			</Typography>*/}
+		{/*		</div>*/}
+		{/*		<div className={'flex'}>*/}
+		{/*			<div className={styles.label}>*/}
+		{/*				<CalendarOutlined/>*/}
+		{/*				<Typography>*/}
+		{/*					Số điện thoại :*/}
+		{/*				</Typography>*/}
+		{/*			</div>*/}
+		{/*			<Typography className={styles.value}>*/}
+		{/*				031555648*/}
+		{/*			</Typography>*/}
+		{/*		</div>*/}
+		{/*		<div className={'flex'}>*/}
+		{/*			<div className={styles.label}>*/}
+		{/*				<CalendarOutlined/>*/}
+		{/*				<Typography>*/}
+		{/*					Địa chỉ :*/}
+		{/*				</Typography>*/}
+		{/*			</div>*/}
+		{/*			<Typography.Text ellipsis={true} className={styles.value}>*/}
+		{/*				254 Hai Bà Trưng, Quận Hoàn Kiếm, P9, Tp. Hà Nội*/}
+		{/*			</Typography.Text>*/}
+		{/*		</div>*/}
+		{/*	</div>*/}
+		{/*</div>*/}
+		<ModalDetailInfo
+			records={[
+				{
+					icon: <CalendarOutlined/>,
+					fieldName: 'Ngày thành lập:',
+					value: '12/02/2020'
+				},
+				{
+					icon: <PhoneOutlined/>,
+					fieldName: 'Số điện thoại :',
+					value: '031555648'
+				},
+				{
+					icon: <HomeOutlined/>,
+					fieldName: 'Địa chỉ :',
+					value: '254 Hai Bà Trưng, Quận Hoàn Kiếm, P9, Tp. Hà Nội'
+				}
+			]}/>
 	</Modal>;
 }
