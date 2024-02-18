@@ -6,7 +6,7 @@ import {
   BellOutlined,
   HomeOutlined, LockOutlined,
   LogoutOutlined,
-  SettingOutlined,
+  SettingOutlined, SolutionOutlined,
   UserOutlined
 } from "@ant-design/icons";
 import LogoMain from "@/assets/figures/logo-main.png";
@@ -37,6 +37,11 @@ export default function DashboardLayoutContent(props: any) {
             icon: <HomeOutlined/>,
             label: `Quản lý thư viện`,
             onClick: () => router.push('/dashboard/manage-libs')
+          }, {
+	          key: 'accounts',
+	          icon: <SolutionOutlined />,
+	          label: `Quản lý bạn đọc`,
+	          onClick: () => router.push('/dashboard/manage-accounts')
           }, {
             key: 'settings',
             icon: <SettingOutlined/>,
