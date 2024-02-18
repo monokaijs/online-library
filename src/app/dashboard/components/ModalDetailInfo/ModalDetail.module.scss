@@ -8,19 +8,24 @@
     margin-bottom: 18px;
   }
 
-  .label {
+  .record {
     display: flex;
-    gap: 10px;
-    min-width: 200px;
-  }
+    align-items: center;
+    height: 32px;
+    .label {
+      display: flex;
+      gap: 10px;
+      min-width: 200px;
+    }
 
-  .value {
-    flex: 1;
-  }
+    .value {
+      flex: 1;
+    }
 
-  .label, .value {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 22px;
+    .label, .value {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+    }
   }
 }
