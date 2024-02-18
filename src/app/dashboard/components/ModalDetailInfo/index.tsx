@@ -26,7 +26,7 @@ export default function ModalDetailInfo( props: ModalDetailInfoProps ) {
 					Icon = () => record.icon;
 				}
 				return (
-					<div className={'flex'}>
+					<div className={styles.record}>
 						<div className={styles.label}>
 							{record?.icon && <Icon/>}
 							<Typography>
