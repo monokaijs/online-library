@@ -1,14 +1,14 @@
 "use client";
-import { Button, Table } from "antd";
-import ManageLibsHeader from "@/app/dashboard/manage-libs/components/ManageLibsHeader";
 import { useState } from "react";
-import ViewLibModal from "@/app/dashboard/manage-libs/components/ViewLibModal";
+import { Button, Table } from "antd";
+import ManageAccountsHeader from "@/app/dashboard/manage-accounts/components/ManageAccountsHeader";
+import ViewAccountModal from "@/app/dashboard/manage-accounts/components/ViewAccountModal";
 
-function ManageLibs() {
+function ManageAccounts() {
 	const [isOpenViewModal, setIsOpenViewModal] = useState(false);
 
 	return <div>
-		<ManageLibsHeader/>
+		<ManageAccountsHeader/>
 		<Button className={'mb-2'} onClick={() => {
 			setIsOpenViewModal(true);
 		}
@@ -16,7 +16,7 @@ function ManageLibs() {
 			View UI
 		</Button>
 		<Table/>
-		<ViewLibModal
+		<ViewAccountModal
 			isOpen={isOpenViewModal}
 			onCancel={() => {
 				setIsOpenViewModal(false);
@@ -25,4 +25,4 @@ function ManageLibs() {
 	</div>;
 }
 
-export default ManageLibs;
+export default ManageAccounts;

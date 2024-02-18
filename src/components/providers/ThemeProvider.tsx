@@ -26,7 +26,6 @@ export default function ThemeProvider( {children}: ThemeProviderProps ) {
 					borderRadiusLG: 0,
 				},
 				Button: {
-					borderRadius: 2,
 					primaryShadow: 'none'
 				}
 			}
