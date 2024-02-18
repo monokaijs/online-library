@@ -16,10 +16,8 @@ export default async function DashboardLayout({children}: any) {
       theme={{
         components: {
           Input: {
-            borderRadius: 2
           },
           DatePicker: {
-            borderRadius: 2
           }
         }
       }}>
