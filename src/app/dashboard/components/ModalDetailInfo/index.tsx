@@ -21,14 +21,10 @@ export default function ModalDetailInfo( props: ModalDetailInfoProps ) {
 		</Typography>
 		<div className={'flex flex-col gap-4'}>
 			{Array.isArray(records) && records.map(( record ) => {
-				let Icon;
-				if (record?.icon) {
-					Icon = () => record.icon;
-				}
 				return (
 					<div className={styles.record}>
 						<div className={styles.label}>
-							{record?.icon && <Icon/>}
+							<>{record?.icon}</>
 							<Typography>
 								{record?.fieldName}
 							</Typography>
