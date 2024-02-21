@@ -31,17 +31,15 @@ export default function DashboardLayoutContent(props: any) {
           items={[{
             key: 'dashboard',
             icon: <BarChartOutlined/>,
-            label: `Dashboard`
+            label: <Link href={'/'}>Dashboard</Link>
           }, {
             key: 'home',
             icon: <HomeOutlined/>,
-            label: `Quản lý thư viện`,
-            onClick: () => router.push('/dashboard/manage-libs')
+            label: <Link href={'/dashboard/manage-libs'}>Quản lý thư viện</Link>,
           }, {
 	          key: 'accounts',
 	          icon: <SolutionOutlined />,
-	          label: `Quản lý bạn đọc`,
-	          onClick: () => router.push('/dashboard/manage-accounts')
+            label: <Link href={'/dashboard/manage-accounts'}>Quản lý bạn đọc</Link>,
           }, {
             key: 'settings',
             icon: <SettingOutlined/>,
@@ -49,13 +47,12 @@ export default function DashboardLayoutContent(props: any) {
             children: [{
               key: 'account',
               icon: <UserOutlined/>,
-              label: `Tài khoản`,
+              label: <Link href={'/dashboard/account'}>Tài khoản</Link>,
               onClick: () => router.push('/dashboard/account'),
             }, {
               key: 'security',
               icon: <LockOutlined/>,
-              label: `Bảo mật`,
-              onClick: () => router.push('/dashboard/security'),
+              label: <Link href={'/dashboard/security'}>Bảo mật</Link>,
             }]
           }]}
         />
