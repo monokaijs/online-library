@@ -4,9 +4,12 @@ const mailgun = new Mailgun(FormData);
 
 class MailingService {
   getClient() {
+    const mailgunKey = process.env.MAILGUN_API_KEY!
+    if (!mailgunKey) throw new Error("Please configure mailgun first!");
+
     return mailgun.client({
       username: 'api',
-      key: process.env.MAILGUN_API_KEY!
+      key: mailgunKey
     })
   }
   sendEmail(to: string, subject: string, body: string) {
