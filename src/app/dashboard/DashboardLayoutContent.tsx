@@ -43,7 +43,7 @@ export default function DashboardLayoutContent(props: any) {
           }, {
             key: 'borrows-returns',
             icon:<RetweetOutlined />,
-            label: <Link href={'/dashboard/manage-borrows-returns'}>Mượn - trả sách </Link>,
+            label: <Link href={'/dashboard/manage-borrows'}>Mượn - trả sách </Link>,
           }, {
             key: 'settings',
             icon: <SettingOutlined/>,

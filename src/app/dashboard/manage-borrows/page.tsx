@@ -1,8 +1,10 @@
 "use client";
-import ManageBorrowsAndReturnsHeader from "./components/ManageBorrowsAndReturnsHeader";
+import ManageBorrowsHeader from "./components/ManageBorrowsHeader";
 import {Avatar, Button, Card, Pagination, Table, theme, Typography} from "antd";
 import {DeleteOutlined, EditOutlined, EyeOutlined, UserOutlined} from "@ant-design/icons";
-import {useToken} from "antd/es/theme/internal";
+import {useState} from "react";
+import ManageBorrowsView from "./components/ManageBorrowsView";
+import {useRouter} from "next/navigation";
 
 const data = [
   {
@@ -23,8 +25,10 @@ const data = [
   }
 ]
 
-export default function ManageBorrowsAndReturns() {
+export default function ManageBorrows() {
+  const router = useRouter();
   const {token} = theme.useToken();
+  const [isOpenViewModal, setIsOpenViewModal] = useState(false);
 
   const columns: any = [
     {
@@ -72,7 +76,12 @@ export default function ManageBorrowsAndReturns() {
 
   return (
     <div>
-      <ManageBorrowsAndReturnsHeader/>
+      <div className={'flex justify-between mb-4'}>
+        <ManageBorrowsHeader/>
+        <Button type={'primary'} onClick={() => {
+          router.push('/dashboard/manage-borrows-returns/create')
+        }}>Thêm lần mượn</Button>
+      </div>
       <Card bodyStyle={{padding: 0}} bordered={false}>
         <Table
           className={'table-no-border-radius'}
@@ -84,6 +93,12 @@ export default function ManageBorrowsAndReturns() {
           <Pagination pageSize={10} total={50}/>
         </div>
       </Card>
+      <ManageBorrowsView
+        isOpen={isOpenViewModal}
+        onCancel={() => {
+          setIsOpenViewModal(false);
+        }}
+      />
     </div>
   )
 }
