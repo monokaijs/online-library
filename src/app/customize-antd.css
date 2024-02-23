@@ -5,3 +5,8 @@
 .table-no-border-radius .ant-table-container table > thead > tr:first-child > *:last-child {
   border-radius: 0 !important;
 }
+
+/*form*/
+.form-item-label-no-colon .ant-form-item-label >label::after {
+  content: '' !important;
+}
