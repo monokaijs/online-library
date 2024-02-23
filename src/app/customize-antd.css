@@ -1,0 +1,7 @@
+/*table*/
+.table-no-border-radius  .ant-table-container table > thead > tr:first-child > *:first-child {
+  border-radius: 0 !important;
+}
+.table-no-border-radius .ant-table-container table > thead > tr:first-child > *:last-child {
+  border-radius: 0 !important;
+}
