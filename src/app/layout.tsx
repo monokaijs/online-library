@@ -1,5 +1,5 @@
 import "./global.css";
-import "./customize-antd.css";
+import "./customize-antd.scss";
 import {ReactNode} from "react";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 import {AntdRegistry} from "@ant-design/nextjs-registry";

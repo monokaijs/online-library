@@ -7,7 +7,8 @@ export default function ManageBorrowsHeader() {
     <div className={'flex gap-8'}>
       <div>
         <Input
-          placeholder={'Tìm kiếm bạn đọc...'}
+          className={'bg-input-group-after'}
+          placeholder={'Tìm kiếm...'}
           addonAfter={<SearchOutlined/>}
         />
       </div>
@@ -16,6 +17,7 @@ export default function ManageBorrowsHeader() {
         style={{ width: 236 }}
         options={[
           { value: 'name', label: 'Tìm kiếm theo tên' },
+          { value: 'book', label: 'Tìm kiếm theo sách' },
         ]}
       />
     </div>
