@@ -94,7 +94,7 @@ function BorrowForm(props: BorrowFormProps) {
           Hủy bỏ
         </Button>
         <Button type={'primary'}>
-          Thêm lượt mượn
+          {FormAction.CREATE === action ? ' Thêm' : 'Cập nhật'}
         </Button>
       </div>
     </div>

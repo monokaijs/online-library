@@ -64,10 +64,16 @@ export default function ManageBorrows() {
     {
       title: 'Tác vụ',
       key: 'actions',
-      render: () => (
+      render: (item:any) => (
         <div className={'flex'}>
           <Button type={'text'} shape={'circle'} icon={<EyeOutlined/>} style={{color: token.colorPrimary}}/>
-          <Button type={'text'} shape={'circle'} icon={<EditOutlined style={{color: token.colorPrimary}}/>}/>
+          <Button
+            onClick={() => {
+              router.push(`/dashboard/manage-borrows/${item?._id}`)
+            }}
+            type={'text'}
+            shape={'circle'}
+            icon={<EditOutlined style={{color: token.colorPrimary}}/>}/>
           <Button type={'text'} danger shape={'circle'} icon={<DeleteOutlined/>}/>
         </div>
       )
