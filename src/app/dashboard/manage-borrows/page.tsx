@@ -79,8 +79,8 @@ export default function ManageBorrows() {
       <div className={'flex justify-between mb-4'}>
         <ManageBorrowsHeader/>
         <Button type={'primary'} onClick={() => {
-          router.push('/dashboard/manage-borrows-returns/create')
-        }}>Thêm lần mượn</Button>
+          router.push('/dashboard/manage-borrows/create')
+        }}>Thêm lượt mượn</Button>
       </div>
       <Card bodyStyle={{padding: 0}} bordered={false}>
         <Table
