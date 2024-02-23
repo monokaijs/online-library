@@ -3,8 +3,9 @@ import ManageBorrowsHeader from "./components/ManageBorrowsHeader";
 import {Avatar, Button, Card, Pagination, Table, theme, Typography} from "antd";
 import {DeleteOutlined, EditOutlined, EyeOutlined, UserOutlined} from "@ant-design/icons";
 import {useState} from "react";
-import ManageBorrowsView from "./components/ManageBorrowsView";
+
 import {useRouter} from "next/navigation";
+import ViewBorrowModal from "./components/ViewBorrowModal";
 
 const data = [
   {
@@ -66,7 +67,12 @@ export default function ManageBorrows() {
       key: 'actions',
       render: (item:any) => (
         <div className={'flex'}>
-          <Button type={'text'} shape={'circle'} icon={<EyeOutlined/>} style={{color: token.colorPrimary}}/>
+          <Button
+            onClick={() => setIsOpenViewModal(true)}
+            type={'text'}
+            shape={'circle'}
+            icon={<EyeOutlined/>}
+            style={{color: token.colorPrimary}}/>
           <Button
             onClick={() => {
               router.push(`/dashboard/manage-borrows/${item?._id}`)
@@ -99,7 +105,7 @@ export default function ManageBorrows() {
           <Pagination pageSize={10} total={50}/>
         </div>
       </Card>
-      <ManageBorrowsView
+      <ViewBorrowModal
         isOpen={isOpenViewModal}
         onCancel={() => {
           setIsOpenViewModal(false);
