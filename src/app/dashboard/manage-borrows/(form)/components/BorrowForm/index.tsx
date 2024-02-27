@@ -48,9 +48,9 @@ function BorrowForm(props: BorrowFormProps) {
     labelCol={{flex: '200px'}}
     labelAlign="left"
     labelWrap
+    className={'form-item-label-no-colon'}
   >
     <Form.Item
-      className={'form-item-label-no-colon'}
       label={<Typography.Text style={{color: colorPrimary}}>Tên sách : </Typography.Text>}
       name={'book'}>
       <Select
@@ -75,7 +75,6 @@ function BorrowForm(props: BorrowFormProps) {
       </Select>
     </Form.Item>
     <Form.Item
-      className={'form-item-label-no-colon'}
       label={<Typography.Text style={{color: colorPrimary}}>Người mượn : </Typography.Text>} name={'borrower'}>
       <Select
         showSearch
@@ -109,28 +108,24 @@ function BorrowForm(props: BorrowFormProps) {
       </Row>
     </div> : null}
     <Form.Item
-      className={'form-item-label-no-colon'}
       label={<Typography.Text style={{color: colorPrimary}}>Địa chỉ : </Typography.Text>}>
       <Input.TextArea placeholder={'Địa chỉ người nhận'}/>
     </Form.Item>
     <Row gutter={18}>
       <Col xs={24} lg={12}>
         <Form.Item
-          className={'form-item-label-no-colon'}
           label={<Typography.Text style={{color: colorPrimary}}>Ngày mượn : </Typography.Text>}>
           <DatePicker style={{width: "100%"}}/>
         </Form.Item>
       </Col>
       <Col xs={24} lg={12}>
         <Form.Item
-          className={'form-item-label-no-colon'}
           label={<Typography.Text style={{color: colorPrimary}}>Ngày trả : </Typography.Text>}>
           <DatePicker style={{width: "100%"}}/>
         </Form.Item>
       </Col>
     </Row>
     <Form.Item
-      className={'form-item-label-no-colon'} name={'delivery'}
       label={<Typography.Text style={{color: colorPrimary}}>Phương thức vận chuyển : </Typography.Text>}>
       <Select
         className={'w-full'}
@@ -143,7 +138,6 @@ function BorrowForm(props: BorrowFormProps) {
       />
     </Form.Item>
     <Form.Item
-      className={'form-item-label-no-colon'}
       label={<Typography.Text style={{color: colorPrimary}}>Ghi chú : </Typography.Text>}>
       <Input.TextArea placeholder={'Ghi chú'}/>
     </Form.Item>
