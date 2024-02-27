@@ -45,9 +45,9 @@ export default function DashboardLayoutContent(props: any) {
             icon:<RetweetOutlined />,
             label: <Link href={'/dashboard/manage-borrows'}>Mượn - trả sách</Link>,
           }, {
-            key: 'bookshelf',
+            key: 'bookcases',
             icon:<TableOutlined />,
-            label: <Link href={'/dashboard/manage-bookshelf'}>Quản lý ngăn sách</Link>,
+            label: <Link href={'/dashboard/manage-bookcases'}>Quản lý tủ sách</Link>,
           }, {
             key: 'settings',
             icon: <SettingOutlined/>,

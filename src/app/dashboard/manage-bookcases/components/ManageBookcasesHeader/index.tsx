@@ -2,7 +2,7 @@
 import {SearchOutlined} from "@ant-design/icons";
 import {DatePicker, Input} from "antd";
 
-export default function ManageBookshelfHeader() {
+export default function ManageBookcasesHeader() {
   return (
     <div className={'flex gap-8'}>
       <div >

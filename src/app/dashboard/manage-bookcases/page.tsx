@@ -1,7 +1,7 @@
 "use client";
-import ManageBookshelfHeader from "./components/ManageBookshelfHeader";
-import {Avatar, Button, Card, Pagination, Table, Tag, theme, Typography} from "antd";
-import {DeleteOutlined, EditOutlined, EyeOutlined, UserOutlined} from "@ant-design/icons";
+import ManageBookcasesHeader from "./components/ManageBookcasesHeader";
+import { Button, Card, Pagination, Table, Tag, theme} from "antd";
+import {DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
 import {useState} from "react";
 
 import {useRouter} from "next/navigation";
@@ -10,25 +10,25 @@ import ViewBorrowModal from "./components/ViewBorrowModal";
 const data = [
   {
     _id: '1',
-    bookshelfId: 'A1',
+    bookcaseId: 'A1',
     category: 'Kinh doanh',
     location: 'Cầu Giấy',
   },
   {
     _id: '1',
-    bookshelfId: 'A2',
+    bookcaseId: 'A2',
     category: 'Kinh doanh',
     location: 'Cầu Giấy',
   },
   {
     _id: '2',
-    bookshelfId: 'A1',
+    bookcaseId: 'A1',
     category: 'Tiểu sử - hồi ký',
     location: 'Thanh Xuân',
   },
 ]
 
-export default function ManageBookshelf() {
+export default function ManageBookcases() {
   const router = useRouter();
   const {token} = theme.useToken();
   const [isOpenViewModal, setIsOpenViewModal] = useState(false);
@@ -37,7 +37,7 @@ export default function ManageBookshelf() {
     {
       title: 'Mã ngăn sách',
       key: 'name',
-      dataIndex: 'bookshelfId',
+      dataIndex: 'bookcaseId',
       width: '15%',
     },
     {
@@ -65,7 +65,7 @@ export default function ManageBookshelf() {
             style={{color: token.colorPrimary}}/>
           <Button
             onClick={() => {
-              router.push(`/dashboard/manage-bookshelf/${item?._id}`)
+              router.push(`/dashboard/manage-bookcases/${item?._id}`)
             }}
             type={'text'}
             shape={'circle'}
@@ -79,10 +79,10 @@ export default function ManageBookshelf() {
   return (
     <div>
       <div className={'flex justify-between mb-4'}>
-        <ManageBookshelfHeader/>
+        <ManageBookcasesHeader/>
         <Button type={'primary'} onClick={() => {
-          router.push('/dashboard/manage-bookshelf/create')
-        }}>Thêm ngăn sách</Button>
+          router.push('/dashboard/manage-bookcases/create')
+        }}>Thêm tủ sách</Button>
       </div>
       <Card bodyStyle={{padding: 0}} bordered={false}>
         <Table
