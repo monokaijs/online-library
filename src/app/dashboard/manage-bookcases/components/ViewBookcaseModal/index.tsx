@@ -14,6 +14,7 @@ export default function ViewBookcaseModal(props: ViewBookcaseModalProps) {
     onCancel={onCancel}
     footer={null}
     width={640}
+    centered
   >
     <ModalDetailInfo
       records={[

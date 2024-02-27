@@ -17,11 +17,12 @@ export default function ViewBorrowModal(props: ViewBorrowModalProps) {
     onCancel={onCancel}
     footer={null}
     width={640}
+    centered
   >
     <ModalDetailInfo
       records={[
         {
-          fieldName: 'Tên sách:',
+          fieldName: 'Tên sách : ',
           value: (
             <div className={'flex gap-4 flex-wrap'}>
               <Tag style={{marginRight: 0}}>Đắc nhân tâm</Tag>
@@ -30,7 +31,7 @@ export default function ViewBorrowModal(props: ViewBorrowModalProps) {
           ),
         },
         {
-          fieldName: 'Người mượn:',
+          fieldName: 'Người mượn : ',
           value: <div className={'flex items-center gap-2'}>
             <Avatar src={''} size={28} icon={<UserOutlined/>}/>
             <Typography.Text>AnhLs</Typography.Text>
