@@ -6,7 +6,7 @@ import {
   BellOutlined,
   HomeOutlined, LockOutlined,
   LogoutOutlined, RetweetOutlined,
-  SettingOutlined, SolutionOutlined,
+  SettingOutlined, SolutionOutlined, TableOutlined,
   UserOutlined
 } from "@ant-design/icons";
 import LogoMain from "@/assets/figures/logo-main.png";
@@ -43,7 +43,11 @@ export default function DashboardLayoutContent(props: any) {
           }, {
             key: 'borrows-returns',
             icon:<RetweetOutlined />,
-            label: <Link href={'/dashboard/manage-borrows'}>Mượn - trả sách </Link>,
+            label: <Link href={'/dashboard/manage-borrows'}>Mượn - trả sách</Link>,
+          }, {
+            key: 'bookshelf',
+            icon:<TableOutlined />,
+            label: <Link href={'/dashboard/manage-bookshelf'}>Quản lý ngăn sách</Link>,
           }, {
             key: 'settings',
             icon: <SettingOutlined/>,
