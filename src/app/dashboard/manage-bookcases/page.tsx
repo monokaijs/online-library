@@ -5,7 +5,7 @@ import {DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
 import {useState} from "react";
 
 import {useRouter} from "next/navigation";
-import ViewBorrowModal from "./components/ViewBorrowModal";
+import ViewBookcaseModal from "./components/ViewBookcaseModal";
 
 const data = [
   {
@@ -98,7 +98,7 @@ export default function ManageBookcases() {
           <Pagination pageSize={10} total={50}/>
         </div>
       </Card>
-      <ViewBorrowModal
+      <ViewBookcaseModal
         isOpen={isOpenViewModal}
         onCancel={() => {
           setIsOpenViewModal(false);

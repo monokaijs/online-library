@@ -2,11 +2,11 @@ import {ReactNode} from "react";
 import styles from "./layout.module.scss";
 import {Card} from "antd";
 
-interface BookshelfFormLayoutProps {
+interface BookcaseFormLayoutProps {
   children: ReactNode;
 }
 
-function BookshelfFormLayout(props: BookshelfFormLayoutProps) {
+function BookcaseFormLayout(props: BookcaseFormLayoutProps) {
   return (
     <div className={styles.wrapper}>
       <Card>{props?.children}</Card>
@@ -14,4 +14,4 @@ function BookshelfFormLayout(props: BookshelfFormLayoutProps) {
   );
 }
 
-export default BookshelfFormLayout;
+export default BookcaseFormLayout;
