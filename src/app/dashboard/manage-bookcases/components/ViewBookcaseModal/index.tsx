@@ -1,8 +1,6 @@
 "use client";
-import {Avatar, Modal, Tag, Typography} from "antd";
-import styles from './ViewBookcaseModal.module.scss';
+import { Modal} from "antd";
 import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
-import {UserOutlined} from "@ant-design/icons";
 
 interface ViewBookcaseModalProps {
   isOpen: boolean;
@@ -12,7 +10,6 @@ interface ViewBookcaseModalProps {
 export default function ViewBookcaseModal(props: ViewBookcaseModalProps) {
   const {isOpen, onCancel} = props;
   return <Modal
-    className={styles.modal}
     open={isOpen}
     onCancel={onCancel}
     footer={null}
