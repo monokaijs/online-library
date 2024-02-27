@@ -27,7 +27,12 @@ export default function ThemeProvider( {children}: ThemeProviderProps ) {
 				},
 				Button: {
 					primaryShadow: 'none'
-				}
+				},
+				Table: {
+					colorTextHeading: '#006D75',
+					rowSelectedBg: 'rgba(0,109,117,0.2)',
+					rowSelectedHoverBg: 'rgba(0,109,117,0.5)'
+				},
 			}
 		}}
 	>
