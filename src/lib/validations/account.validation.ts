@@ -19,8 +19,7 @@ export const accountLoginValidationSchema = z.object({
 
 export const accountPasswordValidationSchema = z.string()
   .min(6, 'Password must have at least 6 characters')
-  .max(40, 'Password must have 40 characters or under')
-  .regex(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/, 'Password must have at least a number and a special character');
+  .max(40, 'Password must have 40 characters or under');
 
 export const accountRegistrationValidationSchema = z.object({
   email: z.string().email(`Email không hợp lệ`),
