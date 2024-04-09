@@ -1,5 +1,5 @@
 'use server';
-import {accountRegistrationValidationSchema} from "@/lib/validations/account.validation";
+import {accountRegistrationValidationSchema} from "@/lib/common/validations/account.validation";
 import accountService from "@/lib/services/account.service";
 import {dbService} from "@/lib/services/db.service";
 import securityService from "@/lib/services/security.service";

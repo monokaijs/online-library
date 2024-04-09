@@ -1,4 +1,4 @@
-import {AccountRegistrationData} from "@/lib/validations/account.validation";
+import {AccountRegistrationData} from "@/lib/common/validations/account.validation";
 import {AccountModel, RoleEnum} from "@/lib/models/account.model";
 import securityService from "@/lib/services/security.service";
 import {AccountVerificationModel} from "@/lib/models/account-verification.model";

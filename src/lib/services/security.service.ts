@@ -5,7 +5,7 @@ import accountService from "@/lib/services/account.service";
 import {AccountVerificationTemplate} from "@/lib/mailing/templates/account.verification.template";
 import {AccountVerificationModel} from "@/lib/models/account-verification.model";
 import {randomString} from "@/lib/utils/string";
-import {accountPasswordValidationSchema} from "@/lib/validations/account.validation";
+import {accountPasswordValidationSchema} from "@/lib/common/validations/account.validation";
 
 class SecurityService {
   hashPassword(passwordText: string) {
