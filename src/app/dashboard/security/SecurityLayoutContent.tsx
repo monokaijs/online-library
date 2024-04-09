@@ -16,7 +16,7 @@ export default function SecurityLayoutContent(props: any) {
         </Typography.Text>
       </div>
       <Menu
-        style={{marginLeft: -16, marginBottom: -25}}
+        style={{marginLeft: -16, marginBottom: -21}}
         mode={'horizontal'}
         items={[{
           key: 'change-password',

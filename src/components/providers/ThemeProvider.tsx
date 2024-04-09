@@ -23,7 +23,7 @@ export default function ThemeProvider( {children}: ThemeProviderProps ) {
 			components: {
 				Card: {
 					paddingLG: 20,
-					borderRadiusLG: 0,
+					// borderRadiusLG: 0,
 				},
 				Button: {
 					primaryShadow: 'none'

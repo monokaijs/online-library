@@ -2,7 +2,13 @@ import mongoose from 'mongoose';
 import { AccountModel, RoleEnum } from '@/lib/models/account.model';
 import { hashSync } from 'bcryptjs';
 import {ApiError} from "@/lib/common/errors/api.error";
-import {DEFAULT_ACCOUNT_EMAIL, DEFAULT_ACCOUNT_PASSWORD, DEFAULT_ACCOUNT_USERNAME, MONGO_URI} from "@/lib/configs/env";
+import {
+  appEnv,
+  DEFAULT_ACCOUNT_EMAIL,
+  DEFAULT_ACCOUNT_PASSWORD,
+  DEFAULT_ACCOUNT_USERNAME,
+  MONGO_URI
+} from "@/lib/configs/env";
 
 let cached = global.mongoose;
 
@@ -26,7 +32,7 @@ class DbService {
       };
 
       cached.promise = mongoose
-        .connect(MONGO_URI as string, opts)
+        .connect(appEnv.base.mongoUri, opts)
         .then(async (mongoose) => {
           return mongoose;
         });
