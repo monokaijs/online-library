@@ -17,6 +17,7 @@ export const appEnv = {
       enabled: getEnv<boolean>('GOOGLE_ENABLED', false, '', false),
       clientId: getEnv<string>('NEXT_PUBLIC_GOOGLE_CLIENT_ID'),
       clientSecret: getEnv<string>('GOOGLE_CLIENT_SECRET'),
+      redirectURI: getEnv<string>('GOOGLE_REDIRECT_URI'),
     }
   }
 }
