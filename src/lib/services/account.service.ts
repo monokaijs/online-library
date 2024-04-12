@@ -27,6 +27,10 @@ class AccountService {
     return AccountModel.findOne({email}).select(withPassword ? '+password': '');
   }
 
+  async getAccountByGoogleId(googleId?: string | null) {
+    return await AccountModel.findOne({ googleId });
+  }
+
 }
 
 export default new AccountService();
