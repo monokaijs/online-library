@@ -7,7 +7,7 @@ export enum LibraryStatus {
   CLOSED = 'closed'
 }
 
-export interface Library {
+export interface Location {
   name: string;
   openingTime: string;
   closingTime: string;
@@ -23,7 +23,7 @@ export interface Library {
   estDate: Date;
 }
 
-const LibrarySchema = new mongoose.Schema<Library>({
+const LocationSchema = new mongoose.Schema<Location>({
   name: String,
   openingTime: String,
   closingTime: String,
@@ -42,17 +42,17 @@ const LibrarySchema = new mongoose.Schema<Library>({
   estDate: Date,
 }, {timestamps: true});
 
-export interface LibraryDocument extends Document, Library {
+export interface LibraryDocument extends Document, Location {
 }
 
-LibrarySchema.plugin(paginate);
+LocationSchema.plugin(paginate);
 
 let model;
 
 try {
-  model = mongoose.model('Library');
+  model = mongoose.model('Location');
 } catch (e) {
-  model = mongoose.model('Library', LibrarySchema);
+  model = mongoose.model('Location', LocationSchema);
 }
 
-export const LibraryModel = model as Model<LibraryDocument>;
+export const LocationModel = model as Model<Location>;
