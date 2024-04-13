@@ -66,7 +66,7 @@ export async function googleConnectAction(
 
   await AccountModel.findOneAndUpdate(
     {
-      _id: session?.acccount?._id,
+      _id: session?.account?._id,
     },
     {
       $set: {
@@ -92,7 +92,7 @@ export async function googleDisconnectAction(): Promise<ConnectState> {
 
   await AccountModel.findOneAndUpdate(
     {
-      _id: session?.acccount?._id,
+      _id: session?.account?._id,
     },
     {
       $set: {
