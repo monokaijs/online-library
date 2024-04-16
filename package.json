@@ -16,6 +16,7 @@
     "antd-css-utilities": "^2.0.4",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "dayjs": "^1.11.10",
     "googleapis": "^134.0.0",
     "http-status": "^1.7.3",
     "iron-session": "^8.0.1",

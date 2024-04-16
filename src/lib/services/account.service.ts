@@ -91,7 +91,7 @@ class AccountService {
       return {
         accounts: result.docs,
         totalPages: result.totalPages,
-        totalAccounts: result.totalDocs,
+        totalDocs: result.totalDocs,
         page,
         limit,
       };

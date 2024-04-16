@@ -1,5 +1,8 @@
 "use client";
-import { createAccountAction } from "@/app/dashboard/manage-accounts/action";
+import {
+  createAccountAction,
+  updateAccountAction,
+} from "@/app/dashboard/manage-accounts/action";
 import { UploadOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -10,22 +13,56 @@ import {
   Typography,
   message,
 } from "antd";
+import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 
-function AccountForm() {
+function AccountForm({ account }: { account?: Account }) {
+  const router = useRouter();
   const [form] = Form.useForm();
-
   const [state, formAction] = useFormState(createAccountAction, {} as any);
+  const [updateStatus, updateAccount] = useFormState(updateAccountAction, {
+    success: false,
+    message: "",
+  });
 
   useEffect(() => {
-    if (state.message)
+    if (state.message) {
       message[state.success ? "success" : "error"](state.message);
+    }
+    if (state.success) {
+      router.back();
+    }
   }, [state]);
+
+  useEffect(() => {
+    if (updateStatus.message) {
+      message[updateStatus.success ? "success" : "error"](updateStatus.message);
+    }
+    if (updateStatus.success) {
+      router.back();
+    }
+  }, [updateStatus]);
+
+  useEffect(() => {
+    if (account) {
+      form.setFieldsValue({
+        ...account,
+        birthday: dayjs(account.birthday),
+      });
+    }
+  }, []);
 
   const onFinish = (values: any) => {
     values.birthday = new Date(values.birthday);
-    formAction(values);
+
+    if (account) {
+      values._id = account._id;
+      updateAccount(values);
+    } else {
+      formAction(values);
+    }
   };
 
   return (
@@ -61,7 +98,7 @@ function AccountForm() {
         name="email"
         label={"Email"}
       >
-        <Input placeholder={"example@gmail.com"} />
+        <Input disabled={!!account} placeholder={"example@gmail.com"} />
       </Form.Item>
       <Form.Item
         rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
@@ -82,7 +119,7 @@ function AccountForm() {
         label={"Ngày sinh"}
         name={"birthday"}
       >
-        <DatePicker style={{ width: "100%" }} />
+        <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
       </Form.Item>
       <Form.Item
         rules={[{ required: true, message: "Vui lòng chọn giới tính !" }]}
@@ -115,9 +152,15 @@ function AccountForm() {
       </Form.Item>
       <div className={"flex justify-end"}>
         <div className={"flex gap-9"}>
-          <Button>Hủy bỏ</Button>
+          <Button
+            onClick={() => {
+              router.back();
+            }}
+          >
+            Hủy bỏ
+          </Button>
           <Button htmlType="submit" type={"primary"}>
-            Thêm bạn đọc
+            {account ? "Lưu lại" : "Thêm bạn đọc"}
           </Button>
         </div>
       </div>

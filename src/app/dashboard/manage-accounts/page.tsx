@@ -1,74 +1,159 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Button, Table, Tag } from "antd";
 import ManageAccountsHeader from "@/app/dashboard/manage-accounts/components/ManageAccountsHeader";
 import ViewAccountModal from "@/app/dashboard/manage-accounts/components/ViewAccountModal";
-import { useFormState } from "react-dom";
-import { getAccountsAction } from "./action";
+import { SessionContext } from "@/components/shared/SessionContext";
 import { RoleEnum } from "@/lib/models/account.model";
-import moment from "moment";
+import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { Button, Modal, Table, message, theme } from "antd";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { deleteAccountAction, getAccountsAction } from "./action";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 function ManageAccounts() {
+  const { token } = theme.useToken();
+  const { account } = useContext(SessionContext);
   const [accountDetail, setAccountDetail] = useState<Account>();
 
-  const [state, formAction] = useFormState(getAccountsAction, {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const createQueryString = useCallback(
+    (paramsToUpdate: any) => {
+      const updatedParams = new URLSearchParams(searchParams.toString());
+      Object.entries(paramsToUpdate).forEach(([key, value]: any) => {
+        if (value === null || value === undefined) {
+          updatedParams.delete(key);
+        } else {
+          updatedParams.set(key, value);
+        }
+      });
+
+      return updatedParams.toString();
+    },
+    [searchParams]
+  );
+
+  const [state, getAccounts] = useFormState(getAccountsAction, {
     accounts: [],
-    limit: 20,
-    page: 1,
+    limit: Number(searchParams.get("limit") ?? 20),
+    page: Number(searchParams.get("page") ?? 1),
     totalPages: 0,
-    totalAccounts: 0,
+    totalDocs: 0,
+  });
+
+  const [deleteState, deleteAction] = useFormState(deleteAccountAction, {
+    success: false,
+    message: "",
   });
 
   useEffect(() => {
-    formAction();
+    getAccounts(state);
   }, []);
 
-  const columns = [
+  useEffect(() => {
+    if (deleteState.message)
+      message[deleteState.success ? "success" : "error"](deleteState.message);
+    if (deleteState.success) {
+      getAccounts(state);
+    }
+  }, [deleteState]);
+
+  const columns: any = [
     {
-      title: "#",
+      title: "STT",
       key: "index",
       render: (_: any, record: any, index: number) => {
         ++index;
         return index;
       },
+      align: "center",
     },
     {
       title: "Họ tên",
       dataIndex: "fullName",
       key: "fullName",
+      align: "center",
     },
     {
-      title: "Tuổi",
-      dataIndex: "birthday",
-      key: "birthday",
-      render: (item: string) => moment().year() - moment(item).year(),
-    },
-
-    {
-      title: "Ngày gia nhập",
-      dataIndex: "joinDate",
-      key: "joinDate",
-      render: (item: string) => moment(item).format("DD/MM/YYYY"),
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      align: "center",
     },
     {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      render: (status: AccountStatus) => {
+      title: "SĐT",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+      render: (item: string) => item ?? "Không rõ",
+      align: "center",
+    },
+    {
+      title: "ID",
+      dataIndex: "_id",
+      key: "_id",
+      render: (_id: string) => _id.substring(0, 8) + "...",
+      align: "center",
+    },
+    {
+      title: "Vai trò",
+      dataIndex: "role",
+      key: "role",
+      render: (role: string) =>
+        role === RoleEnum.USER ? "Bạn đọc" : role.toUpperCase(),
+      align: "center",
+    },
+    {
+      title: "Thao tác",
+      key: "role",
+      render: (item: Account) => {
         return (
-          <Tag
-            color={
-              status === "banned"
-                ? "black"
-                : status === "verified"
-                ? "green"
-                : "red"
-            }
+          <div
+            className={"flex justify-center"}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           >
-            {status?.toUpperCase()}
-          </Tag>
+            <Button
+              onClick={() => {
+                setAccountDetail(item);
+              }}
+              type={"text"}
+              shape={"circle"}
+              icon={<EyeOutlined />}
+              style={{ color: token.colorPrimary }}
+            />
+            <Button
+              onClick={() => {
+                router.push(`/dashboard/manage-accounts/update/${item?._id}`);
+              }}
+              type={"text"}
+              shape={"circle"}
+              icon={<EditOutlined style={{ color: token.colorPrimary }} />}
+            />
+            <Button
+              type={"text"}
+              danger
+              disabled={account?._id == item._id}
+              shape={"circle"}
+              icon={<DeleteOutlined />}
+              onClick={() => {
+                Modal.confirm({
+                  title: "Hành động này không thể hoàn tác!",
+                  content: `Xác nhận xóa bạn đọc ${item.fullName}`,
+                  okText: "Xóa",
+                  cancelText: "Hủy",
+                  onOk: () => {
+                    deleteAction(item._id);
+                  },
+                });
+              }}
+            />
+          </div>
         );
       },
+      align: "center",
     },
   ];
 
@@ -78,7 +163,25 @@ function ManageAccounts() {
       <Table
         columns={columns}
         dataSource={state.accounts}
-        onRow={(record) => ({
+        pagination={{
+          total: state.totalDocs,
+          pageSize: state.limit,
+          current: state.page,
+          pageSizeOptions: [10, 20, 30, 50, 100],
+          showSizeChanger: true,
+        }}
+        onChange={(e) => {
+          if (e.current && e.pageSize) {
+            router.push(
+              `${pathname}?${createQueryString({
+                page: e.current,
+                limit: e.pageSize,
+              })}`
+            );
+            getAccounts({ limit: e.pageSize, page: e.current });
+          }
+        }}
+        onRow={(record: any) => ({
           onClick: () => {
             setAccountDetail(record);
           },
