@@ -107,25 +107,13 @@ function AccountForm({ account }: { account?: Account }) {
       >
         <Input placeholder={"Số điện thoại..."} />
       </Form.Item>
-      <Form.Item
-        rules={[{ required: true, message: "Vui lòng nhập CCCD/CMND!" }]}
-        name="identityNumber"
-        label={"Số CCCD/CMND"}
-      >
+      <Form.Item name="identityNumber" label={"Số CCCD/CMND"}>
         <Input placeholder={"Số CCCD/CMND..."} />
       </Form.Item>
-      <Form.Item
-        rules={[{ required: true, message: "Vui lòng nhập ngày sinh!" }]}
-        label={"Ngày sinh"}
-        name={"birthday"}
-      >
+      <Form.Item label={"Ngày sinh"} name={"birthday"}>
         <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
       </Form.Item>
-      <Form.Item
-        rules={[{ required: true, message: "Vui lòng chọn giới tính !" }]}
-        name="gender"
-        label={"Giới tính"}
-      >
+      <Form.Item name="gender" label={"Giới tính"}>
         <Radio.Group
           options={[
             {
@@ -143,11 +131,7 @@ function AccountForm({ account }: { account?: Account }) {
           ]}
         />
       </Form.Item>
-      <Form.Item
-        rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
-        name="address"
-        label={"Địa chỉ"}
-      >
+      <Form.Item name="address" label={"Địa chỉ"}>
         <Input.TextArea placeholder={"Địa chỉ..."} />
       </Form.Item>
       <div className={"flex justify-end"}>

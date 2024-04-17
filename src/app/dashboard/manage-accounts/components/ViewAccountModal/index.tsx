@@ -43,7 +43,7 @@ export default function ViewAccountModal(props: ViewAccountModalProps) {
           <div>
             <div className="flex w-full justify-between">
               <Typography>
-                #{accountDetail?._id?.slice(-6)?.toUpperCase()} -{" "}
+                {/* #{accountDetail?._id?.slice(-6)?.toUpperCase()} -{" "} */}
                 {moment(accountDetail?.joinDate).format("DD/MM/YYYY")}
               </Typography>
               <Typography
@@ -68,7 +68,12 @@ export default function ViewAccountModal(props: ViewAccountModalProps) {
         records={[
           {
             fieldName: "Giới tính",
-            value: accountDetail?.gender ?? "Chưa có thông tin",
+            value:
+              accountDetail?.gender === "male"
+                ? "Nam"
+                : accountDetail?.gender === "female"
+                ? "Nữ"
+                : "Khác",
           },
           {
             fieldName: "Email",
@@ -92,7 +97,9 @@ export default function ViewAccountModal(props: ViewAccountModalProps) {
         <Button
           icon={<EditOutlined />}
           onClick={() => {
-            router.push("/dashboard/manage-libs/1");
+            router.push(
+              `/dashboard/manage-accounts/update/${accountDetail?._id}`
+            );
             onCancel();
           }}
         >

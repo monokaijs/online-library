@@ -5,7 +5,7 @@ import LoginForm from "@/app/auth/login/LoginForm";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 
-export default function LoginPageContent() {
+export default function LoginPageContent({redirectUri}: {redirectUri:string}) {
   const router = useRouter();
   return <div className={styles.content}>
     <div className={styles.wrapper}>
@@ -18,7 +18,7 @@ export default function LoginPageContent() {
         </Typography.Paragraph>
       </div>
 
-      <LoginForm onSuccess={() => {
+      <LoginForm redirectUri={redirectUri} onSuccess={() => {
         router.replace('/');
       }}/>
     </div>

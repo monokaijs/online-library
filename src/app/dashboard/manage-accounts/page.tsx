@@ -89,13 +89,13 @@ function ManageAccounts() {
       render: (item: string) => item ?? "Không rõ",
       align: "center",
     },
-    {
-      title: "ID",
-      dataIndex: "_id",
-      key: "_id",
-      render: (_id: string) => _id.substring(0, 8) + "...",
-      align: "center",
-    },
+    // {
+    //   title: "ID",
+    //   dataIndex: "_id",
+    //   key: "_id",
+    //   render: (_id: string) => _id.substring(0, 8) + "...",
+    //   align: "center",
+    // },
     {
       title: "Vai trò",
       dataIndex: "role",
