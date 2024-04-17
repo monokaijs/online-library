@@ -3,7 +3,7 @@ import {LibraryStatus} from "@/lib/models/library.model";
 
 export const createLibraryValidationSchema = z.object({
   name: z.string(),
-  estDate: z.date(),
+  estDate: z.string(),
   openingTime: z.string(),
   closingTime: z.string(),
   phoneNumber: z.string(),
