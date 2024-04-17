@@ -18,3 +18,7 @@ body {
 .color-gray_1 {
   color: #00000073 !important;
 }
+
+.ant-table-row {
+  cursor: pointer;
+}

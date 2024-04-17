@@ -11,10 +11,6 @@ function ManageAccountsHeader() {
 				placeholder={'Tìm kiếm bạn đọc...'}
 				addonAfter={<SearchOutlined/>}
 			/>
-			<Input
-				placeholder={'Tìm kiếm theo tên...'}
-				addonAfter={<DownOutlined/>}
-			/>
 		</div>
 		<Button type={'primary'} onClick={() => {
 			router.push('/dashboard/manage-accounts/create');

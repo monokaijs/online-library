@@ -1,17 +1,18 @@
-import {Button, Card} from "antd";
-import {GoogleOutlined} from "@ant-design/icons";
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import {appEnv} from "@/lib/configs/env";
+import GoogleConnectButton from "@/app/dashboard/security/connect-account/components/GoogleConnectButton";
+import { appEnv } from "@/lib/configs/env";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Card } from "antd";
 
 export default function ConnectAccount() {
-  return <div className={'mt-4'}>
-    <Card>
-      <GoogleOAuthProvider clientId={appEnv.security.google.clientId}>
-        <Button shape={'round'}>
-          <GoogleOutlined/>
-          Connect with Google
-        </Button>
-      </GoogleOAuthProvider>
-    </Card>
-  </div>
+  const redirectUri = appEnv.security.google.redirectURI;
+
+  return (
+    <div className={"mt-4"}>
+      <Card>
+        <GoogleOAuthProvider clientId={appEnv.security.google.clientId}>
+          <GoogleConnectButton redirectUri={redirectUri} />
+        </GoogleOAuthProvider>
+      </Card>
+    </div>
+  );
 }

@@ -83,10 +83,11 @@ export default function DashboardLayoutContent(props: any) {
                   icon: <UserOutlined/>,
                   key: 'user',
                   label: 'Tài khoản',
+                  onClick: () => router.push('/dashboard/account'),
                 }, {
                   icon: <SettingOutlined/>,
                   key: 'settings',
-                  label: 'Thiết lập'
+                  label: <Link href={'/dashboard/security'}>Thiết lập</Link>,
                 }, {
                   type: 'divider'
                 }, {
