@@ -24,7 +24,7 @@ export async function deleteAccountAction(_: any, _id: string) {
     await accountService.deleteAccount(_id);
     return {
       success: true,
-      message: "Deleted account",
+      message: "Đã xóa tài khoản",
     };
   } catch (error: any) {
     return {
@@ -40,7 +40,7 @@ export async function updateAccountAction(
 ) {
   try {
     await accountService.updateAccount(account._id, account);
-    return { success: true, message: "Account updated" };
+    return { success: true, message: "Đã cập nhật tài khoản" };
   } catch (error: any) {
     return { success: false, message: error.message };
   }

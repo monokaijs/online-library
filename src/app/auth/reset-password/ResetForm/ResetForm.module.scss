@@ -1,0 +1,23 @@
+.loginForm {
+  .item {
+    margin-bottom: 8px;
+  }
+
+  .signInBtn {
+    margin-top: 12px;
+  }
+
+  .resetPassword {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    a {
+      opacity: .4;
+      transition: all 200ms ease-in;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}

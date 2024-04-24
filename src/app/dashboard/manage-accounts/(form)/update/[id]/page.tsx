@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 
-export default function CreateAccountPage() {
+export default function UpdatePage() {
   const { id } = useParams();
   const [state, getAccounts] = useFormState(getAccountByIdAction, {
     success: false,
