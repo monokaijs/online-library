@@ -13,6 +13,7 @@ export interface Book {
   authorName: string;
   description: string;
   isbn: string;
+  name: string;
   publishYear: string;
   picture: string;
   language: string;
@@ -20,7 +21,24 @@ export interface Book {
   status: BookStatus;
 }
 
-const BookSchema = new mongoose.Schema<Book>({}, { timestamps: true });
+const BookSchema = new mongoose.Schema<Book>({
+  bookcase: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Bookcase'
+  },
+  authorName: String,
+  description: String,
+  isbn: String,
+  name: String,
+  publishYear: String,
+  picture: String,
+  language: String,
+  borrowingDateLimit: Number,
+  status: {
+    type: String,
+    enum: Object.values(BookStatus),
+  },
+}, { timestamps: true });
 
 export interface BookDocument extends Document, Book {}
 

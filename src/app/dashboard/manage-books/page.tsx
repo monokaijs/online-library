@@ -1,284 +1,170 @@
 "use client";
 
-import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, Popconfirm, Table, theme } from "antd";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Book, makeData } from "./makeData";
-import { useRouter } from "next/navigation";
-const EditableContext = React.createContext<any>(null);
+import { Button, Card, Flex, Modal, Pagination, theme } from "antd";
+import React, { useCallback, useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import Spreadsheet, { CellBase, Matrix } from "react-spreadsheet";
+import { getBookcaseAction } from "@/app/dashboard/manage-books/action";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { PlusOutlined, SaveOutlined, CloseOutlined } from "@ant-design/icons";
+import { Book } from "@/lib/models/book.model";
 
-interface Item {
-  key: string;
-  name: string;
-  age: string;
-  address: string;
-}
-
-interface EditableRowProps {
-  index: number;
-}
-
-const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
-  const [form] = Form.useForm();
-  return (
-    <Form form={form} component={false}>
-      <EditableContext.Provider value={form}>
-        <tr {...props} />
-      </EditableContext.Provider>
-    </Form>
-  );
-};
-
-interface EditableCellProps {
-  title: React.ReactNode;
-  editable: boolean;
-  children: React.ReactNode;
-  dataIndex: keyof Item;
-  record: Item;
-  handleSave: (record: Item) => void;
-}
-
-const EditableCell: React.FC<EditableCellProps> = ({
-  title,
-  editable,
-  children,
-  dataIndex,
-  record,
-  handleSave,
-  ...restProps
-}) => {
-  const [editing, setEditing] = useState(false);
-  const inputRef = useRef<any>(null);
-  const form = useContext(EditableContext)!;
-
-  useEffect(() => {
-    if (editing) {
-      inputRef.current?.focus();
-    }
-  }, [editing]);
-
-  const toggleEdit = () => {
-    setEditing(!editing);
-    form.setFieldsValue({ [dataIndex]: record[dataIndex] });
-  };
-
-  const save = async () => {
-    try {
-      const values = await form.validateFields();
-
-      toggleEdit();
-      handleSave({ ...record, ...values });
-    } catch (errInfo) {
-      console.log("Save failed:", errInfo);
-    }
-  };
-
-  let childNode = children;
-
-  if (editable) {
-    childNode = editing ? (
-      <Form.Item
-        style={{ margin: 0 }}
-        name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} is required.`,
-          },
-        ]}
-      >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-      </Form.Item>
-    ) : (
-      <div
-        className="editable-cell-value-wrap"
-        style={{ paddingRight: 24 }}
-        onClick={toggleEdit}
-      >
-        {children}
-      </div>
-    );
-  }
-
-  return <td {...restProps}>{childNode}</td>;
-};
-
-type EditableTableProps = Parameters<typeof Table>[0];
-
-type ColumnTypes = Exclude<EditableTableProps["columns"], undefined>;
-
-const App: React.FC = () => {
-  const [dataSource, setDataSource] = useState<Book[]>(makeData(5));
-  const { token } = theme.useToken();
+export default function ManageBook() {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const {
+    token: { colorPrimary },
+  } = theme.useToken();
 
-  const [count, setCount] = useState(2);
+  const createQueryString = useCallback(
+    (paramsToUpdate: any) => {
+      const updatedParams = new URLSearchParams(searchParams.toString());
+      Object.entries(paramsToUpdate).forEach(([key, value]: any) => {
+        if (value === null || value === undefined) {
+          updatedParams.delete(key);
+        } else {
+          updatedParams.set(key, value);
+        }
+      });
 
-  const handleDelete = (key: React.Key) => {
-    const newData = dataSource.filter((item) => item.sku !== key);
-    setDataSource(newData);
-  };
+      return updatedParams.toString();
+    },
+    [searchParams]
+  );
 
-  const defaultColumns: (ColumnTypes[number] & {
-    editable?: boolean;
-    dataIndex: string;
-  })[] = [
-    {
-      title: "Tên sách",
-      dataIndex: "name",
-      editable: true,
-    },
-    {
-      title: "Tác giả",
-      dataIndex: "authorName",
-      editable: true,
-    },
-    {
-      title: "ID",
-      dataIndex: "isbn",
-      align: "center",
-      editable: true,
-    },
-    {
-      title: "Hạn mức",
-      dataIndex: "borrowingDateLimit",
-      align: "center",
-      editable: true,
-    },
-    {
-      title: "Thư viện",
-      dataIndex: "library",
-      align: "center",
-      editable: true,
-    },
-    {
-      title: "Tình trạng sách",
-      dataIndex: "status",
-      align: "center",
-      editable: true,
-    },
-    {
-      title: "Ngày mượn",
-      editable: true,
-      align: "center",
-      dataIndex: "",
-    },
-    {
-      title: "Ngày hẹn",
-      dataIndex: "",
-      align: "center",
-      editable: true,
-    },
-    {
-      title: "Thao tác",
-      dataIndex: "action",
-      align: "center",
-      render: (_: any, record: any) => {
-        console.log(record);
-
-        return (
-          <div
-            className={"flex justify-center"}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <Button
-              disabled={true}
-              onClick={() => {}}
-              type={"text"}
-              shape={"circle"}
-              icon={<EyeOutlined />}
-              // style={{ color: token.colorPrimary }}
-            />
-            <Button
-              onClick={() => {
-                router.push(
-                  `/dashboard/manage-bookcases/update/${record?._id}`
-                );
-              }}
-              type={"text"}
-              shape={"circle"}
-              icon={<EditOutlined style={{ color: token.colorPrimary }} />}
-            />
-            <Popconfirm
-              title={`Bạn muốn xóa ${record.name}?`}
-              onConfirm={() => handleDelete(record.sku)}
-              cancelText="Hủy"
-              okText="Xóa"
-            >
-              <Button
-                type={"text"}
-                danger
-                shape={"circle"}
-                icon={<DeleteOutlined />}
-              />
-            </Popconfirm>
-          </div>
-        );
-      },
-    },
-  ];
-
-  const handleAdd = () => {
-    const newData: any = {
-      key: count,
-      name: `Edward King ${count}`,
-      age: "32",
-      address: `London, Park Lane no. ${count}`,
-    };
-    setDataSource([...dataSource, newData]);
-    setCount(count + 1);
-  };
-
-  const handleSave = (row: Book) => {
-    const newData = [...dataSource];
-    const index = newData.findIndex((item) => row.isbn === item.isbn);
-    const item = newData[index];
-    newData.splice(index, 1, {
-      ...item,
-      ...row,
-    });
-    setDataSource(newData);
-  };
-
-  const components = {
-    body: {
-      row: EditableRow,
-      cell: EditableCell,
-    },
-  };
-
-  const columns = defaultColumns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record: Book) => ({
-        record,
-        editable: col.editable,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        handleSave,
-      }),
-    };
+  const [bookState, getAction] = useFormState(getBookcaseAction, {
+    data: [],
+    limit: Number(searchParams.get("limit") ?? 20),
+    page: Number(searchParams.get("page") ?? 1),
+    totalDocs: 0,
+    totalPages: 0,
   });
 
-  return (
-    <div>
-      <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
-        Add a row
-      </Button>
-      <Table
-        components={components}
-        rowClassName={() => "editable-row"}
-        bordered
-        dataSource={dataSource}
-        columns={columns as ColumnTypes}
-      />
-    </div>
-  );
-};
+  useEffect(() => {
+    getAction(bookState);
+  }, []);
 
-export default App;
+  const rowLabels = [
+    "Tên sách",
+    "Tác giả",
+    "Mã sách",
+    "Hạn mức (ngày)",
+    "Thư viện",
+    "Tình trạng sách",
+    "Ngày mượn",
+    "Ngày hẹn",
+    "Thao tác",
+  ];
+
+  const [data, setData] = useState<Matrix<CellBase<any>>>([
+    [
+      {
+        value: "redOnly + text-color",
+        readOnly: true,
+        className: "text-danger",
+      },
+      { value: "text-color", className: "text-danger" },
+      { value: "readOnly", readOnly: true },
+      { value: "readOnly + css", readOnly: true, className: "header-row" },
+      { value: "css", className: "header-row" },
+      { value: ["no options", "no option2"] },
+    ],
+    [
+      { value: "Strawberry" },
+      { value: "Cookies" },
+      { value: "Vanilla" },
+      { value: "Chocolate" },
+      { value: "Citrus" },
+      { value: "Green Apple" },
+    ],
+  ]);
+
+  const booksToSheet = (books: Book[]) => {
+    const sheet: Matrix<CellBase<any>> = books.map((item) => [
+      {
+        value: item.name,
+      },
+      {
+        value: item.authorName,
+      },
+      {
+        value: item.isbn,
+      },
+      {
+        value: item.borrowingDateLimit,
+      },
+      {
+        value: item.bookcase.category,
+      },
+      {
+        value: item.status,
+      },
+      {
+        value: item.status,
+      },
+      {
+        value: item.status,
+      },
+    ]);
+
+    return sheet;
+  };
+
+  useEffect(() => {
+    const data = booksToSheet(bookState.data);
+    setData(data);
+  }, [bookState]);
+
+  const format = booksToSheet(bookState.data);
+  const isChange = JSON.stringify(format) == JSON.stringify(data);
+
+  const handleRollback = () => {
+    Modal.confirm({
+      title: "Hủy bỏ các thao tác",
+      onOk: () => {
+        const rollbackData = booksToSheet(bookState.data);
+        setData(rollbackData);
+      },
+      okText: "Hủy",
+      cancelText: "Không",
+      maskClosable: true
+    });
+  };
+
+  const handleAddRow = () => {
+    setData((prev) => [...prev, []]);
+  };
+
+  return (
+    <Card>
+      <Flex className="mb-4 justify-between">
+        <Flex className="gap-6">
+          <Button>Tất cả sách ({bookState.data.length})</Button>
+          <Button>Sách trên kệ ({bookState.data.length - 1})</Button>
+        </Flex>
+        <Flex className="gap-6">
+          {!isChange && (
+            <Button icon={<CloseOutlined />} onClick={handleRollback}>
+              Hủy
+            </Button>
+          )}
+          <Button type="primary" icon={<SaveOutlined />} disabled={isChange}>
+            Lưu lại
+          </Button>
+          <Button icon={<PlusOutlined />} type="primary" onClick={handleAddRow}>
+            Thêm mới
+          </Button>
+        </Flex>
+      </Flex>
+      <div>
+        <Spreadsheet
+          className="w-full"
+          data={data}
+          columnLabels={rowLabels}
+          onChange={setData}
+        />
+      </div>
+    </Card>
+  );
+}

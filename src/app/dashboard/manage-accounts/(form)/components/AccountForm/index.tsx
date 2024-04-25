@@ -107,6 +107,20 @@ function AccountForm({ account }: { account?: Account }) {
       >
         <Input placeholder={"Số điện thoại..."} />
       </Form.Item>
+      <Form.Item name="role" label={"Vai trò"}>
+        <Radio.Group
+          options={[
+            {
+              label: "Bạn đọc",
+              value: "user",
+            },
+            {
+              label: "Quản lý",
+              value: "admin",
+            },
+          ]}
+        />
+      </Form.Item>
       <Form.Item name="identityNumber" label={"Số CCCD/CMND"}>
         <Input placeholder={"Số CCCD/CMND..."} />
       </Form.Item>

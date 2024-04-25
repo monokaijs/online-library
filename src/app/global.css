@@ -22,3 +22,12 @@ body {
 .ant-table-row {
   cursor: pointer;
 }
+
+.Spreadsheet__header{
+  color: black !important;
+  font-weight: bold !important;
+}
+
+.Spreadsheet__table{
+  width: 100% !important;
+}
