@@ -1,6 +1,15 @@
 "use client";
 
-import { Button, Card, Flex, Modal, Pagination, theme } from "antd";
+import {
+  Button,
+  Card,
+  DatePicker,
+  Flex,
+  Modal,
+  Pagination,
+  Select,
+  theme,
+} from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import Spreadsheet, { CellBase, Matrix } from "react-spreadsheet";
@@ -8,6 +17,8 @@ import { getBookcaseAction } from "@/app/dashboard/manage-books/action";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PlusOutlined, SaveOutlined, CloseOutlined } from "@ant-design/icons";
 import { Book } from "@/lib/models/book.model";
+import dayjs from "dayjs";
+import { Option } from "antd/es/mentions";
 
 export default function ManageBook() {
   const router = useRouter();
@@ -60,9 +71,52 @@ export default function ManageBook() {
   const [data, setData] = useState<Matrix<CellBase<any>>>([
     [
       {
-        value: "redOnly + text-color",
-        readOnly: true,
-        className: "text-danger",
+        value: dayjs().format("DD/MM/YYYY"),
+        DataViewer: ({ setCellData }) => {
+          const onChange = (e: any) => {
+            console.log(e);
+
+            setCellData({
+              value: e?.format("DD/MM/YYYY"),
+              DataViewer: () => (
+                <DatePicker
+                  style={{ width: "100%" }}
+                  format="DD/MM/YYYY"
+                  value={e}
+                  onChange={onChange}
+                />
+              ),
+              DataEditor: ({ cell }) => {
+                return (
+                  <DatePicker
+                    style={{ width: "100%" }}
+                    format="DD/MM/YYYY"
+                    value={dayjs(cell?.value, "DD/MM/YYYY")}
+                    onChange={onChange}
+                  />
+                );
+              },
+            });
+          };
+
+          return (
+            <DatePicker
+              defaultValue={dayjs()}
+              style={{ width: "100%" }}
+              format="DD/MM/YYYY"
+              onChange={onChange}
+            />
+          );
+        },
+        DataEditor: ({ cell }) => {
+          return (
+            <DatePicker
+              style={{ width: "100%" }}
+              format="DD/MM/YYYY"
+              value={dayjs(cell?.value, "DD/MM/YYYY")}
+            />
+          );
+        },
       },
       { value: "text-color", className: "text-danger" },
       { value: "readOnly", readOnly: true },
@@ -95,16 +149,60 @@ export default function ManageBook() {
         value: item.borrowingDateLimit,
       },
       {
-        value: item.bookcase.category,
+        value: "cg",
+        DataViewer: ({ setCellData, cell }) => {
+          const onChange = (e: any) => {
+            setCellData({
+              value: e,
+              DataViewer: () => (
+                <Select onChange={onChange} value={e}>
+                  <Option value="cg">Cầu Giấy</Option>
+                  <Option value="dl">Đại La</Option>
+                </Select>
+              ),
+              DataEditor: ({ cell }) => {
+                return (
+                  <Select onChange={onChange} value={cell?.value}>
+                    <Option value="cg">Cầu Giấy</Option>
+                    <Option value="dl">Đại La</Option>
+                  </Select>
+                );
+              },
+            });
+          };
+
+          return (
+            <Select onChange={onChange} value={cell}>
+              <Option value="cg">Cầu Giấy</Option>
+              <Option value="dl">Đại La</Option>
+            </Select>
+          );
+        },
+        DataEditor: ({ cell }) => {
+          return (
+            <Select value={cell}>
+              <Option value="cg">Cầu Giấy</Option>
+              <Option value="dl">Đại La</Option>
+            </Select>
+          );
+        },
+      },
+      {
+        value:
+          item.status === "available"
+            ? "Đang trên kệ"
+            : item.status === "overdue"
+            ? "Quá hạn"
+            : "Đang mượn",
+        readOnly: true,
       },
       {
         value: item.status,
+        readOnly: true,
       },
       {
         value: item.status,
-      },
-      {
-        value: item.status,
+        readOnly: true,
       },
     ]);
 
@@ -128,7 +226,7 @@ export default function ManageBook() {
       },
       okText: "Hủy",
       cancelText: "Không",
-      maskClosable: true
+      maskClosable: true,
     });
   };
 
