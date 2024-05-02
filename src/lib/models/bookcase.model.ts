@@ -1,14 +1,20 @@
 import mongoose, {Document, Model} from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
+import { Library } from './library.model';
 
 export interface Bookcase {
   position: string;
   category: string;
+  library: Library;
 }
 
 const BookcaseSchema = new mongoose.Schema<Bookcase>({
   position: String,
-  category: String
+  category: String,
+  library: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Library'
+  },
 }, {timestamps: true});
 
 export interface BookcaseDocument extends Document, Bookcase {

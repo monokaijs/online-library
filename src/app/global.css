@@ -22,27 +22,3 @@ body {
 .ant-table-row {
   cursor: pointer;
 }
-
-.Spreadsheet__header {
-  color: black !important;
-  font-weight: bold !important;
-}
-
-.Spreadsheet__table {
-  width: 100% !important;
-}
-
-.ant-picker {
-  border: none !important
-}
-
-.ant-select,
-.ant-select-selector {
-  width: 100%;
-  border: none !important;
-}
-
-.Spreadsheet__cell--readonly{
-  color: black !important;
-  cursor: no-drop !important;
-}

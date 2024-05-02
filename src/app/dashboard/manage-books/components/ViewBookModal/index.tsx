@@ -4,14 +4,14 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { useRouter } from "next/navigation";
 
-interface ViewBookcaseModalProps {
+interface ViewBookModalProps {
   isOpen: boolean;
   onCancel: () => void;
   detail?: any;
   deleteAction: any;
 }
 
-export default function ViewBookcaseModal(props: ViewBookcaseModalProps) {
+export default function ViewBookModal(props: ViewBookModalProps) {
   const { onCancel, detail, deleteAction } = props;
 
   const router = useRouter();

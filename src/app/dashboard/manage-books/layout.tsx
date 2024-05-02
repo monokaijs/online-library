@@ -5,7 +5,7 @@ interface ManageBookLayoutProps {
 }
 
 function ManageBookLayout(props: ManageBookLayoutProps) {
-  return <div>{props?.children}</div>;
+  return <div className="h-full">{props?.children}</div>;
 }
 
 export default ManageBookLayout;

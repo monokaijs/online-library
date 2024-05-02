@@ -19,6 +19,9 @@
     }
   }
   .content {
+    display: flex;
+    background-color: red;
+    height: 100vh;
     .header {
       background-color: #FFFFFF;
       display: flex;
@@ -63,6 +66,7 @@
     .pageContent {
       padding: 28px 24px;
       width: 100%;
+      flex: 1
     }
   }
 }

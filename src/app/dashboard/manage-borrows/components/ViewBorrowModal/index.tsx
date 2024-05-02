@@ -22,7 +22,7 @@ export default function ViewBorrowModal(props: ViewBorrowModalProps) {
     <ModalDetailInfo
       records={[
         {
-          fieldName: 'Tên sách : ',
+          fieldName: 'Tên sách',
           value: (
             <div className={'flex gap-4 flex-wrap'}>
               <Tag style={{marginRight: 0}}>Đắc nhân tâm</Tag>
@@ -31,38 +31,38 @@ export default function ViewBorrowModal(props: ViewBorrowModalProps) {
           ),
         },
         {
-          fieldName: 'Người mượn : ',
+          fieldName: 'Người mượn',
           value: <div className={'flex items-center gap-2'}>
             <Avatar src={''} size={28} icon={<UserOutlined/>}/>
             <Typography.Text>AnhLs</Typography.Text>
           </div>,
         },
         {
-          fieldName: 'Email :',
+          fieldName: 'Email',
           value: 'anhls@gmail.com',
         },
         {
-          fieldName: 'Điện thoại :',
+          fieldName: 'Điện thoại',
           value: '0932234322',
         },
         {
-          fieldName: 'Địa chỉ người nhận :',
+          fieldName: 'Địa chỉ người nhận',
           value: '254 Hai Bà Trưng, Quận Hoàn Kiếm, P9, Tp. Hà Nội',
         },
         {
-          fieldName: 'Ngày mượn :',
+          fieldName: 'Ngày mượn',
           value: '12/02/2024',
         },
         {
-          fieldName: 'Ngày trả :',
+          fieldName: 'Ngày trả',
           value: 'Chưa có thông tin',
         },
         {
-          fieldName: 'Vận chuyển :',
+          fieldName: 'Vận chuyển',
           value: 'Giao hàng tiết kiệm',
         },
         {
-          fieldName: 'Ghi chú :',
+          fieldName: 'Ghi chú',
           value: 'Chưa có thông tin',
         },
       ]}/>

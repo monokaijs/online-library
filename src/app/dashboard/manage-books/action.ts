@@ -1,45 +1,41 @@
 "use server";
 
+import { Book, BookDocument } from "@/lib/models/book.model";
 import { Bookcase, BookcaseDocument } from "@/lib/models/bookcase.model";
 import { bookService } from "@/lib/services/book.service";
 import { bookcaseService } from "@/lib/services/bookcase.service";
 import { dbService } from "@/lib/services/db.service";
+import { libraryService } from "@/lib/services/library.service";
+import * as cheerio from "cheerio";
 
 export interface GetBookPayload {
   page?: number;
   limit?: number;
 }
 
-export async function createBookcaseAction(prev: any, payload: Bookcase) {
+export async function createBookAction(prev: any, payload: Book) {
   await dbService.connect();
   try {
-    await bookcaseService.create(payload);
+    await bookService.create(payload);
     return {
       success: true,
-      message: "Thêm kệ sách thành công",
+      message: "Thêm sách thành công",
     };
   } catch (error) {
     return {
-      success: true,
-      message: "Có lỗi khi thêm kệ sách",
+      success: false,
+      message: "Có lỗi khi thêm sách",
     };
   }
 }
 
-export async function getBookcaseAction(_: any, payload: GetBookPayload) {
+export async function getLibraryAction() {
   await dbService.connect();
-  const { page = 1, limit = 20 } = payload;
-  return await bookService.get(page, limit);
-}
-
-export async function deleteBookcaseAction(_: any, _id: string) {
-  await dbService.connect();
-
   try {
-    await bookcaseService.deleteById(_id);
+    const data = await libraryService.get();
     return {
       success: true,
-      message: "Đã xóa tủ sách",
+      data: JSON.parse(JSON.stringify(data)),
     };
   } catch (error: any) {
     return {
@@ -49,10 +45,56 @@ export async function deleteBookcaseAction(_: any, _id: string) {
   }
 }
 
-export async function getBookcaseByIdAction(prev: any, _id: string) {
+export async function getImagesAction(_prev: any, q: string) {
+  try {
+    const text = await fetch(
+      `https://cachep.vn/search?type=product&q=${q}`
+    ).then((res) => res.text());
+
+    const $ = cheerio.load(text);
+    const imgTags = $("img");
+    const imgSources = imgTags
+      .map((index, element) => $(element).attr("src"))
+      .get();
+    return {
+      success: true,
+      data: imgSources.filter((item) => item.startsWith("//product")),
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+}
+
+export async function getBookAction(_: any, payload: GetBookPayload) {
+  await dbService.connect();
+  const { page = 1, limit = 20 } = payload;
+  return await bookService.get(page, limit);
+}
+
+export async function deleteBookAction(_: any, _id: string) {
+  await dbService.connect();
+
+  try {
+    await bookService.deleteById(_id);
+    return {
+      success: true,
+      message: "Đã xóa sách",
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+}
+
+export async function getBookByIdAction(prev: any, _id: string) {
   try {
     return {
-      data: await bookcaseService.getById(_id),
+      data: await bookService.getById(_id),
       success: true,
     };
   } catch (error: any) {
@@ -64,13 +106,13 @@ export async function getBookcaseByIdAction(prev: any, _id: string) {
   }
 }
 
-export async function updateBookcaseAction(
+export async function updateBookAction(
   prev: any,
-  data: Partial<BookcaseDocument>
+  data: Partial<BookDocument>
 ) {
   try {
-    await bookcaseService.update(data._id, data);
-    return { success: true, message: "Đã cập nhật ngăn sách" };
+    await bookService.update(data._id, data);
+    return { success: true, message: "Đã cập nhật sách" };
   } catch (error: any) {
     return { success: false, message: error.message };
   }

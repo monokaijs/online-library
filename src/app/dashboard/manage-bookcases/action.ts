@@ -19,7 +19,7 @@ export async function createBookcaseAction(prev: any, payload: Bookcase) {
     };
   } catch (error) {
     return {
-      success: true,
+      success: false,
       message: "Có lỗi khi thêm kệ sách",
     };
   }

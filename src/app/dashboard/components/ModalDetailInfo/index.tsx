@@ -21,13 +21,13 @@ export default function ModalDetailInfo( props: ModalDetailInfoProps ) {
 			{title || 'Thông tin chi tiết'}
 		</Typography>
 		<div className={'flex flex-col gap-4'}>
-			{Array.isArray(records) && records.map(( record ) => {
+			{Array.isArray(records) && records.map(( record, index ) => {
 				return (
-					<div className={styles.record}>
+					<div className={styles.record} key={index}>
 						<div className={styles.label} >
 							<Typography.Text style={{color: colorPrimary}}>{record?.icon}</Typography.Text>
 							<Typography.Text style={{color: colorPrimary}}>
-								{record?.fieldName}
+								{record?.fieldName} :
 							</Typography.Text>
 						</div>
 						<div>

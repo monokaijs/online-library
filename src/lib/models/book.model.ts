@@ -1,6 +1,7 @@
 import mongoose, { Document, Model } from "mongoose";
 import paginate from "mongoose-paginate-v2";
 import { Bookcase } from "@/lib/models/bookcase.model";
+import { Borrow } from "@/lib/models/borrow.model";
 
 export enum BookStatus {
   AVAILABLE = "available",
@@ -14,11 +15,13 @@ export interface Book {
   description: string;
   isbn: string;
   name: string;
+  publisher: string;
   publishYear: string;
   picture: string;
   language: string;
   borrowingDateLimit: number;
   status: BookStatus;
+  borrowRecord?: Borrow
 }
 
 const BookSchema = new mongoose.Schema<Book>({
@@ -26,10 +29,15 @@ const BookSchema = new mongoose.Schema<Book>({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Bookcase'
   },
+  borrowRecord: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Borrow'
+  },
   authorName: String,
   description: String,
   isbn: String,
   name: String,
+  publisher: String,
   publishYear: String,
   picture: String,
   language: String,

@@ -57,17 +57,17 @@ export default function ViewLibModal( props: ViewLibModalProps ) {
 			records={[
 				{
 					icon: <CalendarOutlined/>,
-					fieldName: 'Ngày thành lập:',
+					fieldName: 'Ngày thành lậ',
 					value: '12/02/2020'
 				},
 				{
 					icon: <PhoneOutlined/>,
-					fieldName: 'Số điện thoại :',
+					fieldName: 'Số điện thoại',
 					value: '031555648'
 				},
 				{
 					icon: <HomeOutlined/>,
-					fieldName: 'Địa chỉ :',
+					fieldName: 'Địa chỉ',
 					value: '254 Hai Bà Trưng, Quận Hoàn Kiếm, P9, Tp. Hà Nội'
 				}
 			]}/>
