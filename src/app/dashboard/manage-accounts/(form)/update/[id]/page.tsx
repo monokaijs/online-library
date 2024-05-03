@@ -2,6 +2,7 @@
 
 import AccountForm from "@/app/dashboard/manage-accounts/(form)/components/AccountForm";
 import { getAccountByIdAction } from "@/app/dashboard/manage-accounts/action";
+import { Spin } from "antd";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
@@ -24,5 +25,9 @@ export default function UpdatePage() {
     return <AccountForm account={state.account as any} />;
   }
 
-  return <div>Loading...</div>;
+  return (
+    <div className="h-full w-full flex items-center justify-center">
+      <Spin />
+    </div>
+  );
 }

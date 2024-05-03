@@ -26,13 +26,18 @@ export default function ViewBookModal(props: ViewBookModalProps) {
     >
       <ModalDetailInfo
         records={[
+          { fieldName: "Tên sách", value: detail?.name },
+          { fieldName: "Nhà xuất bản", value: detail?.publisher },
+          { fieldName: "Năm xuất bản", value: detail?.publishYear },
+          { fieldName: "Ngôn ngữ", value: detail?.language },
+          { fieldName: "Mã sách", value: detail?.isbn },
+          { fieldName: "Thể loại", value: detail?.bookcase?.category },
+          { fieldName: "Kệ sách", value: detail?.bookcase?.position },
+          { fieldName: "Thư viện", value: detail?.bookcase?.library?.name },
+          { fieldName: "Trạng thái", value: detail?.status },
           {
-            fieldName: "Mã ngăn sách",
-            value: detail?.position ?? "Không rõ",
-          },
-          {
-            fieldName: "Thể loại",
-            value: detail?.category ?? "Không rõ",
+            fieldName: "Hạn mức mượn",
+            value: detail?.borrowingDateLimit + " ngày",
           },
         ]}
       />
@@ -41,11 +46,11 @@ export default function ViewBookModal(props: ViewBookModalProps) {
         <Button
           icon={<EditOutlined />}
           onClick={() => {
-            router.push(`/dashboard/manage-bookcases/update/${detail?._id}`);
+            router.push(`/dashboard/manage-books/update/${detail?._id}`);
             onCancel();
           }}
         >
-          Sửa ngăn sách
+          Sửa thông tin
         </Button>
         <Button
           danger
@@ -53,7 +58,7 @@ export default function ViewBookModal(props: ViewBookModalProps) {
           onClick={() => {
             Modal.confirm({
               title: "Hành động này không thể hoàn tác!",
-              content: `Xác nhận xóa tủ sách`,
+              content: `Xác nhận xóa sách`,
               okText: "Xóa",
               cancelText: "Hủy",
               onOk: () => {
@@ -62,7 +67,7 @@ export default function ViewBookModal(props: ViewBookModalProps) {
             });
           }}
         >
-          Xóa ngăn sách
+          Xóa sách
         </Button>
       </div>
     </Modal>

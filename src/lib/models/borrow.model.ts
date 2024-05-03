@@ -1,19 +1,53 @@
+import { Book } from "@/lib/models/book.model";
 import mongoose, { Document, Model } from "mongoose";
 import paginate from "mongoose-paginate-v2";
-import { Book } from "@/lib/models/book.model";
 
-export interface Borrow {
-  user: Account;
-  book: Book,
-  borrowDate: string,
-  returnDate: string,
-  deliveryMethod: string,
-  email: string,
-  note: string,
-  address: string
+export enum BorrowStatus {
+  OVERDUE = "overdue",
+  BORROWING = "borrowing",
+  RETURNED = "returned" 
 }
 
-const BorrowSchema = new mongoose.Schema<Borrow>({}, { timestamps: true });
+export interface Borrow {
+  _id?: any;
+  user: Account;
+  book: Book;
+  phoneNumber: string;
+  borrowDate: string;
+  returnDate: string;
+  realReturnDate: string;
+  deliveryMethod: string;
+  email: string;
+  note: string;
+  address: string;
+  status: BorrowStatus;
+}
+
+const BorrowSchema = new mongoose.Schema<Borrow>(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Account",
+    },
+    book: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Book",
+    },
+    phoneNumber: String,
+    borrowDate: String,
+    returnDate: String,
+    realReturnDate: String,
+    deliveryMethod: String,
+    email: String,
+    note: String,
+    address: String,
+    status: {
+      type: String,
+      enum: Object.values(BorrowStatus),
+    },
+  },
+  { timestamps: true }
+);
 
 export interface BorrowDocument extends Document, Borrow {}
 

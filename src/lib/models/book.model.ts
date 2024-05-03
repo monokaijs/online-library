@@ -10,6 +10,7 @@ export enum BookStatus {
 }
 
 export interface Book {
+  _id?: any;
   bookcase: Bookcase;
   authorName: string;
   description: string;

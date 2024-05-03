@@ -11,6 +11,7 @@ import * as cheerio from "cheerio";
 export interface GetBookPayload {
   page?: number;
   limit?: number;
+  filter?: Partial<Book>
 }
 
 export async function createBookAction(prev: any, payload: Book) {
@@ -70,8 +71,8 @@ export async function getImagesAction(_prev: any, q: string) {
 
 export async function getBookAction(_: any, payload: GetBookPayload) {
   await dbService.connect();
-  const { page = 1, limit = 20 } = payload;
-  return await bookService.get(page, limit);
+  const { page = 1, limit = 20, filter } = payload;
+  return await bookService.get(page, limit, filter);
 }
 
 export async function deleteBookAction(_: any, _id: string) {

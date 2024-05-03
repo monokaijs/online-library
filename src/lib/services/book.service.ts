@@ -14,7 +14,7 @@ class BookService {
     return JSON.parse(JSON.stringify(res));
   }
 
-  async get(page: number, limit: number, query?: FilterQuery<BookDocument>) {
+  async get(page: number, limit: number, query?: Partial<Book>) {
     await LibraryModel.find();
 
     try {
@@ -30,7 +30,15 @@ class BookService {
         ],
       };
 
-      const result = await (BookModel as any).paginate(query, options);
+      const filter: FilterQuery<BookDocument> = {};
+      if (query?.name) {
+        filter.name = { $regex: new RegExp(query.name, "i") };
+      }
+      if (query?.status) {
+        filter.status = query.status;
+      }
+
+      const result = await (BookModel as any).paginate(filter, options);
 
       return {
         data: JSON.parse(JSON.stringify(result.docs)) as Book[],

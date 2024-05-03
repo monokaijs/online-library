@@ -75,18 +75,20 @@ class AccountService {
     }
   }
 
-  async getAccounts(
-    page: number,
-    limit: number,
-    query?: FilterQuery<AccountDocument>
-  ) {
+  async getAccounts(page: number, limit: number, query?: Partial<Account>) {
     try {
       const options = {
         page,
         limit,
       };
 
-      const result = await (AccountModel as any).paginate(query, options);
+      const filter: FilterQuery<AccountDocument> = {};
+
+      if (query?.fullName) {
+        filter.fullName = { $regex: new RegExp(query.fullName, "i") };
+      }
+
+      const result = await (AccountModel as any).paginate(filter, options);
 
       return {
         accounts: JSON.parse(JSON.stringify(result.docs)),

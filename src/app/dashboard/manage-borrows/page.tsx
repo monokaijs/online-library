@@ -1,116 +1,244 @@
 "use client";
-import ManageBorrowsHeader from "./components/ManageBorrowsHeader";
-import {Avatar, Button, Card, Pagination, Table, theme, Typography} from "antd";
-import {DeleteOutlined, EditOutlined, EyeOutlined, UserOutlined} from "@ant-design/icons";
-import {useState} from "react";
-
-import {useRouter} from "next/navigation";
+import { Book } from "@/lib/models/book.model";
+import { Borrow } from "@/lib/models/borrow.model";
+import { toast } from "@/lib/utils/toast";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Button, Input, Modal, Table, theme } from "antd";
+import dayjs from "dayjs";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { deleteBorrowAction, getBorrowAction } from "./action";
+import Status from "./components/BorrowStatus";
 import ViewBorrowModal from "./components/ViewBorrowModal";
 
-const data = [
-  {
-    _id: '1',
-    name: 'AnhLs',
-    email: 'anhls@gmail.com',
-    phoneNumber: '039882355',
-    borrowDate: '02/02/2023',
-    returnDate: '12/03/2023',
-  },
-  {
-    _id: '2',
-    name: 'John',
-    email: 'john@gmail.com',
-    phoneNumber: '039882311',
-    borrowDate: '15/01/2023',
-    returnDate: '22/01/2023',
-  }
-]
-
-export default function ManageBorrows() {
+function ManageBook() {
+  const { token } = theme.useToken();
   const router = useRouter();
-  const {token} = theme.useToken();
-  const [isOpenViewModal, setIsOpenViewModal] = useState(false);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [detail, setDetail] = useState<Borrow>();
+
+  const createQueryString = useCallback(
+    (paramsToUpdate: any) => {
+      const updatedParams = new URLSearchParams(searchParams.toString());
+      Object.entries(paramsToUpdate).forEach(([key, value]: any) => {
+        if (value === null || value === undefined) {
+          updatedParams.delete(key);
+        } else {
+          updatedParams.set(key, value);
+        }
+      });
+
+      return updatedParams.toString();
+    },
+    [searchParams]
+  );
+
+  const [state, getData] = useFormState(getBorrowAction, {
+    data: [],
+    limit: Number(searchParams.get("limit") ?? 20),
+    page: Number(searchParams.get("page") ?? 1),
+    totalPages: 0,
+    totalDocs: 0,
+  });
+
+  const [deleteState, deleteAction] = useFormState(deleteBorrowAction, {
+    success: false,
+    message: "",
+  });
+
+  useEffect(() => {
+    getData(state);
+  }, []);
+
+  useEffect(() => {
+    toast(deleteState);
+    if (deleteState.success) {
+      getData(state);
+      setDetail(undefined);
+    }
+  }, [deleteState]);
 
   const columns: any = [
     {
-      title: 'Họ và tên',
-      key: 'name',
-      render: (item: any) => (
-        <div className={'flex items-center gap-4'}>
-          <Avatar>{item?.name.split('')[0]}</Avatar>
-          <Typography.Text>{item?.name}</Typography.Text>
-        </div>
-      )
+      title: "STT",
+      key: "index",
+      render: (_: any, record: any, index: number) => {
+        ++index;
+        return index;
+      },
+      align: "center",
     },
     {
-      title: 'ID bạn đọc',
-      dataIndex: '_id',
-      key: '_id',
+      title: "Thư viện",
+      dataIndex: "book",
+      key: "library",
+      align: "center",
+      render: (item: Book) => item?.bookcase?.library?.name,
     },
     {
-      title: 'Số điện thoại',
-      dataIndex: 'phoneNumber',
-      key: 'phoneNumber',
+      title: "Tên sách",
+      dataIndex: "book",
+      key: "name",
+      align: "center",
+      render: (item: Book) => item.name,
     },
     {
-      title: 'Ngày mượn',
-      dataIndex: 'borrowDate',
-      key: 'borrowDate',
+      title: "Tên bạn đọc",
+      dataIndex: "user",
+      key: "user",
+      align: "center",
+      render: (item: Account) => item.fullName,
     },
     {
-      title: 'Ngày trả',
-      dataIndex: 'returnDate',
-      key: 'returnDate',
+      title: "Số điện thoại",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+      align: "center",
+      // render: ({ library }: { library: Library }) => {
+      //   return <div>{library.name}</div>;
+      // },
     },
     {
-      title: 'Tác vụ',
-      key: 'actions',
-      render: (item:any) => (
-        <div className={'flex'}>
-          <Button
-            onClick={() => setIsOpenViewModal(true)}
-            type={'text'}
-            shape={'circle'}
-            icon={<EyeOutlined/>}
-            style={{color: token.colorPrimary}}/>
-          <Button
-            onClick={() => {
-              router.push(`/dashboard/manage-borrows/${item?._id}`)
+      title: "Ngày mượn",
+      dataIndex: "borrowDate",
+      key: "borrowDate",
+      align: "center",
+      render: (item: string) => dayjs(item).format("DD/MM/YYYY"),
+    },
+    {
+      title: "Ngày hẹn",
+      dataIndex: "returnDate",
+      key: "returnDate",
+      align: "center",
+      render: (item: string) => dayjs(item).format("DD/MM/YYYY"),
+    },
+    {
+      title: "Trạng thái",
+      key: "status",
+      align: "center",
+      render: (record: Borrow) => <Status data={record} />,
+    },
+    {
+      title: "Thao tác",
+      key: "action",
+      render: (item: any) => {
+        return (
+          <div
+            className={"flex justify-center"}
+            onClick={(e) => {
+              e.stopPropagation();
             }}
-            type={'text'}
-            shape={'circle'}
-            icon={<EditOutlined style={{color: token.colorPrimary}}/>}/>
-          <Button type={'text'} danger shape={'circle'} icon={<DeleteOutlined/>}/>
-        </div>
-      )
+          >
+            <Button
+              onClick={() => {
+                router.push(`/dashboard/manage-borrows/${item?._id}`);
+              }}
+              type={"text"}
+              shape={"circle"}
+              icon={<EyeOutlined />}
+              style={{ color: token.colorPrimary }}
+            />
+            <Button
+              onClick={() => {
+                router.push(`/dashboard/manage-borrows/update/${item?._id}`);
+              }}
+              type={"text"}
+              shape={"circle"}
+              icon={<EditOutlined style={{ color: token.colorPrimary }} />}
+            />
+            <Button
+              type={"text"}
+              danger
+              shape={"circle"}
+              icon={<DeleteOutlined />}
+              onClick={() => {
+                Modal.confirm({
+                  title: "Hành động này không thể hoàn tác!",
+                  content: `Xác nhận xóa sách`,
+                  okText: "Xóa",
+                  cancelText: "Hủy",
+                  onOk: () => {
+                    deleteAction(item._id);
+                  },
+                });
+              }}
+            />
+          </div>
+        );
+      },
+      align: "center",
     },
-  ]
+  ];
 
   return (
     <div>
-      <div className={'flex justify-between mb-4'}>
-        <ManageBorrowsHeader/>
-        <Button type={'primary'} onClick={() => {
-          router.push('/dashboard/manage-borrows/create')
-        }}>Thêm lượt mượn</Button>
-      </div>
-      <Card bodyStyle={{padding: 0}} bordered={false}>
-        <Table
-          className={'table-no-border-radius'}
-          dataSource={data}
-          columns={columns}
-          pagination={false}
-        />
-        <div className={'flex justify-center my-6'}>
-          <Pagination pageSize={10} total={50}/>
+      <div className={"flex gap-8 justify-between mb-4"}>
+        <div>
+          <Input
+            className={"bg-input-group-after"}
+            placeholder={"Tìm kiếm..."}
+            addonAfter={<SearchOutlined />}
+          />
         </div>
-      </Card>
+
+        <div className={"flex justify-between"}>
+          <Button
+            type={"primary"}
+            onClick={() => {
+              router.push(`/dashboard/manage-borrows/create`);
+            }}
+          >
+            Thêm phiếu mượn
+          </Button>
+        </div>
+      </div>
+      <Table
+        columns={columns}
+        dataSource={state.data}
+        pagination={{
+          total: state.totalDocs,
+          pageSize: state.limit,
+          current: state.page,
+          pageSizeOptions: [10, 20, 30, 50, 100],
+          showSizeChanger: true,
+        }}
+        onChange={(e) => {
+          if (e.current && e.pageSize) {
+            router.push(
+              `${pathname}?${createQueryString({
+                page: e.current,
+                limit: e.pageSize,
+              })}`
+            );
+            getData({ limit: e.pageSize, page: e.current });
+          }
+        }}
+        onRow={(record: any) => ({
+          onClick: () => {
+            router.push(`/dashboard/manage-borrows/${record?._id}`);
+            // setDetail(record);
+          },
+        })}
+      />
       <ViewBorrowModal
-        isOpen={isOpenViewModal}
+        isOpen={!!detail}
         onCancel={() => {
-          setIsOpenViewModal(false);
+          setDetail(undefined);
+        }}
+        detail={detail}
+        deleteAction={(arg: any) => {
+          deleteAction(arg);
         }}
       />
     </div>
-  )
+  );
 }
+
+export default ManageBook;

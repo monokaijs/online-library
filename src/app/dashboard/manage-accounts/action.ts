@@ -8,6 +8,7 @@ import { message } from "antd";
 export interface GetAccountPayload {
   page?: number;
   limit?: number;
+  filter?: Partial<Account>
 }
 
 export async function deleteAccountAction(_: any, _id: string) {
@@ -48,8 +49,8 @@ export async function updateAccountAction(
 
 export async function getAccountsAction(_: any, payload: GetAccountPayload) {
   await dbService.connect();
-  const { page = 1, limit = 20 } = payload;
-  return await accountService.getAccounts(page, limit);
+  const { page = 1, limit = 20, filter } = payload;
+  return await accountService.getAccounts(page, limit, filter);
 }
 
 export async function createAccountAction(_: any, account: Account) {

@@ -88,6 +88,7 @@ function BookForm(props: FormProps) {
   }, [updateState]);
 
   useEffect(() => {
+    console.log(data)
     if (data) {
       form.setFieldsValue(data);
       form.setFieldValue("library", data?.bookcase?.library?._id);

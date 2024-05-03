@@ -1,16 +1,16 @@
 "use client";
 
+import { FormAction } from "@/constants/app.constant";
+import { Spin } from "antd";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
-import { getBookcaseByIdAction } from "@/app/dashboard/manage-bookcases/action";
-import BookcaseForm from "@/app/dashboard/manage-bookcases/(form)/components/BookcaseForm";
-import { FormAction } from "@/constants/app.constant";
-import { Spin } from "antd";
+import BorrowForm from "../../components/BorrowForm";
+import { getBorrowByIdAction } from "../../../action";
 
 export default function UpdatePage() {
   const { id } = useParams();
-  const [state, action] = useFormState(getBookcaseByIdAction, {
+  const [state, action] = useFormState(getBorrowByIdAction, {
     success: false,
     data: undefined,
     message: "",
@@ -23,7 +23,7 @@ export default function UpdatePage() {
   }, []);
 
   if (state.data) {
-    return <BookcaseForm data={state.data as any} action={FormAction.UPDATE} />;
+    return <BorrowForm detail={state.data as any} action={FormAction.UPDATE} />;
   }
 
   return (

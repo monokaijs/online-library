@@ -11,13 +11,16 @@ import {
   EyeOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Modal, Table, theme } from "antd";
+import { Button, Input, Modal, Table, Tag, theme } from "antd";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import ViewBookModal from "./components/ViewBookModal";
 import { getBookAction, deleteBookAction } from "./action";
 import { Library } from "@/lib/models/library.model";
+import { render } from "nprogress";
+import { Book, BookStatus } from "@/lib/models/book.model";
+import dayjs from "dayjs";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -100,27 +103,54 @@ function ManageBook() {
       dataIndex: "bookcase",
       key: "bookcase",
       align: "center",
-      render: ({ library }: { library: Library }) => {
-        return <div>{library.name}</div>;
+      render: (bookcase: any) => {
+        return <div>{bookcase?.library.name}</div>;
       },
     },
     {
       title: "Tình trạng sách",
-      dataIndex: "status",
       key: "status",
       align: "center",
+      render: (record: Book) => {
+        const overdued = dayjs().diff(record.borrowRecord?.returnDate) > 0;
+        return (
+          <Tag
+            color={
+              record.status === BookStatus.AVAILABLE
+                ? "green"
+                : record.status === BookStatus.OVERDUE || overdued
+                ? "red"
+                : "yellow"
+            }
+          >
+            {record.status === BookStatus.AVAILABLE
+              ? "Đang trên kệ"
+              : record.status === BookStatus.OVERDUE || overdued
+              ? "Quá hạn"
+              : "Đang mượn"}
+          </Tag>
+        );
+      },
     },
     {
       title: "Ngày mượn",
-      dataIndex: "status",
       key: "status",
       align: "center",
+      render: (record: Book) => {
+        return record.borrowRecord && record.status !== BookStatus.AVAILABLE
+          ? dayjs(record.borrowRecord?.borrowDate).format("DD/MM/YYYY")
+          : "-";
+      },
     },
     {
       title: "Ngày hẹn",
-      dataIndex: "status",
       key: "status",
       align: "center",
+      render: (record: Book) => {
+        return record.borrowRecord && record.status !== BookStatus.AVAILABLE
+          ? dayjs(record.borrowRecord?.returnDate).format("DD/MM/YYYY")
+          : "-";
+      },
     },
     {
       title: "Thao tác",
@@ -134,14 +164,18 @@ function ManageBook() {
             }}
           >
             <Button
-              href={`/dashboard/manage-books/${item?._id}`}
+              onClick={() => {
+                router.push(`/dashboard/manage-books/${item?._id}`);
+              }}
               type={"text"}
               shape={"circle"}
               icon={<EyeOutlined />}
               style={{ color: token.colorPrimary }}
             />
             <Button
-              href={`/dashboard/manage-books/update/${item?._id}`}
+              onClick={() => {
+                router.push(`/dashboard/manage-books/update/${item?._id}`);
+              }}
               type={"text"}
               shape={"circle"}
               icon={<EditOutlined style={{ color: token.colorPrimary }} />}
@@ -182,7 +216,12 @@ function ManageBook() {
         </div>
 
         <div className={"flex justify-between"}>
-          <Button type={"primary"} href="/dashboard/manage-books/create">
+          <Button
+            type={"primary"}
+            onClick={() => {
+              router.push("/dashboard/manage-books/create");
+            }}
+          >
             Thêm sách
           </Button>
         </div>
