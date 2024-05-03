@@ -1,27 +1,22 @@
 "use client";
-import { Badge, Button, Modal, Typography, theme } from "antd";
-import styles from "./ViewAccountModal.module.scss";
-import {
-  CalendarOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  HomeOutlined,
-  PhoneOutlined,
-} from "@ant-design/icons";
-import { useRouter } from "next/navigation";
 import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
-import moment from "moment";
-import { useContext } from "react";
 import { SessionContext } from "@/components/shared/SessionContext";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Button, Modal, Typography, theme } from "antd";
+import moment from "moment";
+import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import styles from "./ViewAccountModal.module.scss";
 
 interface ViewAccountModalProps {
   isOpen: boolean;
   onCancel: () => void;
   accountDetail?: Account;
+  deleteAction: any;
 }
 
 export default function ViewAccountModal(props: ViewAccountModalProps) {
-  const { isOpen, onCancel, accountDetail } = props;
+  const { isOpen, onCancel, accountDetail, deleteAction } = props;
   const { account } = useContext(SessionContext);
   const {
     token: { colorPrimary },
@@ -109,6 +104,17 @@ export default function ViewAccountModal(props: ViewAccountModalProps) {
           danger
           disabled={account?._id == accountDetail?._id}
           icon={<DeleteOutlined />}
+          onClick={() => {
+            Modal.confirm({
+              title: "Hành động này không thể hoàn tác!",
+              content: `Xác nhận xóa bạn đọc ${accountDetail?.fullName}`,
+              okText: "Xóa",
+              cancelText: "Hủy",
+              onOk: () => {
+                deleteAction(accountDetail?._id);
+              },
+            });
+          }}
         >
           Xóa tài khoản
         </Button>

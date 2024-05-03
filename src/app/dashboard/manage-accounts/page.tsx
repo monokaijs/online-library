@@ -7,8 +7,12 @@ import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button, Modal, Table, message, theme } from "antd";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
-import { deleteAccountAction, getAccountsAction } from "./action";
+import {
+  deleteAccountAction,
+  getAccountsAction,
+} from "@/app/dashboard/manage-accounts/action";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { toast } from "@/lib/utils/toast";
 
 function ManageAccounts() {
   const { token } = theme.useToken();
@@ -53,10 +57,10 @@ function ManageAccounts() {
   }, []);
 
   useEffect(() => {
-    if (deleteState.message)
-      message[deleteState.success ? "success" : "error"](deleteState.message);
+    toast(deleteState);
     if (deleteState.success) {
       getAccounts(state);
+      setAccountDetail(undefined);
     }
   }, [deleteState]);
 
@@ -193,6 +197,9 @@ function ManageAccounts() {
           setAccountDetail(undefined);
         }}
         accountDetail={accountDetail}
+        deleteAction={(agrs: string) => {
+          deleteAction(agrs);
+        }}
       />
     </div>
   );

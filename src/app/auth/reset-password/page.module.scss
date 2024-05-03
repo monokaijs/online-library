@@ -1,0 +1,16 @@
+.loginPage {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.content {
+  width: 100%;
+  .wrapper {
+    padding: 24px;
+
+    .meta {
+      margin-bottom: 32px;
+    }
+  }
+}

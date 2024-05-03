@@ -8,6 +8,7 @@ import { message } from "antd";
 export interface GetAccountPayload {
   page?: number;
   limit?: number;
+  filter?: Partial<Account>
 }
 
 export async function deleteAccountAction(_: any, _id: string) {
@@ -24,7 +25,7 @@ export async function deleteAccountAction(_: any, _id: string) {
     await accountService.deleteAccount(_id);
     return {
       success: true,
-      message: "Deleted account",
+      message: "Đã xóa tài khoản",
     };
   } catch (error: any) {
     return {
@@ -40,7 +41,7 @@ export async function updateAccountAction(
 ) {
   try {
     await accountService.updateAccount(account._id, account);
-    return { success: true, message: "Account updated" };
+    return { success: true, message: "Đã cập nhật tài khoản" };
   } catch (error: any) {
     return { success: false, message: error.message };
   }
@@ -48,8 +49,8 @@ export async function updateAccountAction(
 
 export async function getAccountsAction(_: any, payload: GetAccountPayload) {
   await dbService.connect();
-  const { page = 1, limit = 20 } = payload;
-  return await accountService.getAccounts(page, limit);
+  const { page = 1, limit = 20, filter } = payload;
+  return await accountService.getAccounts(page, limit, filter);
 }
 
 export async function createAccountAction(_: any, account: Account) {

@@ -52,7 +52,7 @@ function AccountForm({ account }: { account?: Account }) {
         birthday: dayjs(account.birthday),
       });
     }
-  }, []);
+  }, [account]);
 
   const onFinish = (values: any) => {
     values.birthday = new Date(values.birthday);
@@ -73,19 +73,6 @@ function AccountForm({ account }: { account?: Account }) {
       labelWrap
       form={form}
     >
-      <Form.Item>
-        <div className={"flex gap-9 items-end"}>
-          <img src="/images/default-user-avatar.png" alt="avatar" />
-          <div>
-            <Button icon={<UploadOutlined />} type={"primary"}>
-              Click to Upload
-            </Button>
-            <Typography className={"mt-2 color-gray_1"}>
-              Ảnh có kích cỡ ít nhất 200x200 định dạng PNG hoặc JPG
-            </Typography>
-          </div>
-        </div>
-      </Form.Item>
       <Form.Item
         rules={[{ required: true, message: "Vui lòng nhập họ tên!" }]}
         name="fullName"
@@ -106,6 +93,20 @@ function AccountForm({ account }: { account?: Account }) {
         label={"Số điện thoại"}
       >
         <Input placeholder={"Số điện thoại..."} />
+      </Form.Item>
+      <Form.Item name="role" label={"Vai trò"}>
+        <Radio.Group
+          options={[
+            {
+              label: "Bạn đọc",
+              value: "user",
+            },
+            {
+              label: "Quản lý",
+              value: "admin",
+            },
+          ]}
+        />
       </Form.Item>
       <Form.Item name="identityNumber" label={"Số CCCD/CMND"}>
         <Input placeholder={"Số CCCD/CMND..."} />

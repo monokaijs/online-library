@@ -45,7 +45,7 @@ class AccountService {
   async getAccountById(accountId: string): Promise<AccountDocument | null> {
     try {
       const account = await AccountModel.findById(accountId);
-      return account;
+      return JSON.parse(JSON.stringify(account));
     } catch (error: any) {
       throw new Error(`Error getting account: ${error.message}`);
     }
@@ -75,21 +75,23 @@ class AccountService {
     }
   }
 
-  async getAccounts(
-    page: number,
-    limit: number,
-    query?: FilterQuery<AccountDocument>
-  ) {
+  async getAccounts(page: number, limit: number, query?: Partial<Account>) {
     try {
       const options = {
         page,
         limit,
       };
 
-      const result = await (AccountModel as any).paginate(query, options);
+      const filter: FilterQuery<AccountDocument> = {};
+
+      if (query?.fullName) {
+        filter.fullName = { $regex: new RegExp(query.fullName, "i") };
+      }
+
+      const result = await (AccountModel as any).paginate(filter, options);
 
       return {
-        accounts: result.docs,
+        accounts: JSON.parse(JSON.stringify(result.docs)),
         totalPages: result.totalPages,
         totalDocs: result.totalDocs,
         page,

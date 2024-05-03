@@ -1,98 +1,64 @@
-import mongoose, {Document, Model} from 'mongoose';
-import paginate from 'mongoose-paginate-v2';
-import {Category} from "@/lib/models/category.model";
-import {BookAuthor} from "@/lib/models/author.model";
-import {BookShelfSlot} from "@/lib/models/book-shelf-slot.model";
-import {Publisher} from "@/lib/models/publisher.model";
+import mongoose, { Document, Model } from "mongoose";
+import paginate from "mongoose-paginate-v2";
+import { Bookcase } from "@/lib/models/bookcase.model";
+import { Borrow } from "@/lib/models/borrow.model";
 
 export enum BookStatus {
-  MISSING = 'missing',
-  LOST = 'lost',
-  AVAILABLE = 'available',
-}
-
-export enum BookCondition {
-  NEW = 'new',
-  OLD = 'old',
+  AVAILABLE = "available",
+  OVERDUE = "overdue",
+  BORROWING = "borrowing",
 }
 
 export interface Book {
-  name: string;
-  category: string | Category;
-  author: string | BookAuthor;
-  slot: string | BookShelfSlot;
-  publisher: string | Publisher;
-  title: string;
-  publishDate: Date;
-  language: string;
+  _id?: any;
+  bookcase: Bookcase;
+  authorName: string;
   description: string;
-  status: BookStatus;
-  edition: string;
-  keywords: string[];
-  price: number;
-  condition: BookCondition;
   isbn: string;
-  pages: number;
-  quantity: number;
+  name: string;
+  publisher: string;
+  publishYear: string;
+  picture: string;
+  language: string;
+  borrowingDateLimit: number;
+  status: BookStatus;
+  borrowRecord?: Borrow
 }
 
 const BookSchema = new mongoose.Schema<Book>({
-  name: String,
-  category: {
+  bookcase: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'BookCategory',
+    ref: 'Bookcase'
   },
-  author: {
+  borrowRecord: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Author',
+    ref: 'Borrow'
   },
-  slot: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'BookShelfSlot'
-  },
-  publisher: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Publisher'
-  },
-  title: String,
-  publishDate: {
-    type: Date,
-  },
-  language: String,
+  authorName: String,
   description: String,
+  isbn: String,
+  name: String,
+  publisher: String,
+  publishYear: String,
+  picture: String,
+  language: String,
+  borrowingDateLimit: Number,
   status: {
     type: String,
-    enum: Object.values(BookStatus)
+    enum: Object.values(BookStatus),
   },
-  edition: String,
-  keywords: {
-    type: [String],
-  },
-  price: {
-    type: Number,
-  },
-  condition: {
-    type: String,
-    enum: Object.values(BookCondition),
-  },
-  isbn: String,
-  pages: Number,
-  quantity: Number,
-}, {
-  timestamps: true,
-});
+}, { timestamps: true });
 
-export interface BookDocument extends Document, Book {
-}
+export interface BookDocument extends Document, Book {}
 
 BookSchema.plugin(paginate);
 
 let model;
 
 try {
-  model = mongoose.model('Book');
+  model = mongoose.model("Book");
 } catch (e) {
-  model = mongoose.model('Book', BookSchema);
+  model = mongoose.model("Book", BookSchema);
 }
 
-export const BookModel = model as Model<Book>;
+export const BookModel = model as Model<BookDocument>;
