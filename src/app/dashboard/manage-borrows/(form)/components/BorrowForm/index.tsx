@@ -246,7 +246,7 @@ function BorrowForm(props: BorrowFormProps) {
               }}
               onChange={(e) => {
                 const book: Book = JSON.parse(e);
-                form.setFieldValue("library", book.bookcase.library.name);
+                form.setFieldValue("library", book?.bookcase?.library?.name);
               }}
               loading={bookLoading}
               filterOption={(input, option: any) =>
@@ -268,7 +268,7 @@ function BorrowForm(props: BorrowFormProps) {
           ) : (
             <Select disabled>
               <Option value={JSON.stringify(detail.book)}>
-                {detail.book.name}
+                {detail?.book?.name}
               </Option>
             </Select>
           )}

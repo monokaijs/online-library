@@ -1,11 +1,11 @@
 import mongoose, {Document, Model} from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
-import { Library } from './library.model';
+import { Location } from './library.model';
 
 export interface Bookcase {
   position: string;
   category: string;
-  library: Library;
+  library: Location;
 }
 
 const BookcaseSchema = new mongoose.Schema<Bookcase>({
@@ -13,7 +13,7 @@ const BookcaseSchema = new mongoose.Schema<Bookcase>({
   category: String,
   library: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Library'
+    ref: 'Location'
   },
 }, {timestamps: true});
 

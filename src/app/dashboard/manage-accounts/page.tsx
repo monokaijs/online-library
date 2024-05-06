@@ -165,6 +165,7 @@ function ManageAccounts() {
     <div>
       <ManageAccountsHeader />
       <Table
+        rowKey="_id"
         columns={columns}
         dataSource={state.accounts}
         pagination={{

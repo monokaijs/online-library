@@ -200,6 +200,7 @@ function ManageBook() {
         </div>
       </div>
       <Table
+        rowKey="_id"
         columns={columns}
         dataSource={state.data}
         pagination={{

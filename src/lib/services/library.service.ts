@@ -1,9 +1,9 @@
 import { BookcaseModel } from "@/lib/models/bookcase.model";
-import { LibraryModel } from "@/lib/models/library.model";
+import { LocationModel } from "@/lib/models/library.model";
 
 class LibraryService {
   async get() {
-    const libaries = await LibraryModel.find();
+    const libaries = await LocationModel.find();
     const bookcases = await BookcaseModel.find().populate("library");
     return { libaries, bookcases };
   }
