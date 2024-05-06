@@ -33,7 +33,7 @@ export async function createBookAction(prev: any, payload: Book) {
 export async function getLibraryAction() {
   await dbService.connect();
   try {
-    const data = await libraryService.get();
+    const data = await libraryService.getAll();
     return {
       success: true,
       data: JSON.parse(JSON.stringify(data)),

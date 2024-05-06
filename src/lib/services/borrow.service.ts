@@ -6,7 +6,7 @@ import {
   BorrowStatus,
 } from "@/lib/models/borrow.model";
 import { FilterQuery } from "mongoose";
-import { BookcaseModel } from "../models/bookcase.model";
+import { BookcaseModel } from '@/lib/models/bookcase.model';
 import accountService from "./account.service";
 import { bookService } from "./book.service";
 import dayjs from "dayjs";
@@ -28,6 +28,8 @@ class BorrowService {
   }
 
   async get(page: number, limit: number, query?: Partial<Borrow>) {
+    BookcaseModel.find();
+    
     try {
       const options = {
         page,

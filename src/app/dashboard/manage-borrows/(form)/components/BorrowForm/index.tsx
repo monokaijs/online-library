@@ -257,11 +257,11 @@ function BorrowForm(props: BorrowFormProps) {
             >
               {books.data.map((book: Book) => (
                 <Select.Option
-                  label={book.name}
-                  key={book._id}
+                  label={book?.name}
+                  key={book?._id}
                   value={JSON.stringify(book)}
                 >
-                  {book.name}
+                  {book?.name}
                 </Select.Option>
               ))}
             </Select>

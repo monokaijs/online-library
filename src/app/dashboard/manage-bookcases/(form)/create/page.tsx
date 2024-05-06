@@ -1,6 +1,8 @@
+import { FormAction } from "@/constants/app.constant";
+import { libraryService } from "@/lib/services/library.service";
 import BookcaseForm from "../components/BookcaseForm";
-import {FormAction} from "@/constants/app.constant";
 
-export default function CreateBookCasePage() {
-  return <BookcaseForm action={FormAction.CREATE}/>;
+export default async function CreateBookCasePage() {
+  const libraries = await libraryService.get();
+  return <BookcaseForm libraries={libraries} action={FormAction.CREATE} />;
 }

@@ -8,6 +8,7 @@ export enum LibraryStatus {
 }
 
 export interface Location {
+  _id?: any;
   name: string;
   openingTime: string;
   closingTime: string;

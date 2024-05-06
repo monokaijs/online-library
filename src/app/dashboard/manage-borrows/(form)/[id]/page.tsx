@@ -97,7 +97,7 @@ export default function BorrowDetail() {
           />
           <div style={{ flex: 1 }}>
             <Typography.Title className="ma-0 mb-4" level={4}>
-              {user.fullName}
+              Độc giả: {user.fullName}
             </Typography.Title>
             <Flex gap={32}>
               <ModalDetailInfo
@@ -134,7 +134,7 @@ export default function BorrowDetail() {
           />
           <div style={{ flex: 1 }}>
             <Typography.Title className="ma-0 mb-4" level={4}>
-              {book.name}
+              Sách: {book?.name}
             </Typography.Title>
             <ModalDetailInfo
               title={false}
@@ -169,7 +169,7 @@ export default function BorrowDetail() {
             onClick={() => {
               Modal.confirm({
                 title: "Hành động này không thể hoàn tác!",
-                content: `Hoàn thành lượt mượn ${book.name}`,
+                content: `Hoàn thành lượt mượn ${book?.name}`,
                 okText: "Xác nhận",
                 cancelText: "Hủy",
                 onOk: () => {

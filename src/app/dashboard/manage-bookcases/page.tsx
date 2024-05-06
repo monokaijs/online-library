@@ -139,6 +139,7 @@ function ManageBookcases() {
     <div>
       <ManageBookcasesHeader />
       <Table
+        loading={state.data.length == 0}
         rowKey="_id"
         columns={columns}
         dataSource={state.data}

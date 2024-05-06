@@ -1,6 +1,6 @@
 "use client";
 import { Book } from "@/lib/models/book.model";
-import { Borrow } from "@/lib/models/borrow.model";
+import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
 import { toast } from "@/lib/utils/toast";
 import {
   DeleteOutlined,
@@ -76,6 +76,13 @@ function ManageBook() {
       align: "center",
     },
     {
+      title: "Tên sách",
+      dataIndex: "book",
+      key: "name",
+      align: "center",
+      render: (item: Book) => item?.name,
+    },
+    {
       title: "Thư viện",
       dataIndex: "book",
       key: "library",
@@ -83,18 +90,11 @@ function ManageBook() {
       render: (item: Book) => item?.bookcase?.library?.name,
     },
     {
-      title: "Tên sách",
-      dataIndex: "book",
-      key: "name",
-      align: "center",
-      render: (item: Book) => item.name,
-    },
-    {
       title: "Tên bạn đọc",
       dataIndex: "user",
       key: "user",
       align: "center",
-      render: (item: Account) => item.fullName,
+      render: (item: Account) => item?.fullName,
     },
     {
       title: "Số điện thoại",
@@ -129,6 +129,7 @@ function ManageBook() {
       title: "Thao tác",
       key: "action",
       render: (item: any) => {
+        const borrowing = item.status === BorrowStatus.BORROWING;
         return (
           <div
             className={"flex justify-center"}
@@ -146,12 +147,17 @@ function ManageBook() {
               style={{ color: token.colorPrimary }}
             />
             <Button
+              disabled={!borrowing}
               onClick={() => {
                 router.push(`/dashboard/manage-borrows/update/${item?._id}`);
               }}
               type={"text"}
               shape={"circle"}
-              icon={<EditOutlined style={{ color: token.colorPrimary }} />}
+              icon={
+                <EditOutlined
+                  style={{ color: borrowing ? token.colorPrimary : "" }}
+                />
+              }
             />
             <Button
               type={"text"}
@@ -200,6 +206,7 @@ function ManageBook() {
         </div>
       </div>
       <Table
+        loading={state.data.length == 0}
         rowKey="_id"
         columns={columns}
         dataSource={state.data}

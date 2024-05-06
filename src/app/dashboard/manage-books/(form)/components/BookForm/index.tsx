@@ -88,7 +88,7 @@ function BookForm(props: FormProps) {
   }, [updateState]);
 
   useEffect(() => {
-    console.log(data)
+    form.setFieldValue("borrowingDateLimit", 35);
     if (data) {
       form.setFieldsValue(data);
       form.setFieldValue("library", data?.bookcase?.library?._id);
@@ -203,7 +203,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập năm xuất bản"} />
+              <Input placeholder={"Nhập năm xuất bản"} type="number" />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -247,9 +247,9 @@ function BookForm(props: FormProps) {
                   <Select>
                     {app.data?.bookcases.map(
                       (item: any) =>
-                        item.library._id == libraryActive && (
+                        item?.library?._id == libraryActive && (
                           <Option value={item._id} key={item._id}>
-                            {item.position} ({item.category})
+                            {item?.position} ({item?.category})
                           </Option>
                         )
                     )}

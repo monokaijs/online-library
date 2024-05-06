@@ -165,6 +165,7 @@ function ManageAccounts() {
     <div>
       <ManageAccountsHeader />
       <Table
+        loading={state.accounts.length == 0}
         rowKey="_id"
         columns={columns}
         dataSource={state.accounts}

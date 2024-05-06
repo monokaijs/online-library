@@ -159,7 +159,7 @@ export default function DashboardLayoutContent(props: any) {
               </Dropdown>
             </div>
           </Layout.Header>
-          <div className={styles.info}>
+          {/* <div className={styles.info}>
             <Breadcrumb
               className={styles.breadcrumb}
               items={pathname.split("/").map((key, index) => {
@@ -176,7 +176,7 @@ export default function DashboardLayoutContent(props: any) {
             <Typography.Title className={"mt-2"} level={4}>
               {`f.${pathname}.name`}
             </Typography.Title>
-          </div>
+          </div> */}
           <Layout className={styles.pageContent}>{props.children}</Layout>
         </Layout>
       </Layout.Content>

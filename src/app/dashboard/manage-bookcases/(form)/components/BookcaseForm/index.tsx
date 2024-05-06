@@ -3,9 +3,12 @@ import {
   createBookcaseAction,
   updateBookcaseAction,
 } from "@/app/dashboard/manage-bookcases/action";
+import { getLibraryAction } from "@/app/dashboard/manage-books/action";
 import { FormAction } from "@/constants/app.constant";
+import { Location } from "@/lib/models/library.model";
 import { toast } from "@/lib/utils/toast";
-import { Button, Form, Input, Typography, theme } from "antd";
+import { Button, Form, Input, Select, Typography, theme } from "antd";
+import { Option } from "antd/es/mentions";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
@@ -13,11 +16,12 @@ import { useFormState } from "react-dom";
 interface BookcaseFormProps {
   action: FormAction;
   data?: any;
+  libraries?: any;
 }
 
 function BookcaseForm(props: BookcaseFormProps) {
   const router = useRouter();
-  const { action, data } = props;
+  const { action, data, libraries } = props;
   const {
     token: { colorPrimary },
   } = theme.useToken();
@@ -32,6 +36,8 @@ function BookcaseForm(props: BookcaseFormProps) {
     success: false,
     message: "",
   });
+
+  console.log(libraries);
 
   useEffect(() => {
     toast(createState);
@@ -88,6 +94,24 @@ function BookcaseForm(props: BookcaseFormProps) {
         }
       >
         <Input placeholder={"Thể loại"} />
+      </Form.Item>
+      <Form.Item
+        name="library"
+        label={
+          <Typography.Text style={{ color: colorPrimary }}>
+            Thư viện
+          </Typography.Text>
+        }
+      >
+        <Select>
+          {libraries.map((item: Location) => {
+            return (
+              <Option key={item._id} value={item._id}>
+                {item?.name}
+              </Option>
+            );
+          })}
+        </Select>
       </Form.Item>
       <div className={"flex justify-end"}>
         <div className={"flex gap-9"}>
