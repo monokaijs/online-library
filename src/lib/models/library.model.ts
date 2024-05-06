@@ -13,13 +13,7 @@ export interface Location {
   openingTime: string;
   closingTime: string;
   phoneNumber: string;
-  address: {
-    text: string;
-    coordinate: {
-      lat: number;
-      lng: number;
-    },
-  };
+  address: string;
   status: LibraryStatus;
   estDate: Date;
 }
@@ -29,13 +23,7 @@ const LocationSchema = new mongoose.Schema<Location>({
   openingTime: String,
   closingTime: String,
   phoneNumber: String,
-  address: {
-    text: String,
-    coordinate: {
-      lat: Number,
-      lng: Number,
-    }
-  },
+  address: String,
   status: {
     type: String,
     enum: Object.values(LibraryStatus),

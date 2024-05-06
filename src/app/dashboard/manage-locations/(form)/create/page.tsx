@@ -1,6 +1,6 @@
 import { FormAction } from "@/constants/app.constant";
-import BookcaseForm from "../components/BookcaseForm";
+import LocationForm from "../components/LocationForm";
 
 export default async function CreateBookCasePage() {
-  return <BookcaseForm action={FormAction.CREATE} />;
+  return <LocationForm action={FormAction.CREATE} />;
 }

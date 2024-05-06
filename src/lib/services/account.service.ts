@@ -6,6 +6,7 @@ import {
 } from "@/lib/models/account.model";
 import securityService from "@/lib/services/security.service";
 import { FilterQuery, PaginateModel } from "mongoose";
+import { borrowService } from "./borrow.service";
 
 export interface AccountQueries {
   page?: number;
@@ -127,6 +128,17 @@ class AccountService {
       await securityService.sendVerificationEmail(account);
     }
     return account;
+  }
+
+  async getAccountDetail(_id: string) {
+    const account = await this.getAccountById(_id);
+    const history = await borrowService.getAllByAccount(_id);
+    return JSON.parse(
+      JSON.stringify({
+        account,
+        history,
+      })
+    );
   }
 }
 

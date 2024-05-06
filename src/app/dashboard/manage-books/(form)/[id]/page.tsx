@@ -4,7 +4,12 @@ import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
 import {
   deleteBookAction,
   getBookByIdAction,
+  getBookDetailAction,
 } from "@/app/dashboard/manage-books/action";
+import Status from "@/app/dashboard/manage-borrows/components/BorrowStatus";
+import { BookStatus } from "@/lib/models/book.model";
+import { Borrow } from "@/lib/models/borrow.model";
+import { toast } from "@/lib/utils/toast";
 import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -16,18 +21,19 @@ import {
   Modal,
   Row,
   Spin,
+  Tag,
   Typography,
 } from "antd";
+import dayjs from "dayjs";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import "./style.css";
-import { toast } from "@/lib/utils/toast";
 
 export default function BookDetail() {
   const router = useRouter();
   const { id } = useParams();
-  const [{ data }, getBook] = useFormState(getBookByIdAction, {
+  const [{ data }, getBook] = useFormState(getBookDetailAction, {
     data: undefined,
     success: false,
     message: "",
@@ -57,6 +63,8 @@ export default function BookDetail() {
     );
   }
 
+  const overdued = dayjs().diff(data.borrowRecord?.returnDate) > 0;
+
   return (
     <Row className="h-full" gutter={24}>
       <Col span={17} className="flex flex-col h-full">
@@ -64,8 +72,8 @@ export default function BookDetail() {
           <Flex gap={20}>
             <Image
               preview={false}
-              style={{ minWidth: 200 }}
-              src={data?.picture}
+              style={{ minWidth: 200, maxWidth: 240 }}
+              src={data?.book?.picture}
             />
             <div style={{ flex: 1 }}>
               <Flex
@@ -74,7 +82,7 @@ export default function BookDetail() {
                 className="mb-1 w-full"
               >
                 <Typography.Title className="ma-0" level={4}>
-                  {data?.name}
+                  {data?.book?.name}
                 </Typography.Title>
                 <Dropdown
                   menu={{
@@ -117,57 +125,195 @@ export default function BookDetail() {
                 </Dropdown>
               </Flex>
               <Typography.Text className="book-description mb-2">
-                {data?.description}
+                {data?.book?.description}
               </Typography.Text>
               <Typography.Title className="ma-0" level={5}>
-                Tác giả: {data?.authorName}
+                Tác giả: {data?.book?.authorName}
               </Typography.Title>
             </div>
           </Flex>
         </Card>
-        <Typography.Title level={4}>Lịch sử mượn sách (15)</Typography.Title>
-        <Card style={{ flex: 1, overflow: "auto" }}>
-          <Typography.Title className="ma-0" level={4}>
-            {data?.name}
-          </Typography.Title>
-          <Typography.Title className="ma-0" level={4}>
-            {data?.name}
-          </Typography.Title>
-          <Typography.Title className="ma-0" level={4}>
-            {data?.name}
-          </Typography.Title>
-          <Typography.Title className="ma-0" level={4}>
-            {data?.name}
-          </Typography.Title>
-          <Typography.Title className="ma-0" level={4}>
-            {data?.name}
-          </Typography.Title>
-          <Typography.Title className="ma-0" level={4}>
-            {data?.name}
-          </Typography.Title>
-          <Typography.Title className="ma-0" level={4}>
-            {data?.name}
-          </Typography.Title>
-          <Typography.Title className="ma-0" level={4}>
-            {data?.name}
-          </Typography.Title>
-        </Card>
+        <Typography.Title level={4}>
+          Lịch sử mượn sách ({data?.history?.length})
+        </Typography.Title>
+        <div
+          style={{
+            flex: 1,
+            overflow: "hidden",
+            padding: 20,
+            backgroundColor: "white",
+            borderRadius: 8,
+            border: "1px solid #F0F0F0",
+          }}
+        >
+          <div
+            style={{
+              borderRadius: 8,
+              border: "1px solid #F0F0F0",
+              overflow: "auto",
+              height: "100%",
+            }}
+          >
+            <div
+              className="flex"
+              style={{
+                position: "sticky",
+                top: 0,
+                backgroundColor: "white",
+                zIndex: 1000,
+              }}
+            >
+              <Typography.Text
+                strong
+                className="text-center py-4"
+                style={{
+                  width: "32%",
+                  borderBottom: "1px solid #F0F0F0",
+                  borderRight: "1px solid #F0F0F0",
+                }}
+              >
+                Tên bạn đọc
+              </Typography.Text>
+              <Typography.Text
+                strong
+                className="text-center py-4"
+                style={{
+                  width: "17%",
+                  borderBottom: "1px solid #F0F0F0",
+                  borderRight: "1px solid #F0F0F0",
+                }}
+              >
+                Ngày mượn
+              </Typography.Text>
+              <Typography.Text
+                strong
+                className="text-center py-4"
+                style={{
+                  width: "17%",
+                  borderBottom: "1px solid #F0F0F0",
+                  borderRight: "1px solid #F0F0F0",
+                }}
+              >
+                Ngày hẹn
+              </Typography.Text>
+              <Typography.Text
+                strong
+                className="text-center py-4"
+                style={{
+                  width: "17%",
+                  borderBottom: "1px solid #F0F0F0",
+                  borderRight: "1px solid #F0F0F0",
+                }}
+              >
+                Thư viện
+              </Typography.Text>
+              <Typography.Text
+                strong
+                className="text-center py-4"
+                style={{ width: "17%", borderBottom: "1px solid #F0F0F0" }}
+              >
+                Trạng thái
+              </Typography.Text>
+            </div>
+            {data?.history?.map((item: Borrow, index: number) => {
+              return (
+                <div
+                  key={item._id}
+                  className="flex"
+                  style={{
+                    borderBottom:
+                      index < data?.history?.length - 1
+                        ? "1px solid #F0F0F0"
+                        : "",
+                  }}
+                >
+                  <Typography.Text
+                    className="text-center py-3"
+                    style={{
+                      width: "32%",
+                      borderRight: "1px solid #F0F0F0",
+                    }}
+                  >
+                    {item?.user?.fullName}
+                  </Typography.Text>
+                  <Typography.Text
+                    className="text-center py-3"
+                    style={{
+                      width: "17%",
+                      borderRight: "1px solid #F0F0F0",
+                    }}
+                  >
+                    {dayjs(item.borrowDate).format("DD/MM/YYYY")}
+                  </Typography.Text>
+                  <Typography.Text
+                    className="text-center py-3"
+                    style={{
+                      width: "17%",
+                      borderRight: "1px solid #F0F0F0",
+                    }}
+                  >
+                    {dayjs(item.returnDate).format("DD/MM/YYYY")}
+                  </Typography.Text>
+                  <Typography.Text
+                    className="text-center py-3"
+                    style={{
+                      width: "17%",
+                      borderRight: "1px solid #F0F0F0",
+                    }}
+                  >
+                    {item.book?.bookcase?.library?.name}
+                  </Typography.Text>
+                  <Typography.Text
+                    className="text-center py-3"
+                    style={{
+                      width: "17%",
+                    }}
+                  >
+                    <Status data={item} />
+                  </Typography.Text>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </Col>
       <Col span={7} className="h-full">
         <Card className="h-full">
           <ModalDetailInfo
             records={[
-              { fieldName: "Nhà xuất bản", value: data.publisher },
-              { fieldName: "Năm xuất bản", value: data.publishYear },
-              { fieldName: "Ngôn ngữ", value: data.language },
-              { fieldName: "Mã sách", value: data.isbn },
-              { fieldName: "Thể loại", value: data?.bookcase?.category },
-              { fieldName: "Kệ sách", value: data.bookcase.position },
-              { fieldName: "Thư viện", value: data?.bookcase?.library?.name },
-              { fieldName: "Trạng thái", value: data.status },
+              { fieldName: "Nhà xuất bản", value: data?.book?.publisher },
+              { fieldName: "Năm xuất bản", value: data?.book?.publishYear },
+              { fieldName: "Ngôn ngữ", value: data?.book?.language },
+              { fieldName: "Mã sách", value: data?.book?.isbn },
+              { fieldName: "Thể loại", value: data?.book?.bookcase?.category },
+              { fieldName: "Kệ sách", value: data?.book?.bookcase?.position },
+              {
+                fieldName: "Thư viện",
+                value: data?.book?.bookcase?.library?.name,
+              },
+              {
+                fieldName: "Trạng thái",
+                value: (
+                  <Tag
+                    color={
+                      data?.book?.status === BookStatus.AVAILABLE
+                        ? "green"
+                        : data?.book?.status === BookStatus.OVERDUE || overdued
+                        ? "red"
+                        : "yellow"
+                    }
+                  >
+                    {data?.book?.status === BookStatus.AVAILABLE
+                      ? "Đang trên kệ"
+                      : data?.book?.status === BookStatus.OVERDUE || overdued
+                      ? "Quá hạn"
+                      : "Đang mượn"}
+                  </Tag>
+                ),
+              },
               {
                 fieldName: "Hạn mức mượn",
-                value: data.borrowingDateLimit + " ngày",
+                value: data?.book.borrowingDateLimit + " ngày",
               },
             ]}
           />

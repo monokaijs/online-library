@@ -1,15 +1,16 @@
-import { BookStatus } from "@/lib/models/book.model";
+import { BookModel, BookStatus } from "@/lib/models/book.model";
+import { BookcaseModel } from "@/lib/models/bookcase.model";
 import {
   Borrow,
   BorrowDocument,
   BorrowModel,
   BorrowStatus,
 } from "@/lib/models/borrow.model";
+import dayjs from "dayjs";
 import { FilterQuery } from "mongoose";
-import { BookcaseModel } from '@/lib/models/bookcase.model';
+import { AccountModel } from "./../models/account.model";
 import accountService from "./account.service";
 import { bookService } from "./book.service";
-import dayjs from "dayjs";
 
 class BorrowService {
   async create(payload: any) {
@@ -29,15 +30,26 @@ class BorrowService {
 
   async get(page: number, limit: number, query?: Partial<Borrow>) {
     BookcaseModel.find();
-    
+
+    const existingBookIds = (await BookModel.find({}, "_id")).map(
+      (book) => book._id
+    );
+    const existingUserIds = (await AccountModel.find({}, "_id")).map(
+      (account) => account._id
+    );
+
     try {
       const options = {
         page,
         limit,
         populate: [
-          "user",
+          {
+            path: "user",
+            model: "Account",
+          },
           {
             path: "book",
+            model: "Book",
             populate: {
               path: "bookcase",
               populate: "library",
@@ -46,7 +58,11 @@ class BorrowService {
         ],
       };
 
-      const filter: FilterQuery<BorrowDocument> = {};
+      const filter: FilterQuery<BorrowDocument> = {
+        book: { $ne: null, $in: existingBookIds },
+        user: { $ne: null, $in: existingUserIds },
+      };
+
       //   if (query?.name) {
       //     filter.name = { $regex: new RegExp(query.name, "i") };
       //   }
@@ -94,7 +110,7 @@ class BorrowService {
   async getDetail(_id: string) {
     try {
       const borrowRecord = await this.getById(_id);
-      const user = await accountService.getAccountById(borrowRecord?.user._id);
+      const user = await accountService.getAccountById(borrowRecord?.user?._id);
       const history = await BorrowModel.find({ user: user?._id });
       const borrowing = history.filter((item) => {
         return item.status === BorrowStatus.BORROWING;
@@ -111,6 +127,23 @@ class BorrowService {
           analysis: { total: history.length, borrowing, returned, overdued },
         })
       );
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
+  async getAllByAccount(_id: string) {
+    try {
+      return BorrowModel.find({ user: _id }).populate([
+        "user",
+        {
+          path: "book",
+          populate: {
+            path: "bookcase",
+            populate: "library",
+          },
+        },
+      ]);
     } catch (error: any) {
       throw new Error(error.message);
     }
@@ -148,6 +181,20 @@ class BorrowService {
     } catch (error: any) {
       throw new Error(error.message);
     }
+  }
+
+  async getAllByBookId(bookId: string) {
+    const history = await BorrowModel.find({ book: bookId }).populate([
+      "user",
+      {
+        path: "book",
+        populate: {
+          path: "bookcase",
+          populate: "library",
+        },
+      },
+    ]);
+    return JSON.parse(JSON.stringify(history));
   }
 }
 

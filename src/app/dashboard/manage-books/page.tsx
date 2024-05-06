@@ -1,4 +1,6 @@
 "use client";
+import useDebounce from "@/lib/hooks/useDebounce";
+import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 import { Book, BookStatus } from "@/lib/models/book.model";
 import { Bookcase } from "@/lib/models/bookcase.model";
 import { toast } from "@/lib/utils/toast";
@@ -8,7 +10,18 @@ import {
   EyeOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Modal, Table, Tag, theme } from "antd";
+import {
+  Button,
+  Card,
+  Input,
+  Modal,
+  Select,
+  Table,
+  Tag,
+  Typography,
+  theme,
+} from "antd";
+import { Option } from "antd/es/mentions";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -18,23 +31,26 @@ import ViewBookModal from "./components/ViewBookModal";
 
 function ManageBook() {
   const { token } = theme.useToken();
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [detail, setDetail] = useState<Bookcase>();
+  const [query, setQuery] = useState("");
+  const queryDebounce = useDebounce(query);
 
   const createQueryString = useCallback(
     (paramsToUpdate: any) => {
       const updatedParams = new URLSearchParams(searchParams.toString());
       Object.entries(paramsToUpdate).forEach(([key, value]: any) => {
-        if (value === null || value === undefined) {
+        if (value === null || value === undefined || value === "") {
           updatedParams.delete(key);
         } else {
           updatedParams.set(key, value);
         }
       });
 
-      return updatedParams.toString();
+      window.history.pushState(null, "", `?${updatedParams.toString()}`);
     },
     [searchParams]
   );
@@ -53,8 +69,27 @@ function ManageBook() {
   });
 
   useEffect(() => {
-    getData(state);
-  }, []);
+    setLoading(true);
+    getData({
+      ...state,
+      limit: Number(searchParams.get("limit") ?? 20),
+      page: Number(searchParams.get("page") ?? 1),
+      filter: {
+        name: searchParams.get("name") ?? "",
+        type: searchParams.get("type") ?? "",
+      },
+    });
+  }, [pathname, searchParams]);
+
+  useDidMountEffect(() => {
+    setLoading(false);
+  }, [state]);
+
+  useDidMountEffect(() => {
+    createQueryString({
+      name: queryDebounce,
+    });
+  }, [queryDebounce]);
 
   useEffect(() => {
     toast(deleteState);
@@ -91,16 +126,25 @@ function ManageBook() {
       dataIndex: "borrowingDateLimit",
       key: "borrowingDateLimit",
       align: "center",
+      render: (item: any) => `${item} ngày`,
     },
-    {
-      title: "Thư viện",
-      dataIndex: "bookcase",
-      key: "bookcase",
-      align: "center",
-      render: (bookcase: any) => {
-        return <div>{bookcase?.library?.name}</div>;
-      },
-    },
+    searchParams.get("type") !== "trending"
+      ? {
+          title: "Thư viện",
+          dataIndex: "bookcase",
+          key: "bookcase",
+          align: "center",
+          render: (bookcase: any) => {
+            return <div>{bookcase?.library?.name}</div>;
+          },
+        }
+      : {
+          title: "Số lượt mượn",
+          dataIndex: "totalBorrowCount",
+          key: "totalBorrowCount",
+          align: "center",
+          render: (item: any) => `${item} lượt`,
+        },
     {
       title: "Tình trạng sách",
       key: "status",
@@ -200,11 +244,32 @@ function ManageBook() {
 
   return (
     <div>
+      {/* <Card className="mb-4">
+        <Typography.Title className="ma-0" level={3}>Quản lý sách</Typography.Title>
+      </Card> */}
       <div className={"flex gap-8 justify-between mb-4"}>
-        <div>
+        <div className="flex gap-4">
+          <Select
+            defaultValue={searchParams.get("type") ?? "all"}
+            style={{ minWidth: 150 }}
+            onChange={(e) => {
+              createQueryString({
+                type: e === "all" ? "" : e,
+              });
+            }}
+          >
+            <Option value="all">Tất cả sách</Option>
+            <Option value="new">Sách mới</Option>
+            <Option value="available">Sách trên kệ</Option>
+            <Option value="trending">Sách trending</Option>
+          </Select>
           <Input
             className={"bg-input-group-after"}
             placeholder={"Tìm kiếm..."}
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+            }}
             addonAfter={<SearchOutlined />}
           />
         </div>
@@ -221,8 +286,8 @@ function ManageBook() {
         </div>
       </div>
       <Table
-        loading={state.data.length == 0}
         rowKey="_id"
+        loading={loading}
         columns={columns}
         dataSource={state.data}
         pagination={{
@@ -234,13 +299,10 @@ function ManageBook() {
         }}
         onChange={(e) => {
           if (e.current && e.pageSize) {
-            router.push(
-              `${pathname}?${createQueryString({
-                page: e.current,
-                limit: e.pageSize,
-              })}`
-            );
-            getData({ limit: e.pageSize, page: e.current });
+            createQueryString({
+              page: e.current == 1 ? "" : e.current,
+              limit: e.pageSize == 20 ? "" : e.pageSize,
+            });
           }
         }}
         onRow={(record: any) => ({

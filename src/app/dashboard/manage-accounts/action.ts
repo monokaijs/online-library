@@ -83,3 +83,18 @@ export async function getAccountByIdAction(prev: any, _id: string) {
     };
   }
 }
+
+export async function getAccountDetailAction(_prev: any, _id: string){
+  try {
+    return {
+      data: await accountService.getAccountDetail(_id),
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+      data: undefined,
+    };
+  }
+}

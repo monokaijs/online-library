@@ -12,6 +12,10 @@ const AccountSchema = new mongoose.Schema<Account>({
     required: true,
     unique: true,
   },
+  userId: {
+    type: String,
+    unique: true,
+  },
   birthday: Date,
   fullName: String,
   phoneNumber: {

@@ -10,8 +10,8 @@ export enum BorrowStatus {
 
 export interface Borrow {
   _id?: any;
-  user: Account;
-  book: Book;
+  user?: Account;
+  book?: Book;
   phoneNumber: string;
   borrowDate: string;
   returnDate: string;

@@ -11,7 +11,7 @@ import * as cheerio from "cheerio";
 export interface GetBookPayload {
   page?: number;
   limit?: number;
-  filter?: Partial<Book>
+  filter?: any
 }
 
 export async function createBookAction(prev: any, payload: Book) {
@@ -96,6 +96,21 @@ export async function getBookByIdAction(prev: any, _id: string) {
   try {
     return {
       data: await bookService.getById(_id),
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+      data: undefined,
+    };
+  }
+}
+
+export async function getBookDetailAction(prev: any, _id: string) {
+  try {
+    return {
+      data: await bookService.getBookDetail(_id),
       success: true,
     };
   } catch (error: any) {

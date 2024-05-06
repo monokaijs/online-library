@@ -1,9 +1,9 @@
 "use client";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Input } from "antd";
+import { Button, Input } from "antd";
 import { useRouter } from "next/navigation";
 
-export default function ManageBookcasesHeader() {
+export default function ManageLocationsHeader() {
   const router = useRouter();
 
   return (
@@ -20,10 +20,10 @@ export default function ManageBookcasesHeader() {
         <Button
           type={"primary"}
           onClick={() => {
-            router.push("/dashboard/manage-bookcases/create");
+            router.push("/dashboard/manage-locations/create");
           }}
         >
-          Thêm tủ sách
+          Thêm thư viện
         </Button>
       </div>
     </div>

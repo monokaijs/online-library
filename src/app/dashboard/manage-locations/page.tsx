@@ -1,24 +1,22 @@
 "use client";
-import {
-  deleteBookcaseAction,
-  getBookcaseAction,
-} from "@/app/dashboard/manage-bookcases/action";
-import { Bookcase } from "@/lib/models/bookcase.model";
+import { deleteBookcaseAction } from "@/app/dashboard/manage-bookcases/action";
+import { Location } from "@/lib/models/library.model";
 import { toast } from "@/lib/utils/toast";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button, Modal, Table, theme } from "antd";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
-import ManageBookcasesHeader from "./components/ManageBookcasesHeader";
-import ViewBookcaseModal from "./components/ViewBookcaseModal";
+import { deleteLibraryAction, getLibraryAction } from "./action";
+import ManageLocationsHeader from "./components/ManageLocationsHeader";
+import ViewLocationModal from "./components/ViewLocationModal";
 
-function ManageBookcases() {
+function ManageLocations() {
   const { token } = theme.useToken();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [detail, setDetail] = useState<Bookcase>();
+  const [detail, setDetail] = useState<Location>();
 
   const createQueryString = useCallback(
     (paramsToUpdate: any) => {
@@ -36,27 +34,25 @@ function ManageBookcases() {
     [searchParams]
   );
 
-  const [state, getBookcases] = useFormState(getBookcaseAction, {
-    data: [],
-    limit: Number(searchParams.get("limit") ?? 20),
-    page: Number(searchParams.get("page") ?? 1),
-    totalPages: 0,
-    totalDocs: 0,
+  const [state, getLibrary] = useFormState(getLibraryAction, {
+    success: false,
+    data: undefined,
+    message: "",
   });
 
-  const [deleteState, deleteAction] = useFormState(deleteBookcaseAction, {
+  const [deleteState, deleteAction] = useFormState(deleteLibraryAction, {
     success: false,
     message: "",
   });
 
   useEffect(() => {
-    getBookcases(state);
+    getLibrary();
   }, []);
 
   useEffect(() => {
     toast(deleteState);
     if (deleteState.success) {
-      getBookcases(state);
+      getLibrary();
       setDetail(undefined);
     }
   }, [deleteState]);
@@ -72,15 +68,27 @@ function ManageBookcases() {
       align: "center",
     },
     {
-      title: "Ngăn sách",
-      dataIndex: "position",
-      key: "position",
+      title: "Cơ sở",
+      dataIndex: "name",
+      key: "name",
       align: "center",
     },
     {
-      title: "Thể loại",
-      dataIndex: "category",
-      key: "category",
+      title: "Địa chỉ",
+      dataIndex: "address",
+      key: "address",
+      align: "center",
+    },
+    {
+      title: "Thời gian mở cửa",
+      dataIndex: "address",
+      key: "address",
+      align: "center",
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "address",
+      key: "address",
       align: "center",
     },
     {
@@ -105,7 +113,7 @@ function ManageBookcases() {
             />
             <Button
               onClick={() => {
-                router.push(`/dashboard/manage-bookcases/update/${item?._id}`);
+                router.push(`/dashboard/manage-locations/update/${item?._id}`);
               }}
               type={"text"}
               shape={"circle"}
@@ -137,36 +145,18 @@ function ManageBookcases() {
 
   return (
     <div>
-      <ManageBookcasesHeader />
+      <ManageLocationsHeader />
       <Table
         rowKey="_id"
         columns={columns}
         dataSource={state.data}
-        pagination={{
-          total: state.totalDocs,
-          pageSize: state.limit,
-          current: state.page,
-          pageSizeOptions: [10, 20, 30, 50, 100],
-          showSizeChanger: true,
-        }}
-        onChange={(e) => {
-          if (e.current && e.pageSize) {
-            router.push(
-              `${pathname}?${createQueryString({
-                page: e.current,
-                limit: e.pageSize,
-              })}`
-            );
-            getBookcases({ limit: e.pageSize, page: e.current });
-          }
-        }}
         onRow={(record: any) => ({
           onClick: () => {
             setDetail(record);
           },
         })}
       />
-      <ViewBookcaseModal
+      <ViewLocationModal
         isOpen={!!detail}
         onCancel={() => {
           setDetail(undefined);
@@ -180,4 +170,4 @@ function ManageBookcases() {
   );
 }
 
-export default ManageBookcases;
+export default ManageLocations;

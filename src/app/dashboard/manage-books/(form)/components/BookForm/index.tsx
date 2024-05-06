@@ -23,7 +23,7 @@ import {
 import TextArea from "antd/es/input/TextArea";
 import { Option } from "antd/es/mentions";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
 interface FormProps {
@@ -109,6 +109,9 @@ function BookForm(props: FormProps) {
 
   return (
     <Card>
+      <Typography.Title level={4} className="mb-8">
+        {action == FormAction.UPDATE ? "Cập nhật" : "Thêm mới"} sách
+      </Typography.Title>
       <Form
         form={form}
         labelCol={{ flex: "120px" }}

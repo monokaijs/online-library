@@ -52,7 +52,7 @@ export default function DashboardLayoutContent(props: any) {
                 key: "home",
                 icon: <HomeOutlined />,
                 label: (
-                  <Link href={"/dashboard/manage-libs"}>Quản lý thư viện</Link>
+                  <Link href={"/dashboard/manage-locations"}>Quản lý thư viện</Link>
                 ),
               },
               {

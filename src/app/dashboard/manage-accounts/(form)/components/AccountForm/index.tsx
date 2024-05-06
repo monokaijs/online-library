@@ -6,6 +6,7 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import {
   Button,
+  Card,
   DatePicker,
   Form,
   Input,
@@ -66,90 +67,98 @@ function AccountForm({ account }: { account?: Account }) {
   };
 
   return (
-    <Form
-      onFinish={onFinish}
-      labelCol={{ flex: "200px" }}
-      labelAlign="left"
-      labelWrap
-      form={form}
-    >
-      <Form.Item
-        rules={[{ required: true, message: "Vui lòng nhập họ tên!" }]}
-        name="fullName"
-        label={"Họ và tên"}
+    <Card style={{ width: 714, margin: "0 auto" }}>
+      <Typography.Title level={4} className="mb-8">
+        {account ? "Cập nhật" : "Thêm"} người dùng
+      </Typography.Title>
+      <Form
+        onFinish={onFinish}
+        labelCol={{ flex: "200px" }}
+        labelAlign="left"
+        labelWrap
+        form={form}
       >
-        <Input placeholder={"Nguyễn Văn A"} />
-      </Form.Item>
-      <Form.Item
-        rules={[{ required: true, message: "Vui lòng nhập email!" }]}
-        name="email"
-        label={"Email"}
-      >
-        <Input disabled={!!account} placeholder={"example@gmail.com"} />
-      </Form.Item>
-      <Form.Item
-        rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
-        name="phoneNumber"
-        label={"Số điện thoại"}
-      >
-        <Input placeholder={"Số điện thoại..."} />
-      </Form.Item>
-      <Form.Item name="role" label={"Vai trò"}>
-        <Radio.Group
-          options={[
-            {
-              label: "Bạn đọc",
-              value: "user",
-            },
-            {
-              label: "Quản lý",
-              value: "admin",
-            },
-          ]}
-        />
-      </Form.Item>
-      <Form.Item name="identityNumber" label={"Số CCCD/CMND"}>
-        <Input placeholder={"Số CCCD/CMND..."} />
-      </Form.Item>
-      <Form.Item label={"Ngày sinh"} name={"birthday"}>
-        <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
-      </Form.Item>
-      <Form.Item name="gender" label={"Giới tính"}>
-        <Radio.Group
-          options={[
-            {
-              label: "Nam",
-              value: "male",
-            },
-            {
-              label: "Nữ",
-              value: "female",
-            },
-            {
-              label: "Khác",
-              value: "orther",
-            },
-          ]}
-        />
-      </Form.Item>
-      <Form.Item name="address" label={"Địa chỉ"}>
-        <Input.TextArea placeholder={"Địa chỉ..."} />
-      </Form.Item>
-      <div className={"flex justify-end"}>
-        <div className={"flex gap-9"}>
-          <Button
-            onClick={() => {
-              router.back();
-            }}
-          >
-            Hủy bỏ
-          </Button>
-          <Button htmlType="submit" type={"primary"}>
-            {account ? "Lưu lại" : "Thêm bạn đọc"}
-          </Button>
+        <Form.Item
+          rules={[{ required: true, message: "Vui lòng nhập họ tên!" }]}
+          name="fullName"
+          label={"Họ và tên"}
+        >
+          <Input placeholder={"Nguyễn Văn A"} />
+        </Form.Item>
+        <Form.Item
+          rules={[{ required: true, message: "Vui lòng nhập email!" }]}
+          name="email"
+          label={"Email"}
+        >
+          <Input disabled={!!account} placeholder={"example@gmail.com"} />
+        </Form.Item>
+        <Form.Item
+          rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
+          name="phoneNumber"
+          label={"Số điện thoại"}
+        >
+          <Input placeholder={"Số điện thoại"} />
+        </Form.Item>
+        <Form.Item name="userId" label={"Mã người dùng"}>
+          <Input placeholder={"Mã người dùng"} />
+        </Form.Item>
+        <Form.Item name="role" label={"Vai trò"}>
+          <Radio.Group
+            options={[
+              {
+                label: "Bạn đọc",
+                value: "user",
+              },
+              {
+                label: "Quản lý",
+                value: "admin",
+              },
+            ]}
+          />
+        </Form.Item>
+        <Form.Item name="identityNumber" label={"Số CCCD/CMND"}>
+          <Input placeholder={"Số CCCD/CMND"} type="number" />
+        </Form.Item>
+        <Form.Item label={"Ngày sinh"} name={"birthday"}>
+          <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
+        </Form.Item>
+        <Form.Item name="gender" label={"Giới tính"}>
+          <Radio.Group
+            options={[
+              {
+                label: "Nam",
+                value: "male",
+              },
+              {
+                label: "Nữ",
+                value: "female",
+              },
+              {
+                label: "Khác",
+                value: "orther",
+              },
+            ]}
+          />
+        </Form.Item>
+        <Form.Item name="address" label={"Địa chỉ"}>
+          <Input.TextArea placeholder={"Địa chỉ"} />
+        </Form.Item>
+        <div className={"flex justify-end"}>
+          <div className={"flex gap-9"}>
+            <Button
+              onClick={() => {
+                router.back();
+              }}
+            >
+              Hủy bỏ
+            </Button>
+            <Button htmlType="submit" type={"primary"}>
+              {account ? "Lưu lại" : "Thêm người dùng"}
+            </Button>
+          </div>
         </div>
-      </div>
-    </Form>
+      </Form>
+    </Card>
   );
 }
 

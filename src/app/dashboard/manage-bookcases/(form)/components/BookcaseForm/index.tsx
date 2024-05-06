@@ -3,7 +3,7 @@ import {
   createBookcaseAction,
   updateBookcaseAction,
 } from "@/app/dashboard/manage-bookcases/action";
-import { getLibraryAction } from "@/app/dashboard/manage-books/action";
+import { getLibraryAction } from "@/app/dashboard/manage-locations/action";
 import { FormAction } from "@/constants/app.constant";
 import { Location } from "@/lib/models/library.model";
 import { toast } from "@/lib/utils/toast";
@@ -16,16 +16,24 @@ import { useFormState } from "react-dom";
 interface BookcaseFormProps {
   action: FormAction;
   data?: any;
-  libraries?: any;
 }
 
 function BookcaseForm(props: BookcaseFormProps) {
   const router = useRouter();
-  const { action, data, libraries } = props;
+  const { action, data } = props;
   const {
     token: { colorPrimary },
   } = theme.useToken();
   const [form] = Form.useForm();
+
+  const [libraries, getLibaries] = useFormState(getLibraryAction, {
+    success: false,
+    message: "",
+  });
+
+  useEffect(() => {
+    getLibaries();
+  }, [])
 
   const [createState, createBookcase] = useFormState(createBookcaseAction, {
     success: false,
@@ -36,8 +44,6 @@ function BookcaseForm(props: BookcaseFormProps) {
     success: false,
     message: "",
   });
-
-  console.log(libraries);
 
   useEffect(() => {
     toast(createState);
@@ -67,61 +73,66 @@ function BookcaseForm(props: BookcaseFormProps) {
   };
 
   return (
-    <Form
-      form={form}
-      labelCol={{ flex: "200px" }}
-      labelAlign="left"
-      labelWrap
-      className={"form-item-label-no-colon"}
-      onFinish={onFinish}
-    >
-      <Form.Item
-        name="position"
-        label={
-          <Typography.Text style={{ color: colorPrimary }}>
-            Ngăn sách
-          </Typography.Text>
-        }
+    <>
+      <Typography.Title level={4} className="mb-8">
+        {action == FormAction.UPDATE ? "Cập nhật" : "Thêm"} tủ sách
+      </Typography.Title>
+      <Form
+        form={form}
+        labelCol={{ flex: "200px" }}
+        labelAlign="left"
+        labelWrap
+        className={"form-item-label-no-colon"}
+        onFinish={onFinish}
       >
-        <Input placeholder={"Mã ngăn sách"} />
-      </Form.Item>
-      <Form.Item
-        name="category"
-        label={
-          <Typography.Text style={{ color: colorPrimary }}>
-            Thể loại
-          </Typography.Text>
-        }
-      >
-        <Input placeholder={"Thể loại"} />
-      </Form.Item>
-      <Form.Item
-        name="library"
-        label={
-          <Typography.Text style={{ color: colorPrimary }}>
-            Thư viện
-          </Typography.Text>
-        }
-      >
-        <Select>
-          {libraries.map((item: Location) => {
-            return (
-              <Option key={item._id} value={item._id}>
-                {item?.name}
-              </Option>
-            );
-          })}
-        </Select>
-      </Form.Item>
-      <div className={"flex justify-end"}>
-        <div className={"flex gap-9"}>
-          <Button onClick={router.back}>Hủy bỏ</Button>
-          <Button type={"primary"} htmlType="submit">
-            {FormAction.CREATE === action ? " Thêm" : "Cập nhật"}
-          </Button>
+        <Form.Item
+          name="position"
+          label={
+            <Typography.Text style={{ color: colorPrimary }}>
+              Ngăn sách
+            </Typography.Text>
+          }
+        >
+          <Input placeholder={"Mã ngăn sách"} />
+        </Form.Item>
+        <Form.Item
+          name="category"
+          label={
+            <Typography.Text style={{ color: colorPrimary }}>
+              Thể loại
+            </Typography.Text>
+          }
+        >
+          <Input placeholder={"Thể loại"} />
+        </Form.Item>
+        <Form.Item
+          name="library"
+          label={
+            <Typography.Text style={{ color: colorPrimary }}>
+              Thư viện
+            </Typography.Text>
+          }
+        >
+          <Select>
+            {libraries?.data?.map((item: Location) => {
+              return (
+                <Option key={item._id} value={item._id}>
+                  {item?.name}
+                </Option>
+              );
+            })}
+          </Select>
+        </Form.Item>
+        <div className={"flex justify-end"}>
+          <div className={"flex gap-9"}>
+            <Button onClick={router.back}>Hủy bỏ</Button>
+            <Button type={"primary"} htmlType="submit">
+              {FormAction.CREATE === action ? " Thêm" : "Cập nhật"}
+            </Button>
+          </div>
         </div>
-      </div>
-    </Form>
+      </Form>
+    </>
   );
 }
 

@@ -121,7 +121,7 @@ function ManageAccounts() {
           >
             <Button
               onClick={() => {
-                setAccountDetail(item);
+                router.push(`/dashboard/manage-accounts/${item?._id}`);
               }}
               type={"text"}
               shape={"circle"}
@@ -165,7 +165,6 @@ function ManageAccounts() {
     <div>
       <ManageAccountsHeader />
       <Table
-        loading={state.accounts.length == 0}
         rowKey="_id"
         columns={columns}
         dataSource={state.accounts}

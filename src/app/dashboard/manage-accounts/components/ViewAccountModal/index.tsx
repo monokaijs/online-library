@@ -42,6 +42,11 @@ export default function ViewAccountModal(props: ViewAccountModalProps) {
                 {moment(accountDetail?.joinDate).format("DD/MM/YYYY")}
               </Typography>
               <Typography
+                onClick={() => {
+                  router.push(
+                    `/dashboard/manage-accounts/${accountDetail?._id}`
+                  );
+                }}
                 style={{
                   color: colorPrimary,
                   textDecoration: "underline",

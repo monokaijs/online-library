@@ -8,6 +8,7 @@ interface Account {
   googleId?: string;
   fullName: string;
   email: string;
+  userId: string;
   phoneNumber: string;
   identityNumber: string;
   password: string;

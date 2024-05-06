@@ -136,6 +136,9 @@ function BorrowForm(props: BorrowFormProps) {
 
   return (
     <Card style={{ maxWidth: 714, margin: "0 auto" }}>
+      <Typography.Title level={4} className="mb-8">
+        {action == FormAction.UPDATE ? "Cập nhật" : "Thêm mới"} phiếu mượn
+      </Typography.Title>
       <Form
         onFinish={onFinish}
         form={form}

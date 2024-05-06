@@ -63,9 +63,9 @@ export default function BorrowDetail() {
     );
   }
 
-  const user: Account = data?.borrowRecord?.user;
+  const user: Account | undefined = data?.borrowRecord?.user;
   const borrowRecord: Borrow = data?.borrowRecord;
-  const book: Book = data?.borrowRecord?.book;
+  const book: Book | undefined = data?.borrowRecord?.book;
   const analysis = data?.analysis;
 
   return (
@@ -97,13 +97,13 @@ export default function BorrowDetail() {
           />
           <div style={{ flex: 1 }}>
             <Typography.Title className="ma-0 mb-4" level={4}>
-              Độc giả: {user.fullName}
+              Bạn đọc: {user?.fullName}
             </Typography.Title>
             <Flex gap={32}>
               <ModalDetailInfo
                 title={false}
                 records={[
-                  { fieldName: "Vai trò", value: user.role },
+                  { fieldName: "Vai trò", value: user?.role },
                   { fieldName: "SĐT", value: borrowRecord.phoneNumber },
                   { fieldName: "Email", value: borrowRecord.email },
                   { fieldName: "Địa chỉ", value: borrowRecord.address },
@@ -139,17 +139,17 @@ export default function BorrowDetail() {
             <ModalDetailInfo
               title={false}
               records={[
-                { fieldName: "Mã sách", value: book.isbn },
+                { fieldName: "Mã sách", value: book?.isbn },
                 {
                   fieldName: "Thời gian",
-                  value: `${dayjs(borrowRecord.borrowDate).format(
+                  value: `${dayjs(borrowRecord?.borrowDate).format(
                     "DD/MM/YYYY"
-                  )} đến ${dayjs(borrowRecord.returnDate).format(
+                  )} đến ${dayjs(borrowRecord?.returnDate).format(
                     "DD/MM/YYYY"
                   )}`,
                 },
                 { fieldName: "Thư viện", value: book?.bookcase?.library?.name },
-                { fieldName: "Ghi chú", value: borrowRecord.note },
+                { fieldName: "Ghi chú", value: borrowRecord?.note },
               ]}
             />
           </div>
