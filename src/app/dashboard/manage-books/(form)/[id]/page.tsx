@@ -163,7 +163,7 @@ export default function BookDetail() {
               { fieldName: "Mã sách", value: data.isbn },
               { fieldName: "Thể loại", value: data?.bookcase?.category },
               { fieldName: "Kệ sách", value: data.bookcase.position },
-              { fieldName: "Thư viện", value: data.bookcase.library.name },
+              { fieldName: "Thư viện", value: data?.bookcase?.library?.name },
               { fieldName: "Trạng thái", value: data.status },
               {
                 fieldName: "Hạn mức mượn",

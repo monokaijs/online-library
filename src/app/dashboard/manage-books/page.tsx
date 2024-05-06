@@ -1,8 +1,5 @@
 "use client";
-import {
-  deleteBookcaseAction,
-  getBookcaseAction,
-} from "@/app/dashboard/manage-bookcases/action";
+import { Book, BookStatus } from "@/lib/models/book.model";
 import { Bookcase } from "@/lib/models/bookcase.model";
 import { toast } from "@/lib/utils/toast";
 import {
@@ -12,15 +9,12 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { Button, Input, Modal, Table, Tag, theme } from "antd";
+import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
+import { deleteBookAction, getBookAction } from "./action";
 import ViewBookModal from "./components/ViewBookModal";
-import { getBookAction, deleteBookAction } from "./action";
-import { Library } from "@/lib/models/library.model";
-import { render } from "nprogress";
-import { Book, BookStatus } from "@/lib/models/book.model";
-import dayjs from "dayjs";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -104,7 +98,7 @@ function ManageBook() {
       key: "bookcase",
       align: "center",
       render: (bookcase: any) => {
-        return <div>{bookcase?.library.name}</div>;
+        return <div>{bookcase?.library?.name}</div>;
       },
     },
     {
@@ -227,6 +221,7 @@ function ManageBook() {
         </div>
       </div>
       <Table
+        rowKey="_id"
         columns={columns}
         dataSource={state.data}
         pagination={{

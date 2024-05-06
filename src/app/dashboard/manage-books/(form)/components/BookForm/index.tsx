@@ -228,7 +228,7 @@ function BookForm(props: FormProps) {
                   >
                     {app.data?.libaries.map((item: any) => (
                       <Option value={item._id} key={item._id}>
-                        {item.name}
+                        {item?.name}
                       </Option>
                     ))}
                   </Select>
