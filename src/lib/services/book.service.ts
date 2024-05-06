@@ -5,7 +5,7 @@ import {
   BookStatus,
 } from "@/lib/models/book.model";
 import { FilterQuery } from "mongoose";
-import { LibraryModel } from "../models/library.model";
+import { LocationModel } from "../models/library.model";
 
 class BookService {
   async create(payload: Book) {
@@ -15,7 +15,7 @@ class BookService {
   }
 
   async get(page: number, limit: number, query?: Partial<Book>) {
-    await LibraryModel.find();
+    await LocationModel.find();
 
     try {
       const options = {

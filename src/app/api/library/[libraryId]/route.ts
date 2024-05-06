@@ -1,5 +1,5 @@
 import {NextRequest} from "next/server";
-import {LibraryModel} from "@/lib/models/library.model";
+import {LocationModel} from "@/lib/models/library.model";
 import httpStatus from "http-status";
 
 export async function GET(
@@ -8,7 +8,7 @@ export async function GET(
 ) {
   // Get library info
   const { libraryId } = params;
-  const library = await LibraryModel.findOne({
+  const library = await LocationModel.findOne({
     _id: libraryId
   });
   if (!library) return Response.json({
