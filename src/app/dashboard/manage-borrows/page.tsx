@@ -272,6 +272,7 @@ function ManageBook() {
         </div>
       </div>
       <Table
+        loading={loading}
         rowKey="_id"
         columns={columns}
         dataSource={state.data}
