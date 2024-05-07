@@ -16,11 +16,12 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
 function AccountForm({ account }: { account?: Account }) {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const [state, formAction] = useFormState(createAccountAction, {} as any);
   const [updateStatus, updateAccount] = useFormState(updateAccountAction, {
@@ -47,6 +48,10 @@ function AccountForm({ account }: { account?: Account }) {
   }, [updateStatus]);
 
   useEffect(() => {
+    setLoading(false);
+  }, [state, updateStatus]);
+
+  useEffect(() => {
     if (account) {
       form.setFieldsValue({
         ...account,
@@ -56,6 +61,7 @@ function AccountForm({ account }: { account?: Account }) {
   }, [account]);
 
   const onFinish = (values: any) => {
+    setLoading(true);
     values.birthday = new Date(values.birthday);
 
     if (account) {
@@ -72,6 +78,7 @@ function AccountForm({ account }: { account?: Account }) {
         {account ? "Cập nhật" : "Thêm"} người dùng
       </Typography.Title>
       <Form
+        disabled={loading}
         onFinish={onFinish}
         labelCol={{ flex: "200px" }}
         labelAlign="left"
@@ -156,7 +163,7 @@ function AccountForm({ account }: { account?: Account }) {
             >
               Hủy bỏ
             </Button>
-            <Button htmlType="submit" type={"primary"}>
+            <Button htmlType="submit" type={"primary"} loading={loading}>
               {account ? "Lưu lại" : "Thêm người dùng"}
             </Button>
           </div>

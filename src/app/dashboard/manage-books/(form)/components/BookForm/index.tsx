@@ -33,6 +33,8 @@ interface FormProps {
 
 function BookForm(props: FormProps) {
   const router = useRouter();
+  const [formLoading, setFormLoading] = useState(false);
+
   const { action, data } = props;
   const {
     token: { colorPrimary },
@@ -74,6 +76,7 @@ function BookForm(props: FormProps) {
   });
 
   useEffect(() => {
+    setFormLoading(false);
     toast(createState);
     if (createState.success) {
       router.back();
@@ -81,6 +84,7 @@ function BookForm(props: FormProps) {
   }, [createState]);
 
   useEffect(() => {
+    setFormLoading(false);
     toast(updateState);
     if (updateState.success) {
       router.back();
@@ -99,6 +103,7 @@ function BookForm(props: FormProps) {
   }, [data]);
 
   const onFinish = (values: any) => {
+    setFormLoading(true)
     if (action === FormAction.CREATE) {
       createBook(values);
     } else {
@@ -119,6 +124,7 @@ function BookForm(props: FormProps) {
         labelWrap
         className={"form-item-label-no-colon"}
         onFinish={onFinish}
+        disabled={formLoading}
       >
         <Row gutter={32}>
           <Col span={12}>
@@ -364,7 +370,7 @@ function BookForm(props: FormProps) {
         <div className={"flex justify-end"}>
           <div className={"flex gap-9"}>
             <Button onClick={router.back}>Hủy bỏ</Button>
-            <Button type={"primary"} htmlType="submit">
+            <Button type={"primary"} htmlType="submit" loading={formLoading}>
               {FormAction.CREATE === action ? " Thêm" : "Cập nhật"}
             </Button>
           </div>

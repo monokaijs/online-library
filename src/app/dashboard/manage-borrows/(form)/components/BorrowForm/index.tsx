@@ -1,6 +1,7 @@
 "use client";
 
 import { getAccountsAction } from "@/app/dashboard/manage-accounts/action";
+import { getBookAction } from "@/app/dashboard/manage-books/action";
 import {
   createBorrowAction,
   updateBorrowAction,
@@ -8,6 +9,7 @@ import {
 import { FormAction } from "@/constants/app.constant";
 import useDebounce from "@/lib/hooks/useDebounce";
 import { Book, BookStatus } from "@/lib/models/book.model";
+import { toast } from "@/lib/utils/toast";
 import {
   Button,
   Card,
@@ -20,15 +22,12 @@ import {
   Typography,
   theme,
 } from "antd";
+import { Option } from "antd/es/mentions";
 import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import "./style.css";
-import { useRouter } from "next/navigation";
-import { Borrow } from "@/lib/models/borrow.model";
-import { toast } from "@/lib/utils/toast";
-import { getBookAction } from "@/app/dashboard/manage-books/action";
-import { Option } from "antd/es/mentions";
 
 interface BorrowFormProps {
   action: FormAction;
@@ -41,6 +40,7 @@ function BorrowForm(props: BorrowFormProps) {
     token: { colorPrimary },
   } = theme.useToken();
 
+  const [formLoading, setFormLoading] = useState(false);
   const router = useRouter();
   const [form] = Form.useForm();
 
@@ -120,7 +120,12 @@ function BorrowForm(props: BorrowFormProps) {
     }
   }, [updateState]);
 
+  useEffect(() => {
+    setFormLoading(false);
+  }, [createState, updateState]);
+
   const onFinish = (values: any) => {
+    setFormLoading(true);
     values.library = JSON.parse(values.book)?.bookcase?.library?._id;
     values.book = JSON.parse(values.book)._id;
     values.user = JSON.parse(values.user)._id;
@@ -143,6 +148,7 @@ function BorrowForm(props: BorrowFormProps) {
       <Form
         onFinish={onFinish}
         form={form}
+        disabled={formLoading}
         labelCol={{ flex: "200px" }}
         labelAlign="left"
         labelWrap
@@ -341,7 +347,7 @@ function BorrowForm(props: BorrowFormProps) {
         <div className={"flex justify-end"}>
           <div className={"flex gap-9"}>
             <Button onClick={router.back}>Hủy bỏ</Button>
-            <Button type={"primary"} htmlType="submit">
+            <Button type={"primary"} htmlType="submit" loading={formLoading}>
               {FormAction.CREATE === action ? " Thêm" : "Cập nhật"}
             </Button>
           </div>
