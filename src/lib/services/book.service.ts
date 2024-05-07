@@ -90,13 +90,17 @@ class BookService {
           }
         });
 
-        return {
-          data: Object.values(groupByName) as Book[],
-          totalPages: 1,
-          totalDocs: result.length,
-          page,
-          limit: result.length,
-        };
+        return JSON.parse(
+          JSON.stringify({
+            data: Object.values(groupByName).sort(
+              (a: any, b: any) => b.totalBorrowCount - a.totalBorrowCount
+            ) as Book[],
+            totalPages: 1,
+            totalDocs: result.length,
+            page,
+            limit: result.length,
+          })
+        );
       }
 
       const result = await (BookModel as any).paginate(filter, options);

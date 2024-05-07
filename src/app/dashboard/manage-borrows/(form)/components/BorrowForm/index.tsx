@@ -121,6 +121,7 @@ function BorrowForm(props: BorrowFormProps) {
   }, [updateState]);
 
   const onFinish = (values: any) => {
+    values.library = JSON.parse(values.book)?.bookcase?.library?._id;
     values.book = JSON.parse(values.book)._id;
     values.user = JSON.parse(values.user)._id;
     values.borrowDate = new Date(values.borrowDate);

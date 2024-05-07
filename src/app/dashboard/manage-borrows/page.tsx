@@ -1,4 +1,5 @@
 "use client";
+import useDebounce from "@/lib/hooks/useDebounce";
 import { Book } from "@/lib/models/book.model";
 import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
 import { toast } from "@/lib/utils/toast";
@@ -8,7 +9,7 @@ import {
   EyeOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Modal, Table, theme } from "antd";
+import { Button, Input, Modal, Select, Table, theme } from "antd";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -16,6 +17,9 @@ import { useFormState } from "react-dom";
 import { deleteBorrowAction, getBorrowAction } from "./action";
 import Status from "./components/BorrowStatus";
 import ViewBorrowModal from "./components/ViewBorrowModal";
+import { Location } from "@/lib/models/library.model";
+import { Option } from "antd/es/mentions";
+import { getLibraryAction } from "../manage-locations/action";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -23,19 +27,26 @@ function ManageBook() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [detail, setDetail] = useState<Borrow>();
+  const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState(searchParams.get("query") ?? "");
+  const queryDebounce = useDebounce(query);
+
+  useEffect(() => {
+    createQueryString({ query: query });
+  }, [queryDebounce]);
 
   const createQueryString = useCallback(
     (paramsToUpdate: any) => {
       const updatedParams = new URLSearchParams(searchParams.toString());
       Object.entries(paramsToUpdate).forEach(([key, value]: any) => {
-        if (value === null || value === undefined) {
+        if (value === null || value === undefined || value === "") {
           updatedParams.delete(key);
         } else {
           updatedParams.set(key, value);
         }
       });
 
-      return updatedParams.toString();
+      window?.history?.pushState(null, "", `?${updatedParams.toString()}`);
     },
     [searchParams]
   );
@@ -48,14 +59,37 @@ function ManageBook() {
     totalDocs: 0,
   });
 
+  const [libraries, getLibraries] = useFormState(getLibraryAction, {
+    data: [],
+    success: false,
+  });
+
   const [deleteState, deleteAction] = useFormState(deleteBorrowAction, {
     success: false,
     message: "",
   });
 
   useEffect(() => {
-    getData(state);
+    getLibraries();
   }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    getData({
+      ...state,
+      limit: Number(searchParams.get("limit") ?? 20),
+      page: Number(searchParams.get("page") ?? 1),
+      filter: {
+        query: searchParams.get("query") ?? "",
+        status: searchParams.get("status") ?? "",
+        library: searchParams.get("library") ?? "",
+      },
+    });
+  }, [searchParams, pathname]);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [state]);
 
   useEffect(() => {
     toast(deleteState);
@@ -84,10 +118,10 @@ function ManageBook() {
     },
     {
       title: "Thư viện",
-      dataIndex: "book",
+      dataIndex: "library",
       key: "library",
       align: "center",
-      render: (item: Book) => item?.bookcase?.library?.name,
+      render: (item: Location) => item?.name,
     },
     {
       title: "Tên bạn đọc",
@@ -186,11 +220,43 @@ function ManageBook() {
   return (
     <div>
       <div className={"flex gap-8 justify-between mb-4"}>
-        <div>
+        <div className="flex gap-8">
+          <Select
+            style={{ minWidth: 150 }}
+            defaultValue="all"
+            onChange={(e) => {
+              createQueryString({
+                library: e == "all" ? "" : e,
+              });
+            }}
+          >
+            <Option value="all">Thư viện</Option>
+            {libraries?.data?.map((item: Location) => (
+              <Option value={item._id}>{item.name}</Option>
+            ))}
+          </Select>
+          <Select
+            style={{ minWidth: 150 }}
+            defaultValue="all"
+            onChange={(e) => {
+              createQueryString({
+                status: e == "all" ? "" : e,
+              });
+            }}
+          >
+            <Option value="all">Tất cả</Option>
+            <Option value="borrowing">Đang mượn</Option>
+            <Option value="returned">Đã trả</Option>
+            <Option value="ovedued">Quá hạn</Option>
+          </Select>
           <Input
             className={"bg-input-group-after"}
-            placeholder={"Tìm kiếm..."}
+            placeholder={"Nhập tên sách, bạn đọc..."}
             addonAfter={<SearchOutlined />}
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+            }}
           />
         </div>
 
@@ -218,13 +284,10 @@ function ManageBook() {
         }}
         onChange={(e) => {
           if (e.current && e.pageSize) {
-            router.push(
-              `${pathname}?${createQueryString({
-                page: e.current,
-                limit: e.pageSize,
-              })}`
-            );
-            getData({ limit: e.pageSize, page: e.current });
+            createQueryString({
+              page: e.current == 1 ? "" : e.current,
+              limit: e.pageSize == 20 ? "" : e.pageSize,
+            });
           }
         }}
         onRow={(record: any) => ({

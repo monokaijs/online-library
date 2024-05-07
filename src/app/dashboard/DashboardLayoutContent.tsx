@@ -46,7 +46,7 @@ export default function DashboardLayoutContent(props: any) {
               {
                 key: "dashboard",
                 icon: <BarChartOutlined />,
-                label: <Link href={"/"}>Trang chủ</Link>,
+                label: <Link href={"/dashboard"}>Trang chủ</Link>,
               },
               {
                 key: "home",

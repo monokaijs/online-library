@@ -13,10 +13,12 @@ import {
 } from "@/app/dashboard/manage-accounts/action";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "@/lib/utils/toast";
+import UserRole from "@/components/shared/UserRole";
 
 function ManageAccounts() {
   const { token } = theme.useToken();
   const { account } = useContext(SessionContext);
+  const [loading, setLoading] = useState(true);
   const [accountDetail, setAccountDetail] = useState<Account>();
 
   const router = useRouter();
@@ -27,14 +29,14 @@ function ManageAccounts() {
     (paramsToUpdate: any) => {
       const updatedParams = new URLSearchParams(searchParams.toString());
       Object.entries(paramsToUpdate).forEach(([key, value]: any) => {
-        if (value === null || value === undefined) {
+        if (value === null || value === undefined || value === "") {
           updatedParams.delete(key);
         } else {
           updatedParams.set(key, value);
         }
       });
 
-      return updatedParams.toString();
+      window.history.pushState(null, "", `?${updatedParams.toString()}`);
     },
     [searchParams]
   );
@@ -53,8 +55,21 @@ function ManageAccounts() {
   });
 
   useEffect(() => {
-    getAccounts(state);
-  }, []);
+    setLoading(true);
+    getAccounts({
+      ...state,
+      limit: Number(searchParams.get("limit") ?? 20),
+      page: Number(searchParams.get("page") ?? 1),
+      filter: {
+        fullName: searchParams.get("fullName") ?? "",
+        role: searchParams.get("role") ?? "",
+      },
+    });
+  }, [searchParams, pathname]);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [state]);
 
   useEffect(() => {
     toast(deleteState);
@@ -104,8 +119,7 @@ function ManageAccounts() {
       title: "Vai trò",
       dataIndex: "role",
       key: "role",
-      render: (role: string) =>
-        role === RoleEnum.USER ? "Bạn đọc" : role.toUpperCase(),
+      render: (role: string) => <UserRole role={role} />,
       align: "center",
     },
     {
@@ -165,6 +179,7 @@ function ManageAccounts() {
     <div>
       <ManageAccountsHeader />
       <Table
+        loading={loading}
         rowKey="_id"
         columns={columns}
         dataSource={state.accounts}
@@ -177,13 +192,10 @@ function ManageAccounts() {
         }}
         onChange={(e) => {
           if (e.current && e.pageSize) {
-            router.push(
-              `${pathname}?${createQueryString({
-                page: e.current,
-                limit: e.pageSize,
-              })}`
-            );
-            getAccounts({ limit: e.pageSize, page: e.current });
+            createQueryString({
+              page: e.current == 1 ? "" : e.current,
+              limit: e.pageSize == 20 ? "" : e.pageSize,
+            });
           }
         }}
         onRow={(record: any) => ({

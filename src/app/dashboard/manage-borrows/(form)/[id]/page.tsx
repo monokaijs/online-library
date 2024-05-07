@@ -29,6 +29,7 @@ import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
 import { Book } from "@/lib/models/book.model";
 import dayjs from "dayjs";
 import Status from "../../components/BorrowStatus";
+import UserRole from "@/components/shared/UserRole";
 
 export default function BorrowDetail() {
   const router = useRouter();
@@ -103,7 +104,10 @@ export default function BorrowDetail() {
               <ModalDetailInfo
                 title={false}
                 records={[
-                  { fieldName: "Vai trò", value: user?.role },
+                  {
+                    fieldName: "Vai trò",
+                    value: <UserRole role={user?.role} />,
+                  },
                   { fieldName: "SĐT", value: borrowRecord.phoneNumber },
                   { fieldName: "Email", value: borrowRecord.email },
                   { fieldName: "Địa chỉ", value: borrowRecord.address },

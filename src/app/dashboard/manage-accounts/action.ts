@@ -8,7 +8,7 @@ import { message } from "antd";
 export interface GetAccountPayload {
   page?: number;
   limit?: number;
-  filter?: Partial<Account>
+  filter?: any;
 }
 
 export async function deleteAccountAction(_: any, _id: string) {
@@ -84,7 +84,7 @@ export async function getAccountByIdAction(prev: any, _id: string) {
   }
 }
 
-export async function getAccountDetailAction(_prev: any, _id: string){
+export async function getAccountDetailAction(_prev: any, _id: string) {
   try {
     return {
       data: await accountService.getAccountDetail(_id),

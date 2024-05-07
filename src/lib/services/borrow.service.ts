@@ -28,7 +28,7 @@ class BorrowService {
     return JSON.parse(JSON.stringify(borrowRecord));
   }
 
-  async get(page: number, limit: number, query?: Partial<Borrow>) {
+  async get(page: number, limit: number, query?: any) {
     BookcaseModel.find();
 
     const existingBookIds = (await BookModel.find({}, "_id")).map(
@@ -48,6 +48,10 @@ class BorrowService {
             model: "Account",
           },
           {
+            path: "library",
+            model: "Location",
+          },
+          {
             path: "book",
             model: "Book",
             populate: {
@@ -56,6 +60,7 @@ class BorrowService {
             },
           },
         ],
+        sort: { createdAt: -1 }
       };
 
       const filter: FilterQuery<BorrowDocument> = {
@@ -63,9 +68,86 @@ class BorrowService {
         user: { $ne: null, $in: existingUserIds },
       };
 
-      //   if (query?.name) {
-      //     filter.name = { $regex: new RegExp(query.name, "i") };
-      //   }
+      if (query.status == "borrowing") {
+        filter.status = "borrowing";
+      }
+
+      if (query.status == "returned") {
+        filter.status = "returned";
+      }
+
+      if (query.status == "ovedued") {
+        filter.status = "ovedued";
+      }
+
+      if(query.library){
+        filter.library = query.library
+      }
+
+      if (query?.query) {
+        const res = (
+          await BorrowModel.aggregate([
+            {
+              $lookup: {
+                from: "accounts",
+                localField: "user",
+                foreignField: "_id",
+                as: "user",
+              },
+            },
+            {
+              $lookup: {
+                from: "books",
+                localField: "book",
+                foreignField: "_id",
+                as: "book",
+              },
+            },
+            {
+              $lookup: {
+                from: "locations",
+                localField: "library",
+                foreignField: "_id",
+                as: "library",
+              },
+            },
+            {
+              $match: {
+                $or: [
+                  { "book.name": { $regex: new RegExp(query.query, "i") } },
+                  { "user.fullName": { $regex: new RegExp(query.query, "i") } },
+                ],
+                "book._id": { $in: existingBookIds },
+                "user._id": { $in: existingUserIds },
+              },
+            },
+            {
+              $facet: {
+                metadata: [
+                  { $count: "totalDocs" },
+                  { $addFields: { page: page, limit: limit } },
+                ],
+                data: [{ $skip: page * limit - limit }, { $limit: limit }],
+              },
+            },
+          ])
+        )[0];
+
+        return JSON.parse(
+          JSON.stringify({
+            data: res.data.map((item: any) => ({
+              ...item,
+              user: item.user[0],
+              book: item.book[0],
+              library: item.library[0],
+            })),
+            totalPages: Math.ceil(res?.metadata?.[0]?.totalDocs / limit),
+            totalDocs: res?.metadata?.[0]?.totalDocs,
+            page,
+            limit,
+          })
+        );
+      }
 
       const result = await (BorrowModel as any).paginate(filter, options);
 

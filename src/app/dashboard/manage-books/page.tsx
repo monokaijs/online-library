@@ -101,7 +101,7 @@ function ManageBook() {
 
   const columns: any = [
     {
-      title: "STT",
+      title: searchParams.get("type") === "trending" ? "TOP" : "STT",
       key: "index",
       render: (_: any, record: any, index: number) => {
         ++index;

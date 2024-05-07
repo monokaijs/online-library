@@ -102,7 +102,7 @@ function AccountForm({ account }: { account?: Account }) {
         <Form.Item name="userId" label={"Mã người dùng"}>
           <Input placeholder={"Mã người dùng"} />
         </Form.Item>
-        <Form.Item name="role" label={"Vai trò"}>
+        <Form.Item name="role" label={"Vai trò"} initialValue={"user"}>
           <Radio.Group
             options={[
               {
@@ -110,7 +110,11 @@ function AccountForm({ account }: { account?: Account }) {
                 value: "user",
               },
               {
-                label: "Quản lý",
+                label: "Thủ thư",
+                value: "manager",
+              },
+              {
+                label: "Quản trị viên",
                 value: "admin",
               },
             ]}
@@ -122,7 +126,7 @@ function AccountForm({ account }: { account?: Account }) {
         <Form.Item label={"Ngày sinh"} name={"birthday"}>
           <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
         </Form.Item>
-        <Form.Item name="gender" label={"Giới tính"}>
+        <Form.Item name="gender" label={"Giới tính"} initialValue={"male"}>
           <Radio.Group
             options={[
               {

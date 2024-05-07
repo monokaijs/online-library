@@ -4,6 +4,7 @@ import paginate from 'mongoose-paginate-v2';
 export enum RoleEnum {
   USER = 'user',
   ADMIN = 'admin',
+  MANAGER = 'manager',
 }
 
 const AccountSchema = new mongoose.Schema<Account>({

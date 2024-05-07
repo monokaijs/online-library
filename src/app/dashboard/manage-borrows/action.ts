@@ -7,7 +7,7 @@ import { dbService } from "@/lib/services/db.service";
 export interface GetBookPayload {
   page?: number;
   limit?: number;
-  filter?: Partial<Borrow>;
+  filter?: any
 }
 
 export async function createBorrowAction(prev: any, payload: Borrow) {

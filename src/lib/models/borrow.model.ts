@@ -1,6 +1,7 @@
 import { Book } from "@/lib/models/book.model";
 import mongoose, { Document, Model } from "mongoose";
 import paginate from "mongoose-paginate-v2";
+import { Location } from "@/lib/models/library.model";
 
 export enum BorrowStatus {
   OVERDUE = "overdue",
@@ -12,6 +13,7 @@ export interface Borrow {
   _id?: any;
   user?: Account;
   book?: Book;
+  library?: Location;
   phoneNumber: string;
   borrowDate: string;
   returnDate: string;
@@ -32,6 +34,10 @@ const BorrowSchema = new mongoose.Schema<Borrow>(
     book: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Book",
+    },
+    library: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Location",
     },
     phoneNumber: String,
     borrowDate: String,

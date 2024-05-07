@@ -76,7 +76,7 @@ class AccountService {
     }
   }
 
-  async getAccounts(page: number, limit: number, query?: Partial<Account>) {
+  async getAccounts(page: number, limit: number, query?: any) {
     try {
       const options = {
         page,
@@ -87,6 +87,10 @@ class AccountService {
 
       if (query?.fullName) {
         filter.fullName = { $regex: new RegExp(query.fullName, "i") };
+      }
+
+      if (query?.role && query.role !== "all") {
+        filter.role = query.role;
       }
 
       const result = await (AccountModel as any).paginate(filter, options);

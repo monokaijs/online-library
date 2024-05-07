@@ -10,6 +10,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import { getAccountDetailAction } from "../../action";
+import UserRole from "@/components/shared/UserRole";
 
 function AccountDetailPage() {
   const { id } = useParams();
@@ -54,7 +55,7 @@ function AccountDetailPage() {
                 {account?.fullName}
               </Typography.Title>
               <Typography.Text type="secondary">
-                {account?.role == RoleEnum.ADMIN ? "ADMIN" : "Bạn đọc"}
+                <UserRole role={account?.role} />
               </Typography.Text>
               {account?.userId && (
                 <Typography.Text strong>{account?.userId}</Typography.Text>

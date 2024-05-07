@@ -22,3 +22,21 @@ body {
 .ant-table-row {
   cursor: pointer;
 }
+
+.ant-menu-item {
+  transition: none !important;
+}
+
+.ant-menu-item * {
+  transition: none !important;
+}
+
+.ant-menu-item-selected {
+  background-color: #157E82 !important;
+  transition: none !important;
+  color: white !important;
+}
+
+.ant-menu-item-selected * {
+  transition: none !important;
+}
