@@ -149,7 +149,7 @@ function ManageLocations() {
       <Table
         rowKey="_id"
         columns={columns}
-        dataSource={state.data}
+        dataSource={state?.data}
         onRow={(record: any) => ({
           onClick: () => {
             setDetail(record);

@@ -36,7 +36,7 @@ function ManageAccounts() {
         }
       });
 
-      window.history.pushState(null, "", `?${updatedParams.toString()}`);
+      router.push(pathname + "?" + updatedParams.toString());
     },
     [searchParams]
   );
@@ -93,19 +93,31 @@ function ManageAccounts() {
       title: "Họ tên",
       dataIndex: "fullName",
       key: "fullName",
-      align: "center",
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+    },
+    {
+      title: "Mã người dùng",
+      dataIndex: "userId",
+      key: "userId",
+      render: (item: string) => (item?.length ? item : "-"),
+      align: "center",
+    },
+    {
+      title: "Số lượt mượn",
+      dataIndex: "totalBorrow",
+      key: "totalBorrow",
+      render: (item: string) => item ?? "-",
       align: "center",
     },
     {
       title: "SĐT",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
-      render: (item: string) => item ?? "Không rõ",
+      render: (item: string) => (item?.length ? item : "-"),
       align: "center",
     },
     // {
@@ -200,7 +212,8 @@ function ManageAccounts() {
         }}
         onRow={(record: any) => ({
           onClick: () => {
-            setAccountDetail(record);
+            // setAccountDetail(record);
+            router.push(`/dashboard/manage-accounts/${record?._id}`);
           },
         })}
       />

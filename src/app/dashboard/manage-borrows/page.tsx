@@ -46,7 +46,7 @@ function ManageBook() {
         }
       });
 
-      window?.history?.pushState(null, "", `?${updatedParams.toString()}`);
+      router.push(pathname + "?" + updatedParams.toString());
     },
     [searchParams]
   );
@@ -223,7 +223,7 @@ function ManageBook() {
         <div className="flex gap-8">
           <Select
             style={{ minWidth: 150 }}
-            defaultValue="all"
+            defaultValue={searchParams.get("library") ?? "all"}
             onChange={(e) => {
               createQueryString({
                 library: e == "all" ? "" : e,
@@ -237,7 +237,7 @@ function ManageBook() {
           </Select>
           <Select
             style={{ minWidth: 150 }}
-            defaultValue="all"
+            defaultValue={searchParams.get("status") ?? "all"}
             onChange={(e) => {
               createQueryString({
                 status: e == "all" ? "" : e,
@@ -275,7 +275,7 @@ function ManageBook() {
         loading={loading}
         rowKey="_id"
         columns={columns}
-        dataSource={state.data}
+        dataSource={state?.data}
         pagination={{
           total: state.totalDocs,
           pageSize: state.limit,

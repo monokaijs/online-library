@@ -22,10 +22,13 @@ import {
   TableOutlined,
   UserOutlined,
   BookOutlined,
+  DoubleLeftOutlined,
+  DoubleRightOutlined
 } from "@ant-design/icons";
 import LogoMain from "@/assets/figures/logo-main.png";
+import LogoMainCollapsed from "@/assets/figures/logo-main-collapsed.png";
 import Link from "next/link";
-import { useContext } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import { SessionContext } from "@/components/shared/SessionContext";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -34,11 +37,44 @@ export default function DashboardLayoutContent(props: any) {
   const router = useRouter();
   const pathname = usePathname();
 
+  const [collapsed, setCollapsed] = useState(false);
+
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
+
+  useLayoutEffect(() => {
+    function updateSize() {
+      if(window.innerWidth < 1300){
+        setCollapsed(true);
+      }else{
+        setCollapsed(false);
+      }
+    }
+    window.addEventListener('resize', updateSize);
+    updateSize();
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
   return (
     <Layout className={styles.dashboardLayout}>
-      <Layout.Sider width={230} className={styles.sider}>
+      <Layout.Sider
+        width={230}
+        className={styles.sider}
+        collapsed={collapsed}
+        collapsible
+        onCollapse={toggleCollapsed}
+        trigger={collapsed ? <DoubleRightOutlined style={{color: "black"}} /> : <DoubleLeftOutlined style={{color: "black"}} />}
+      >
         <div className={styles.siderContent}>
-          <img src={LogoMain.src} alt={"Logo"} className={styles.logo} />
+          <img
+            onClick={() => {
+              router.push("/dashboard")
+            }}
+            src={collapsed ? LogoMainCollapsed.src : LogoMain.src}
+            alt={"Logo"}
+            className={styles.logo}
+          />
           <Menu
             mode={"inline"}
             className={styles.menu}
@@ -52,7 +88,9 @@ export default function DashboardLayoutContent(props: any) {
                 key: "home",
                 icon: <HomeOutlined />,
                 label: (
-                  <Link href={"/dashboard/manage-locations"}>Quản lý thư viện</Link>
+                  <Link href={"/dashboard/manage-locations"}>
+                    Quản lý thư viện
+                  </Link>
                 ),
               },
               {

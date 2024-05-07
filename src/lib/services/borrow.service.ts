@@ -135,7 +135,7 @@ class BorrowService {
 
         return JSON.parse(
           JSON.stringify({
-            data: res.data.map((item: any) => ({
+            data: res?.data.map((item: any) => ({
               ...item,
               user: item.user[0],
               book: item.book[0],

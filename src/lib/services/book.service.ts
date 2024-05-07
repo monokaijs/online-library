@@ -30,11 +30,16 @@ class BookService {
           },
           "borrowRecord",
         ],
+        sort: { createdAt: -1 }
       };
 
       const filter: FilterQuery<BookDocument> = {};
-      if (query?.name) {
-        filter.name = { $regex: new RegExp(query.name, "i") };
+      if (query?.query) {
+        filter.$or = [
+          { name: { $regex: new RegExp(query.query, "i") } },
+          { authorName: { $regex: new RegExp(query.query, "i") } },
+          { isbn: { $regex: new RegExp(query.query, "i") } },
+        ];
       }
       if (query?.status) {
         filter.status = query.status;

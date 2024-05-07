@@ -50,7 +50,7 @@ function ManageBook() {
         }
       });
 
-      window.history.pushState(null, "", `?${updatedParams.toString()}`);
+      router.push(pathname + "?" + updatedParams.toString());
     },
     [searchParams]
   );
@@ -75,7 +75,7 @@ function ManageBook() {
       limit: Number(searchParams.get("limit") ?? 20),
       page: Number(searchParams.get("page") ?? 1),
       filter: {
-        name: searchParams.get("name") ?? "",
+        query: searchParams.get("name") ?? "",
         type: searchParams.get("type") ?? "",
       },
     });
@@ -113,13 +113,18 @@ function ManageBook() {
       title: "Tên sách",
       dataIndex: "name",
       key: "name",
-      align: "center",
     },
     {
       title: "Tác giả",
       dataIndex: "authorName",
       key: "authorName",
+    },
+    {
+      title: "Mã sách",
+      dataIndex: "isbn",
+      key: "isbn",
       align: "center",
+      render: (item: string) => item?.toUpperCase(),
     },
     {
       title: "Hạn mức",
@@ -143,7 +148,7 @@ function ManageBook() {
           dataIndex: "totalBorrowCount",
           key: "totalBorrowCount",
           align: "center",
-          render: (item: any) => `${item} lượt`,
+          render: (item: string) => item ?? "-",
         },
     {
       title: "Tình trạng sách",
@@ -259,7 +264,6 @@ function ManageBook() {
             }}
           >
             <Option value="all">Tất cả sách</Option>
-            <Option value="new">Sách mới</Option>
             <Option value="available">Sách trên kệ</Option>
             <Option value="trending">Sách trending</Option>
           </Select>
@@ -289,7 +293,7 @@ function ManageBook() {
         rowKey="_id"
         loading={loading}
         columns={columns}
-        dataSource={state.data}
+        dataSource={state?.data}
         pagination={{
           total: state.totalDocs,
           pageSize: state.limit,

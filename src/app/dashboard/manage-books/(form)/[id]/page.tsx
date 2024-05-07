@@ -221,10 +221,7 @@ export default function BookDetail() {
                   key={item._id}
                   className="flex"
                   style={{
-                    borderBottom:
-                      index < data?.history?.length - 1
-                        ? "1px solid #F0F0F0"
-                        : "",
+                    borderBottom: "1px solid #F0F0F0",
                   }}
                 >
                   <Typography.Text
@@ -233,8 +230,9 @@ export default function BookDetail() {
                       width: "32%",
                       borderRight: "1px solid #F0F0F0",
                     }}
+                    type={(item?.user?.fullName ? "" : "secondary") as any}
                   >
-                    {item?.user?.fullName}
+                    {item?.user?.fullName ?? "Tài khoản bị xóa"}
                   </Typography.Text>
                   <Typography.Text
                     className="text-center py-3"
@@ -274,6 +272,14 @@ export default function BookDetail() {
                 </div>
               );
             })}
+
+            {data?.history?.length == 0 && (
+              <div className="flex justify-center align-center py-12">
+                <Typography.Text type="secondary">
+                  Không có lịch sử mượn.
+                </Typography.Text>
+              </div>
+            )}
           </div>
         </div>
       </Col>

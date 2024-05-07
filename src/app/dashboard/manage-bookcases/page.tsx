@@ -31,7 +31,7 @@ function ManageBookcases() {
         }
       });
 
-      return updatedParams.toString();
+      router.push(pathname + "?" + updatedParams.toString());
     },
     [searchParams]
   );
@@ -141,7 +141,7 @@ function ManageBookcases() {
       <Table
         rowKey="_id"
         columns={columns}
-        dataSource={state.data}
+        dataSource={state?.data}
         pagination={{
           total: state.totalDocs,
           pageSize: state.limit,
@@ -151,12 +151,10 @@ function ManageBookcases() {
         }}
         onChange={(e) => {
           if (e.current && e.pageSize) {
-            router.push(
-              `${pathname}?${createQueryString({
-                page: e.current,
-                limit: e.pageSize,
-              })}`
-            );
+            createQueryString({
+              page: e.current,
+              limit: e.pageSize,
+            });
             getBookcases({ limit: e.pageSize, page: e.current });
           }
         }}

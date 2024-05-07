@@ -55,7 +55,7 @@ function BookForm(props: FormProps) {
     message: "",
   });
 
-  const isCustomImage = !images.data?.includes(imageSelected) && imageSelected;
+  const isCustomImage = !images?.data?.includes(imageSelected) && imageSelected;
 
   useEffect(() => {
     getLibrary();
@@ -235,7 +235,7 @@ function BookForm(props: FormProps) {
                       form.setFieldValue("bookcase", undefined);
                     }}
                   >
-                    {app.data?.libaries.map((item: any) => (
+                    {app?.data?.libaries.map((item: any) => (
                       <Option value={item._id} key={item._id}>
                         {item?.name}
                       </Option>
@@ -254,7 +254,7 @@ function BookForm(props: FormProps) {
                   }
                 >
                   <Select>
-                    {app.data?.bookcases.map(
+                    {app?.data?.bookcases.map(
                       (item: any) =>
                         item?.library?._id == libraryActive && (
                           <Option value={item._id} key={item._id}>
@@ -302,7 +302,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              {(images.data && images.data?.length > 0) || imageSelected ? (
+              {(images?.data && images?.data?.length > 0) || imageSelected ? (
                 <div
                   style={{
                     display: "grid",
@@ -332,7 +332,7 @@ function BookForm(props: FormProps) {
                       />
                     </div>
                   )}
-                  {images.data?.slice(0, isCustomImage ? 5 : 6)?.map((item) => (
+                  {images?.data?.slice(0, isCustomImage ? 5 : 6)?.map((item) => (
                     <div
                       key={item}
                       style={{

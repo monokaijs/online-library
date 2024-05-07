@@ -1,27 +1,48 @@
 "use client";
 
 import Status from "@/app/dashboard/manage-borrows/components/BorrowStatus";
-import { RoleEnum } from "@/lib/models/account.model";
+import UserRole from "@/components/shared/UserRole";
 import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
-import { EyeOutlined } from "@ant-design/icons";
-import { Button, Card, Flex, Typography, theme } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  MoreOutlined,
+} from "@ant-design/icons";
+import { Button, Card, Dropdown, Flex, Modal, Typography, theme } from "antd";
 import dayjs from "dayjs";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useFormState } from "react-dom";
-import { getAccountDetailAction } from "../../action";
-import UserRole from "@/components/shared/UserRole";
+import { deleteAccountAction, getAccountDetailAction } from "../../action";
+import { toast } from "@/lib/utils/toast";
+import { SessionContext } from "@/components/shared/SessionContext";
 
 function AccountDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const { token } = theme.useToken();
+  const ctx = useContext(SessionContext);
+
 
   const [{ data }, getAccountDetail] = useFormState(getAccountDetailAction, {
     success: false,
     data: undefined,
     message: "",
   });
+
+  
+  const [deleteState, deleteAction] = useFormState(deleteAccountAction, {
+    success: false,
+    message: "",
+  });
+
+  useEffect(() => {
+    toast(deleteState);
+    if (deleteState.success) {
+      router.push(`/dashboard/manage-books`);
+    }
+  }, [deleteState]);
 
   useEffect(() => {
     getAccountDetail(id as string);
@@ -51,9 +72,52 @@ function AccountDetailPage() {
             />
 
             <div className="flex flex-col">
-              <Typography.Title className="mb-1" level={5}>
-                {account?.fullName}
-              </Typography.Title>
+              <Flex justify="space-between" className="mb-1" align="center" gap={4}>
+                <Typography.Title className="ma-0" level={5}>
+                  {account?.fullName}
+                </Typography.Title>
+
+                <Dropdown
+                  menu={{
+                    items: [
+                      {
+                        icon: <EditOutlined />,
+                        key: "edit",
+                        label: "Sửa thông tin",
+                        onClick: () => {
+                          router.push(`/dashboard/manage-accounts/update/${id}`);
+                        },
+                      },
+                      {
+                        key: "d",
+                        type: "divider",
+                      },
+                      {
+                        icon: <DeleteOutlined />,
+                        key: "delete",
+                        label: "Xóa sách",
+                        onClick: () => {
+                          Modal.confirm({
+                            title: "Hành động này không thể hoàn tác!",
+                            content: `Xác nhận xóa sách`,
+                            okText: "Xóa",
+                            cancelText: "Hủy",
+                            onOk: () => {
+                              deleteAction(id as string);
+                            },
+                          });
+                        },
+                        disabled: id === ctx.account?._id
+                      },
+                    ],
+                  }}
+                  trigger={["click"]}
+                >
+                  <Button type="text" shape="circle">
+                    <MoreOutlined />
+                  </Button>
+                </Dropdown>
+              </Flex>
               <Typography.Text type="secondary">
                 <UserRole role={account?.role} />
               </Typography.Text>
@@ -85,8 +149,12 @@ function AccountDetailPage() {
             <Typography.Text strong>
               {account?.gender == "male" ? "Nam" : "Nữ"}
             </Typography.Text>
-            <Typography.Text strong>{account?.email}</Typography.Text>
-            <Typography.Text strong>{account?.address}</Typography.Text>
+            <Typography.Text strong className="one-line">
+              {account?.email}
+            </Typography.Text>
+            <Typography.Text strong className="one-line">
+              {account?.address}
+            </Typography.Text>
 
             <div style={{ gridColumn: "span 3 / span 3", marginTop: 12 }}></div>
 
@@ -94,31 +162,27 @@ function AccountDetailPage() {
             <Typography.Text type="secondary">Số điện thoại</Typography.Text>
             <Typography.Text type="secondary">Số CCCD</Typography.Text>
 
-            <Typography.Text strong>
+            <Typography.Text strong className="one-line">
               {dayjs(account?.birthday).format("DD/MM/YYYY")}
             </Typography.Text>
-            <Typography.Text strong>{account?.phoneNumber}</Typography.Text>
-            <Typography.Text strong>{account?.identityNumber}</Typography.Text>
+            <Typography.Text strong className="one-line">
+              {account?.phoneNumber}
+            </Typography.Text>
+            <Typography.Text strong className="one-line">
+              {account?.identityNumber}
+            </Typography.Text>
           </div>
         </Card>
-        <Card style={{ flex: 1 }}>
+        <Card style={{ paddingRight: 60 }}>
           <div className="flex flex-col">
             <Typography.Title className="mb-1" level={5}>
               Sách
             </Typography.Title>
             <div className="flex flex-col gap-2">
-              <Typography.Text>Đã mượn: {totalBorrow} lượt</Typography.Text>
+              <Typography.Text>Đã mượn: {totalBorrow}</Typography.Text>
               <Typography.Text>Đang mượn: {totalBorrowing}</Typography.Text>
-              <Typography.Text>
-                Đã trả: {totalReturned} (
-                {Math.round((totalReturned * 100) / totalBorrow)}
-                %)
-              </Typography.Text>
-              <Typography.Text>
-                Số lần chậm: {totalOverdued} (
-                {Math.round((totalOverdued * 100) / totalBorrow)}
-                %)
-              </Typography.Text>
+              <Typography.Text>Đã trả: {totalReturned}</Typography.Text>
+              <Typography.Text>Số lần chậm: {totalOverdued}</Typography.Text>
             </div>
           </div>
         </Card>
@@ -224,10 +288,7 @@ function AccountDetailPage() {
                   key={item._id}
                   className="flex"
                   style={{
-                    borderBottom:
-                      index < data?.history?.length - 1
-                        ? "1px solid #F0F0F0"
-                        : "",
+                    borderBottom: "1px solid #F0F0F0",
                   }}
                 >
                   <Typography.Text
@@ -295,6 +356,14 @@ function AccountDetailPage() {
                 </div>
               );
             })}
+
+            {history?.length == 0 && (
+              <div className="flex justify-center align-center py-12">
+                <Typography.Text type="secondary">
+                  Không có lịch sử mượn.
+                </Typography.Text>
+              </div>
+            )}
           </div>
         </div>
       </div>

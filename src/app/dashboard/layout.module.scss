@@ -9,8 +9,10 @@
       height: 100%;
       flex-direction: column;
       .logo {
-        width: 140px;
         align-self: center;
+        height: 64px;
+        object-fit: cover;
+        cursor: pointer;
         // margin-top: 24px;
       }
       .menu {

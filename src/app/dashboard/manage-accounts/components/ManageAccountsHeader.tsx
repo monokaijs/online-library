@@ -1,7 +1,7 @@
 "use client";
 import { Button, Input, Select } from "antd";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import useDebounce from "@/lib/hooks/useDebounce";
 import { Option } from "antd/es/mentions";
@@ -11,6 +11,7 @@ function ManageAccountsHeader() {
   const [query, setQuery] = useState("");
   const searchParams = useSearchParams();
   const queryDebounce = useDebounce(query);
+  const pathname = usePathname();
 
   const createQueryString = useCallback(
     (paramsToUpdate: any) => {
@@ -23,7 +24,7 @@ function ManageAccountsHeader() {
         }
       });
 
-      window.history.pushState(null, "", `?${updatedParams.toString()}`);
+      router.push(pathname + "?" + updatedParams.toString());
     },
     [searchParams]
   );
@@ -37,7 +38,7 @@ function ManageAccountsHeader() {
       <div className={"flex gap-8"}>
         <Select
           style={{ minWidth: 100 }}
-          defaultValue="all"
+          defaultValue={searchParams.get("role") ?? "all"}
           onChange={(e) => {
             createQueryString({
               role: e == "all" ? "" : e,

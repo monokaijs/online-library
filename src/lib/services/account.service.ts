@@ -4,9 +4,10 @@ import {
   AccountModel,
   RoleEnum,
 } from "@/lib/models/account.model";
+import { BorrowModel } from "@/lib/models/borrow.model";
+import { borrowService } from "@/lib/services/borrow.service";
 import securityService from "@/lib/services/security.service";
-import { FilterQuery, PaginateModel } from "mongoose";
-import { borrowService } from "./borrow.service";
+import { FilterQuery } from "mongoose";
 
 export interface AccountQueries {
   page?: number;
@@ -48,7 +49,7 @@ class AccountService {
       const account = await AccountModel.findById(accountId);
       return JSON.parse(JSON.stringify(account));
     } catch (error: any) {
-      throw new Error(`Error getting account: ${error.message}`);
+      throw new Error(error.message);
     }
   }
 
@@ -57,6 +58,13 @@ class AccountService {
     updateData: Partial<AccountDocument>
   ): Promise<AccountDocument | null> {
     try {
+      if (updateData.userId) {
+        const userIdExisting = await AccountModel.countDocuments({
+          userId: updateData.userId,
+        });
+        if (userIdExisting > 0) throw new Error("Mã người dùng đã tồn tại");
+      }
+
       const updatedAccount = await AccountModel.findByIdAndUpdate(
         accountId,
         updateData,
@@ -64,7 +72,7 @@ class AccountService {
       );
       return updatedAccount;
     } catch (error: any) {
-      throw new Error(`Error updating account: ${error.message}`);
+      throw new Error(error.message);
     }
   }
 
@@ -72,7 +80,7 @@ class AccountService {
     try {
       await AccountModel.findByIdAndDelete(accountId);
     } catch (error: any) {
-      throw new Error(`Error deleting account: ${error.message}`);
+      throw new Error(error.message);
     }
   }
 
@@ -86,7 +94,10 @@ class AccountService {
       const filter: FilterQuery<AccountDocument> = {};
 
       if (query?.fullName) {
-        filter.fullName = { $regex: new RegExp(query.fullName, "i") };
+        filter.$or = [
+          { fullName: { $regex: new RegExp(query.fullName, "i") } },
+          { userId: { $regex: new RegExp(query.fullName, "i") } },
+        ];
       }
 
       if (query?.role && query.role !== "all") {
@@ -95,21 +106,32 @@ class AccountService {
 
       const result = await (AccountModel as any).paginate(filter, options);
 
+      const accounts = JSON.parse(JSON.stringify(result.docs));
+      for (const account of accounts) {
+        const borrowedBooksCount = await BorrowModel.countDocuments({
+          user: account._id,
+        });
+        account.totalBorrow = borrowedBooksCount;
+      }
+
       return {
-        accounts: JSON.parse(JSON.stringify(result.docs)),
+        accounts: accounts,
         totalPages: result.totalPages,
         totalDocs: result.totalDocs,
         page,
         limit,
       };
     } catch (error: any) {
-      throw new Error(`Error getting accounts: ${error.message}`);
+      throw new Error(error.message);
     }
   }
 
   async postAccount(payload: Account) {
     const existing = await this.getAccountByEmail(payload.email);
     if (existing) throw new Error("This email is already used");
+
+    const userIdExisting = await AccountModel.find({ userId: payload.userId });
+    if (userIdExisting) throw new Error("Mã người dùng đã tồn tại");
 
     const account = await AccountModel.create({
       email: payload.email,

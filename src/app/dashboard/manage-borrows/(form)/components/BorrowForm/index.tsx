@@ -265,7 +265,7 @@ function BorrowForm(props: BorrowFormProps) {
                   .includes(input.toLowerCase())
               }
             >
-              {books.data.map((book: Book) => (
+              {books?.data.map((book: Book) => (
                 <Select.Option
                   label={book?.name}
                   key={book?._id}
