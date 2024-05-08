@@ -109,7 +109,7 @@ function AccountForm({ account }: { account?: Account }) {
           name="email"
           label={"Email"}
         >
-          <Input allowCleardisabled={!!account} placeholder={"example@gmail.com"} />
+          <Input allowClear disabled={!!account} placeholder={"example@gmail.com"} />
         </Form.Item>
         <Form.Item
           rules={[
