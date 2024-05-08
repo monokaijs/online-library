@@ -90,11 +90,10 @@ export default function BorrowDetail() {
               width: 200,
               aspectRatio: "3/4",
               objectFit: "cover",
-              border: "1px solid #ccc",
+              // boxShadow: "1px solid #ccc",
+              boxShadow: "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
             }}
-            src={
-              "https://www.2020mag.com/CMSImagesContent/2014/9/Guy-Nerd-glasses_w.png"
-            }
+            src="/images/user.jpg"
           />
           <div style={{ flex: 1 }}>
             <Typography.Title className="ma-0 mb-4" level={4}>
@@ -132,9 +131,11 @@ export default function BorrowDetail() {
               width: 200,
               aspectRatio: "3/4",
               objectFit: "cover",
-              border: "1px solid #ccc",
+              // border: "1px solid #ccc",
+              boxShadow: "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
+
             }}
-            src={data?.borrowRecord?.book?.picture}
+            src={data?.borrowRecord?.book?.picture ?? "https://dynamicmediainstitute.org/wp-content/themes/dynamic-media-institute-theme/imagery/default-book.png"}
           />
           <div style={{ flex: 1 }}>
             <Typography.Title className="ma-0 mb-4" level={4}>

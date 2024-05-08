@@ -24,7 +24,7 @@ import {
 } from "antd";
 import { Option } from "antd/es/mentions";
 import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import "./style.css";
@@ -36,6 +36,7 @@ interface BorrowFormProps {
 
 function BorrowForm(props: BorrowFormProps) {
   const { action, detail } = props;
+  const searchParams = useSearchParams();
   const {
     token: { colorPrimary },
   } = theme.useToken();
@@ -139,6 +140,17 @@ function BorrowForm(props: BorrowFormProps) {
       updateAction(values);
     }
   };
+
+  useEffect(() => {
+    if(searchParams.get("book")){
+      const selected: Book | undefined = books?.data?.find((item: any) => item._id === searchParams.get("book"))
+
+      if(selected){
+        form.setFieldValue("book", JSON.stringify(selected))
+        form.setFieldValue("library", selected?.bookcase?.library?.name)
+      }
+    }
+  }, [books])
 
   return (
     <Card style={{ maxWidth: 714, margin: "0 auto" }}>

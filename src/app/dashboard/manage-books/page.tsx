@@ -9,10 +9,13 @@ import {
   EditOutlined,
   EyeOutlined,
   SearchOutlined,
+  MoreOutlined,
+  BookOutlined,
 } from "@ant-design/icons";
 import {
   Button,
   Card,
+  Dropdown,
   Input,
   Modal,
   Select,
@@ -206,40 +209,73 @@ function ManageBook() {
               e.stopPropagation();
             }}
           >
-            <Button
-              onClick={() => {
-                router.push(`/dashboard/manage-books/${item?._id}`);
-              }}
-              type={"text"}
-              shape={"circle"}
-              icon={<EyeOutlined />}
-              style={{ color: token.colorPrimary }}
-            />
-            <Button
-              onClick={() => {
-                router.push(`/dashboard/manage-books/update/${item?._id}`);
-              }}
-              type={"text"}
-              shape={"circle"}
-              icon={<EditOutlined style={{ color: token.colorPrimary }} />}
-            />
-            <Button
-              type={"text"}
-              danger
-              shape={"circle"}
-              icon={<DeleteOutlined />}
-              onClick={() => {
-                Modal.confirm({
-                  title: "Hành động này không thể hoàn tác!",
-                  content: `Xác nhận xóa sách`,
-                  okText: "Xóa",
-                  cancelText: "Hủy",
-                  onOk: () => {
-                    deleteAction(item._id);
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    icon: <EyeOutlined />,
+                    key: "view",
+                    label: "Xem chi tiết",
+                    onClick: () => {
+                      router.push(`/dashboard/manage-books/${item?._id}`);
+                    },
                   },
-                });
+                  {
+                    type: "divider",
+                  },
+                  {
+                    icon: <EditOutlined />,
+                    key: "edit",
+                    label: "Cập nhật thông tin",
+                    onClick: () => {
+                      router.push(
+                        `/dashboard/manage-books/update/${item?._id}`
+                      );
+                    },
+                  },
+                  {
+                    key: "d",
+                    type: "divider",
+                  },
+                  {
+                    icon: <BookOutlined />,
+                    key: "borrow",
+                    label: "Tạo phiếu mượn",
+                    onClick: () => {
+                      router.push(
+                        `/dashboard/manage-borrows/create?book=${item?._id}`
+                      );
+                    },
+                    disabled: item.status !== BookStatus.AVAILABLE
+                  },
+                  {
+                    key: "d",
+                    type: "divider",
+                  },
+                  {
+                    icon: <DeleteOutlined />,
+                    key: "delete",
+                    label: "Xóa sách",
+                    onClick: () => {
+                      Modal.confirm({
+                        title: "Hành động này không thể hoàn tác!",
+                        content: `Xác nhận xóa sách`,
+                        okText: "Xóa",
+                        cancelText: "Hủy",
+                        onOk: () => {
+                          deleteAction(item._id);
+                        },
+                      });
+                    },
+                  },
+                ],
               }}
-            />
+              trigger={["click"]}
+            >
+              <Button type="text" shape="circle">
+                <MoreOutlined />
+              </Button>
+            </Dropdown>
           </div>
         );
       },
@@ -266,6 +302,7 @@ function ManageBook() {
             <Option value="all">Tất cả sách</Option>
             <Option value="available">Sách trên kệ</Option>
             <Option value="trending">Sách trending</Option>
+            {/* <Option value="overdued">Sách quá hạn</Option> */}
           </Select>
           <Input
             className={"bg-input-group-after"}

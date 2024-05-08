@@ -7,6 +7,7 @@ import {
 } from "@/app/dashboard/manage-books/action";
 import { FormAction } from "@/constants/app.constant";
 import useDebounce from "@/lib/hooks/useDebounce";
+import { Bookcase } from "@/lib/models/bookcase.model";
 import { toast } from "@/lib/utils/toast";
 import {
   Button,
@@ -94,16 +95,18 @@ function BookForm(props: FormProps) {
   useEffect(() => {
     form.setFieldValue("borrowingDateLimit", 35);
     if (data) {
+      console.log(data)
       form.setFieldsValue(data);
       form.setFieldValue("library", data?.bookcase?.library?._id);
       setLibrary(data?.bookcase?.library?._id);
-      form.setFieldValue("bookcase", data?.bookcase?._id);
+      form.setFieldValue("bookcase", JSON.stringify(data?.bookcase));
       setImage(data.picture);
     }
   }, [data]);
 
   const onFinish = (values: any) => {
-    setFormLoading(true)
+    setFormLoading(true);
+    values.bookcase = JSON.parse(values?.bookcase)?._id
     if (action === FormAction.CREATE) {
       createBook(values);
     } else {
@@ -159,7 +162,7 @@ function BookForm(props: FormProps) {
             </Form.Item>
             <Form.Item
               rules={[{ required: true, message: "Vui lòng nhập mã sách" }]}
-              name="isbn"
+              name="bookID"
               label={
                 <Typography.Text style={{ color: colorPrimary }}>
                   Mã sách
@@ -183,6 +186,16 @@ function BookForm(props: FormProps) {
               }
             >
               <Input placeholder={"Nhập số ngày mượn tối đa"} />
+            </Form.Item>
+            <Form.Item
+              name="isbn"
+              label={
+                <Typography.Text style={{ color: colorPrimary }}>
+                  ISBN
+                </Typography.Text>
+              }
+            >
+              <Input placeholder={"Nhập ISBN"} />
             </Form.Item>
             <Form.Item
               name="language"
@@ -245,7 +258,7 @@ function BookForm(props: FormProps) {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  rules={[{ required: true, message: "Vui lòng chọn kệ sách" }]}
+                  // rules={[{ required: true, message: "Vui lòng chọn kệ sách" }]}
                   name="bookcase"
                   label={
                     <Typography.Text style={{ color: colorPrimary }}>
@@ -253,12 +266,16 @@ function BookForm(props: FormProps) {
                     </Typography.Text>
                   }
                 >
-                  <Select>
+                  <Select onChange={(e) => {
+                    const bookcase: Bookcase = JSON.parse(e);
+                    form.setFieldValue("category", bookcase?.category)
+                  }}>
                     {app?.data?.bookcases.map(
                       (item: any) =>
                         item?.library?._id == libraryActive && (
-                          <Option value={item._id} key={item._id}>
-                            {item?.position} ({item?.category})
+                          <Option value={JSON.stringify(item)} key={item._id}>
+                            {item?.position}
+                             {/* ({item?.category}) */}
                           </Option>
                         )
                     )}
@@ -266,6 +283,16 @@ function BookForm(props: FormProps) {
                 </Form.Item>
               </Col>
             </Row>
+            <Form.Item
+              name="category"
+              label={
+                <Typography.Text style={{ color: colorPrimary }}>
+                  Thể loại
+                </Typography.Text>
+              }
+            >
+              <Input placeholder={"Nhập thể loại"} />
+            </Form.Item>
             <Form.Item
               name="description"
               label={
@@ -332,32 +359,36 @@ function BookForm(props: FormProps) {
                       />
                     </div>
                   )}
-                  {images?.data?.slice(0, isCustomImage ? 5 : 6)?.map((item) => (
-                    <div
-                      key={item}
-                      style={{
-                        cursor: "pointer",
-                        border: "1px solid",
-                        borderColor:
-                          item === imageSelected ? colorPrimary : "transparent",
-                        padding: 4,
-                      }}
-                      onClick={() => {
-                        form.setFieldValue("picture", item);
-                        setImage(item);
-                      }}
-                    >
-                      <Image
+                  {images?.data
+                    ?.slice(0, isCustomImage ? 5 : 6)
+                    ?.map((item) => (
+                      <div
+                        key={item}
                         style={{
-                          width: "100%",
-                          aspectRatio: "3/4",
-                          objectFit: "cover",
+                          cursor: "pointer",
+                          border: "1px solid",
+                          borderColor:
+                            item === imageSelected
+                              ? colorPrimary
+                              : "transparent",
+                          padding: 4,
                         }}
-                        preview={false}
-                        src={item}
-                      />
-                    </div>
-                  ))}
+                        onClick={() => {
+                          form.setFieldValue("picture", item);
+                          setImage(item);
+                        }}
+                      >
+                        <Image
+                          style={{
+                            width: "100%",
+                            aspectRatio: "3/4",
+                            objectFit: "cover",
+                          }}
+                          preview={false}
+                          src={item}
+                        />
+                      </div>
+                    ))}
                 </div>
               ) : (
                 <Typography.Text type="secondary">
