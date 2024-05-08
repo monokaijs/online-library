@@ -63,7 +63,7 @@ export default function BookDetail() {
     );
   }
 
-  const overdued = dayjs().diff(data.borrowRecord?.returnDate) > 0;
+  const overdued = dayjs().diff(data?.borrowRecord?.returnDate) > 0;
 
   return (
     <Row className="h-full" gutter={24}>

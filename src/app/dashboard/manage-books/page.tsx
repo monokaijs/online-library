@@ -20,7 +20,7 @@ import {
   Select,
   Table,
   Tag,
-  theme
+  theme,
 } from "antd";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -121,8 +121,8 @@ function ManageBook() {
     },
     {
       title: "Mã sách",
-      dataIndex: "isbn",
-      key: "isbn",
+      dataIndex: "bookID",
+      key: "bookID",
       align: "center",
       render: (item: string) => item?.toUpperCase(),
     },

@@ -24,14 +24,12 @@ function AccountDetailPage() {
   const { token } = theme.useToken();
   const ctx = useContext(SessionContext);
 
-
   const [{ data }, getAccountDetail] = useFormState(getAccountDetailAction, {
     success: false,
     data: undefined,
     message: "",
   });
 
-  
   const [deleteState, deleteAction] = useFormState(deleteAccountAction, {
     success: false,
     message: "",
@@ -72,7 +70,12 @@ function AccountDetailPage() {
             />
 
             <div className="flex flex-col">
-              <Flex justify="space-between" className="mb-1" align="center" gap={4}>
+              <Flex
+                justify="space-between"
+                className="mb-1"
+                align="center"
+                gap={12}
+              >
                 <Typography.Title className="ma-0" level={5}>
                   {account?.fullName}
                 </Typography.Title>
@@ -85,7 +88,9 @@ function AccountDetailPage() {
                         key: "edit",
                         label: "Sửa thông tin",
                         onClick: () => {
-                          router.push(`/dashboard/manage-accounts/update/${id}`);
+                          router.push(
+                            `/dashboard/manage-accounts/update/${id}`
+                          );
                         },
                       },
                       {
@@ -95,7 +100,7 @@ function AccountDetailPage() {
                       {
                         icon: <DeleteOutlined />,
                         key: "delete",
-                        label: "Xóa sách",
+                        label: "Xóa tài khoản",
                         onClick: () => {
                           Modal.confirm({
                             title: "Hành động này không thể hoàn tác!",
@@ -107,14 +112,14 @@ function AccountDetailPage() {
                             },
                           });
                         },
-                        disabled: id === ctx.account?._id
+                        disabled: id === ctx.account?._id,
                       },
                     ],
                   }}
                   trigger={["click"]}
                 >
                   <Button type="text" shape="circle">
-                    <EllipsisOutlined />
+                    <EllipsisOutlined style={{ fontWeight: 12 }} />
                   </Button>
                 </Dropdown>
               </Flex>
@@ -125,7 +130,7 @@ function AccountDetailPage() {
                 <Typography.Text strong>{account?.userId}</Typography.Text>
               )}
 
-              <Typography.Text type="secondary" className="mt-2">
+              <Typography.Text type="secondary">
                 Ngày tham gia
               </Typography.Text>
               <Typography.Text>
@@ -138,42 +143,78 @@ function AccountDetailPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+              gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
               gap: "4px 12px",
             }}
           >
             <Typography.Text type="secondary">Giới tính</Typography.Text>
-            <Typography.Text type="secondary">Email</Typography.Text>
-            <Typography.Text type="secondary">Địa chỉ</Typography.Text>
+            <Typography.Text
+              type="secondary"
+              style={{ gridColumn: "span 2 / span 2" }}
+            >
+              Email
+            </Typography.Text>
+            <Typography.Text
+              type="secondary"
+              style={{ gridColumn: "span 2 / span 2" }}
+            >
+              Địa chỉ
+            </Typography.Text>
 
             <Typography.Text strong>
               {account?.gender == "male" ? "Nam" : "Nữ"}
             </Typography.Text>
-            <Typography.Text strong className="one-line">
+            <Typography.Text
+              strong
+              className="one-line"
+              style={{ gridColumn: "span 2 / span 2" }}
+            >
               {account?.email}
             </Typography.Text>
-            <Typography.Text strong className="one-line">
+            <Typography.Text
+              strong
+              className="one-line"
+              style={{ gridColumn: "span 2 / span 2" }}
+            >
               {account?.address}
             </Typography.Text>
 
-            <div style={{ gridColumn: "span 3 / span 3", marginTop: 12 }}></div>
+            <div style={{ gridColumn: "span 5 / span 5", marginTop: 12 }}></div>
 
             <Typography.Text type="secondary">Ngày sinh</Typography.Text>
-            <Typography.Text type="secondary">Số điện thoại</Typography.Text>
-            <Typography.Text type="secondary">Số CCCD</Typography.Text>
+            <Typography.Text
+              type="secondary"
+              style={{ gridColumn: "span 2 / span 2" }}
+            >
+              Số điện thoại
+            </Typography.Text>
+            <Typography.Text
+              type="secondary"
+              style={{ gridColumn: "span 2 / span 2" }}
+            >
+              Số CCCD
+            </Typography.Text>
 
             <Typography.Text strong className="one-line">
               {dayjs(account?.birthday).format("DD/MM/YYYY")}
             </Typography.Text>
-            <Typography.Text strong className="one-line">
+            <Typography.Text
+              strong
+              className="one-line"
+              style={{ gridColumn: "span 2 / span 2" }}
+            >
               {account?.phoneNumber}
             </Typography.Text>
-            <Typography.Text strong className="one-line">
+            <Typography.Text
+              strong
+              className="one-line"
+              style={{ gridColumn: "span 2 / span 2" }}
+            >
               {account?.identityNumber}
             </Typography.Text>
           </div>
         </Card>
-        <Card style={{ paddingRight: 60 }}>
+        <Card style={{ paddingRight: 15 }}>
           <div className="flex flex-col">
             <Typography.Title className="mb-1" level={5}>
               Sách
