@@ -5,26 +5,23 @@ import { Book, BookStatus } from "@/lib/models/book.model";
 import { Bookcase } from "@/lib/models/bookcase.model";
 import { toast } from "@/lib/utils/toast";
 import {
+  BookOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
+  EllipsisOutlined,
   SearchOutlined,
-  MoreOutlined,
-  BookOutlined,
 } from "@ant-design/icons";
 import {
   Button,
-  Card,
   Dropdown,
   Input,
   Modal,
   Select,
   Table,
   Tag,
-  Typography,
-  theme,
+  theme
 } from "antd";
-import { Option } from "antd/es/mentions";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -246,7 +243,7 @@ function ManageBook() {
                         `/dashboard/manage-borrows/create?book=${item?._id}`
                       );
                     },
-                    disabled: item.status !== BookStatus.AVAILABLE
+                    disabled: item.status !== BookStatus.AVAILABLE,
                   },
                   {
                     key: "d",
@@ -273,7 +270,7 @@ function ManageBook() {
               trigger={["click"]}
             >
               <Button type="text" shape="circle">
-                <MoreOutlined />
+                <EllipsisOutlined />
               </Button>
             </Dropdown>
           </div>
@@ -299,9 +296,9 @@ function ManageBook() {
               });
             }}
           >
-            <Option value="all">Tất cả sách</Option>
-            <Option value="available">Sách trên kệ</Option>
-            <Option value="trending">Sách trending</Option>
+            <Select.Option value="all">Tất cả sách</Select.Option>
+            <Select.Option value="available">Sách trên kệ</Select.Option>
+            <Select.Option value="trending">Sách trending</Select.Option>
             {/* <Option value="overdued">Sách quá hạn</Option> */}
           </Select>
           <Input

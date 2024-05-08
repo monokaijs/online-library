@@ -22,7 +22,6 @@ import {
   Typography,
   theme,
 } from "antd";
-import { Option } from "antd/es/mentions";
 import dayjs from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -142,15 +141,17 @@ function BorrowForm(props: BorrowFormProps) {
   };
 
   useEffect(() => {
-    if(searchParams.get("book")){
-      const selected: Book | undefined = books?.data?.find((item: any) => item._id === searchParams.get("book"))
+    if (searchParams.get("book")) {
+      const selected: Book | undefined = books?.data?.find(
+        (item: any) => item._id === searchParams.get("book")
+      );
 
-      if(selected){
-        form.setFieldValue("book", JSON.stringify(selected))
-        form.setFieldValue("library", selected?.bookcase?.library?.name)
+      if (selected) {
+        form.setFieldValue("book", JSON.stringify(selected));
+        form.setFieldValue("library", selected?.bookcase?.library?.name);
       }
     }
-  }, [books])
+  }, [books]);
 
   return (
     <Card style={{ maxWidth: 714, margin: "0 auto" }}>
@@ -209,9 +210,9 @@ function BorrowForm(props: BorrowFormProps) {
             </Select>
           ) : (
             <Select disabled>
-              <Option value={JSON.stringify(detail.user)}>
+              <Select.Option value={JSON.stringify(detail.user)}>
                 {detail.user.fullName}
-              </Option>
+              </Select.Option>
             </Select>
           )}
         </Form.Item>
@@ -289,9 +290,9 @@ function BorrowForm(props: BorrowFormProps) {
             </Select>
           ) : (
             <Select disabled>
-              <Option value={JSON.stringify(detail.book)}>
+              <Select.Option value={JSON.stringify(detail.book)}>
                 {detail?.book?.name}
-              </Option>
+              </Select.Option>
             </Select>
           )}
         </Form.Item>

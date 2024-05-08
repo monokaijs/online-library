@@ -1,10 +1,9 @@
 "use client";
+import useDebounce from "@/lib/hooks/useDebounce";
+import { SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Select } from "antd";
-import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import useDebounce from "@/lib/hooks/useDebounce";
-import { Option } from "antd/es/mentions";
 
 function ManageAccountsHeader() {
   const router = useRouter();
@@ -45,10 +44,10 @@ function ManageAccountsHeader() {
             });
           }}
         >
-          <Option value="all">Tất cả</Option>
-          <Option value="user">Bạn đọc</Option>
-          <Option value="manager">Thủ thư</Option>
-          <Option value="admin">Quản lý</Option>
+          <Select.Option value="all">Tất cả</Select.Option>
+          <Select.Option value="user">Bạn đọc</Select.Option>
+          <Select.Option value="manager">Thủ thư</Select.Option>
+          <Select.Option value="admin">Quản lý</Select.Option>
         </Select>
         <Input
           placeholder={"Tìm kiếm bạn đọc..."}

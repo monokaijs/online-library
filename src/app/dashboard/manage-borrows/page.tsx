@@ -2,6 +2,7 @@
 import useDebounce from "@/lib/hooks/useDebounce";
 import { Book } from "@/lib/models/book.model";
 import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
+import { Location } from "@/lib/models/library.model";
 import { toast } from "@/lib/utils/toast";
 import {
   DeleteOutlined,
@@ -14,12 +15,10 @@ import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
+import { getLibraryAction } from "../manage-locations/action";
 import { deleteBorrowAction, getBorrowAction } from "./action";
 import Status from "./components/BorrowStatus";
 import ViewBorrowModal from "./components/ViewBorrowModal";
-import { Location } from "@/lib/models/library.model";
-import { Option } from "antd/es/mentions";
-import { getLibraryAction } from "../manage-locations/action";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -230,9 +229,9 @@ function ManageBook() {
               });
             }}
           >
-            <Option value="all">Thư viện</Option>
+            <Select.Option value="all">Thư viện</Select.Option>
             {libraries?.data?.map((item: Location) => (
-              <Option value={item._id}>{item.name}</Option>
+              <Select.Option value={item._id}>{item.name}</Select.Option>
             ))}
           </Select>
           <Select
@@ -244,10 +243,10 @@ function ManageBook() {
               });
             }}
           >
-            <Option value="all">Tất cả</Option>
-            <Option value="borrowing">Đang mượn</Option>
-            <Option value="returned">Đã trả</Option>
-            <Option value="ovedued">Quá hạn</Option>
+            <Select.Option value="all">Tất cả</Select.Option>
+            <Select.Option value="borrowing">Đang mượn</Select.Option>
+            <Select.Option value="returned">Đã trả</Select.Option>
+            <Select.Option value="ovedued">Quá hạn</Select.Option>
           </Select>
           <Input
             className={"bg-input-group-after"}

@@ -1,35 +1,26 @@
 "use client";
 
 import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
-import {
-  deleteBookAction,
-  getBookByIdAction,
-} from "@/app/dashboard/manage-books/action";
-import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
+import UserRole from "@/components/shared/UserRole";
+import { Book } from "@/lib/models/book.model";
+import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
+import { toast } from "@/lib/utils/toast";
 import {
   Button,
   Card,
-  Col,
-  Dropdown,
   Flex,
   Image,
   Modal,
-  Row,
   Spin,
-  Tag,
-  Typography,
+  Typography
 } from "antd";
+import dayjs from "dayjs";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
-import "./style.css";
-import { toast } from "@/lib/utils/toast";
 import { getBorrowDetailAction, returnBookAction } from "../../action";
-import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
-import { Book } from "@/lib/models/book.model";
-import dayjs from "dayjs";
 import Status from "../../components/BorrowStatus";
-import UserRole from "@/components/shared/UserRole";
+import "./style.css";
 
 export default function BorrowDetail() {
   const router = useRouter();
@@ -91,7 +82,8 @@ export default function BorrowDetail() {
               aspectRatio: "3/4",
               objectFit: "cover",
               // boxShadow: "1px solid #ccc",
-              boxShadow: "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
+              boxShadow:
+                "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
             }}
             src="/images/user.jpg"
           />
@@ -132,10 +124,13 @@ export default function BorrowDetail() {
               aspectRatio: "3/4",
               objectFit: "cover",
               // border: "1px solid #ccc",
-              boxShadow: "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"
-
+              boxShadow:
+                "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
             }}
-            src={data?.borrowRecord?.book?.picture ?? "https://dynamicmediainstitute.org/wp-content/themes/dynamic-media-institute-theme/imagery/default-book.png"}
+            src={
+              data?.borrowRecord?.book?.picture ??
+              "https://dynamicmediainstitute.org/wp-content/themes/dynamic-media-institute-theme/imagery/default-book.png"
+            }
           />
           <div style={{ flex: 1 }}>
             <Typography.Title className="ma-0 mb-4" level={4}>

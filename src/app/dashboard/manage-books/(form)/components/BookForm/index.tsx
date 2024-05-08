@@ -22,11 +22,9 @@ import {
   theme,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { Option } from "antd/es/mentions";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
-
 interface FormProps {
   action: FormAction;
   data?: any;
@@ -95,7 +93,6 @@ function BookForm(props: FormProps) {
   useEffect(() => {
     form.setFieldValue("borrowingDateLimit", 35);
     if (data) {
-      console.log(data)
       form.setFieldsValue(data);
       form.setFieldValue("library", data?.bookcase?.library?._id);
       setLibrary(data?.bookcase?.library?._id);
@@ -106,7 +103,7 @@ function BookForm(props: FormProps) {
 
   const onFinish = (values: any) => {
     setFormLoading(true);
-    values.bookcase = JSON.parse(values?.bookcase)?._id
+    values.bookcase = JSON.parse(values?.bookcase)?._id;
     if (action === FormAction.CREATE) {
       createBook(values);
     } else {
@@ -249,9 +246,9 @@ function BookForm(props: FormProps) {
                     }}
                   >
                     {app?.data?.libaries.map((item: any) => (
-                      <Option value={item._id} key={item._id}>
+                      <Select.Option value={item._id} key={item._id}>
                         {item?.name}
-                      </Option>
+                      </Select.Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -266,17 +263,22 @@ function BookForm(props: FormProps) {
                     </Typography.Text>
                   }
                 >
-                  <Select onChange={(e) => {
-                    const bookcase: Bookcase = JSON.parse(e);
-                    form.setFieldValue("category", bookcase?.category)
-                  }}>
+                  <Select
+                    onChange={(e) => {
+                      const bookcase: Bookcase = JSON.parse(e);
+                      form.setFieldValue("category", bookcase?.category);
+                    }}
+                  >
                     {app?.data?.bookcases.map(
                       (item: any) =>
                         item?.library?._id == libraryActive && (
-                          <Option value={JSON.stringify(item)} key={item._id}>
+                          <Select.Option
+                            value={JSON.stringify(item)}
+                            key={item._id}
+                          >
                             {item?.position}
-                             {/* ({item?.category}) */}
-                          </Option>
+                            {/* ({item?.category}) */}
+                          </Select.Option>
                         )
                     )}
                   </Select>

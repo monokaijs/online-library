@@ -10,7 +10,7 @@ import Status from "@/app/dashboard/manage-borrows/components/BorrowStatus";
 import { BookStatus } from "@/lib/models/book.model";
 import { Borrow } from "@/lib/models/borrow.model";
 import { toast } from "@/lib/utils/toast";
-import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EllipsisOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
@@ -120,7 +120,7 @@ export default function BookDetail() {
                   trigger={["click"]}
                 >
                   <Button type="text" shape="circle">
-                    <MoreOutlined />
+                    <EllipsisOutlined />
                   </Button>
                 </Dropdown>
               </Flex>
@@ -218,7 +218,7 @@ export default function BookDetail() {
             {data?.history?.map((item: Borrow, index: number) => {
               return (
                 <div
-                  key={item._id}
+                  key={index}
                   className="flex"
                   style={{
                     borderBottom: "1px solid #F0F0F0",

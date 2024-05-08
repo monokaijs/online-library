@@ -8,7 +8,6 @@ import { FormAction } from "@/constants/app.constant";
 import { Location } from "@/lib/models/library.model";
 import { toast } from "@/lib/utils/toast";
 import { Button, Form, Input, Select, Typography, theme } from "antd";
-import { Option } from "antd/es/mentions";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
@@ -33,7 +32,7 @@ function BookcaseForm(props: BookcaseFormProps) {
 
   useEffect(() => {
     getLibaries();
-  }, [])
+  }, []);
 
   const [createState, createBookcase] = useFormState(createBookcaseAction, {
     success: false,
@@ -116,9 +115,9 @@ function BookcaseForm(props: BookcaseFormProps) {
           <Select>
             {libraries?.data?.map((item: Location) => {
               return (
-                <Option key={item._id} value={item._id}>
+                <Select.Option key={item._id} value={item._id}>
                   {item?.name}
-                </Option>
+                </Select.Option>
               );
             })}
           </Select>

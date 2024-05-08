@@ -7,7 +7,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
-  MoreOutlined,
+  EllipsisOutlined,
 } from "@ant-design/icons";
 import { Button, Card, Dropdown, Flex, Modal, Typography, theme } from "antd";
 import dayjs from "dayjs";
@@ -114,7 +114,7 @@ function AccountDetailPage() {
                   trigger={["click"]}
                 >
                   <Button type="text" shape="circle">
-                    <MoreOutlined />
+                    <EllipsisOutlined />
                   </Button>
                 </Dropdown>
               </Flex>
@@ -285,7 +285,7 @@ function AccountDetailPage() {
             {history?.map((item: Borrow, index: number) => {
               return (
                 <div
-                  key={item._id}
+                  key={index}
                   className="flex"
                   style={{
                     borderBottom: "1px solid #F0F0F0",
