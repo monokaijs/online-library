@@ -128,10 +128,14 @@ class AccountService {
 
   async postAccount(payload: Account) {
     const existing = await this.getAccountByEmail(payload.email);
-    if (existing) throw new Error("This email is already used");
+    if (existing) throw new Error("Email đã tồn tại");
 
-    const userIdExisting = await AccountModel.find({ userId: payload.userId });
-    if (userIdExisting) throw new Error("Mã người dùng đã tồn tại");
+    if (payload.userId) {
+      const userIdExisting = await AccountModel.countDocuments({
+        userId: payload.userId,
+      });
+      if (userIdExisting > 0) throw new Error("Mã người dùng đã tồn tại");
+    }
 
     const account = await AccountModel.create({
       email: payload.email,

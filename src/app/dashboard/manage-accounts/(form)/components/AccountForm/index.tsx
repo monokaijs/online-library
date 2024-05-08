@@ -55,7 +55,7 @@ function AccountForm({ account }: { account?: Account }) {
     if (account) {
       form.setFieldsValue({
         ...account,
-        birthday: dayjs(account.birthday),
+        birthday: account.birthday ? dayjs(account.birthday) : '',
       });
     }
   }, [account]);
@@ -86,21 +86,39 @@ function AccountForm({ account }: { account?: Account }) {
         form={form}
       >
         <Form.Item
-          rules={[{ required: true, message: "Vui lòng nhập họ tên!" }]}
+          rules={[
+            { required: true, message: "Vui lòng nhập họ tên!" },
+            {
+              max: 30,
+              message: "Họ và tên tối đa 30 kí tự",
+            },
+          ]}
           name="fullName"
           label={"Họ và tên"}
         >
           <Input placeholder={"Nguyễn Văn A"} />
         </Form.Item>
         <Form.Item
-          rules={[{ required: true, message: "Vui lòng nhập email!" }]}
+          rules={[
+            { required: true, message: "Vui lòng nhập email!" },
+            {
+              pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: "Email không hợp lệ",
+            },
+          ]}
           name="email"
           label={"Email"}
         >
           <Input disabled={!!account} placeholder={"example@gmail.com"} />
         </Form.Item>
         <Form.Item
-          rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
+          rules={[
+            { required: true, message: "Vui lòng nhập số điện thoại!" },
+            {
+              pattern: /^(?:\d*)$/,
+              message: "Số điện thoại không hợp lệ",
+            },
+          ]}
           name="phoneNumber"
           label={"Số điện thoại"}
         >
@@ -131,7 +149,13 @@ function AccountForm({ account }: { account?: Account }) {
           <Input placeholder={"Số CCCD/CMND"} type="number" />
         </Form.Item>
         <Form.Item label={"Ngày sinh"} name={"birthday"}>
-          <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
+          <DatePicker
+            style={{ width: "100%" }}
+            format="DD/MM/YYYY"
+            disabledDate={(current) => {
+              return dayjs().diff(current) < 0;
+            }}
+          />
         </Form.Item>
         <Form.Item name="gender" label={"Giới tính"} initialValue={"male"}>
           <Radio.Group

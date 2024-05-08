@@ -129,7 +129,13 @@ function BookForm(props: FormProps) {
         <Row gutter={32}>
           <Col span={12}>
             <Form.Item
-              rules={[{ required: true, message: "Vui lòng nhập tên sách" }]}
+              rules={[
+                { required: true, message: "Vui lòng nhập tên sách" },
+                {
+                  max: 150,
+                  message: "Tên sách tối đa 150 kí tự",
+                },
+              ]}
               name="name"
               label={
                 <Typography.Text style={{ color: colorPrimary }}>
@@ -147,7 +153,13 @@ function BookForm(props: FormProps) {
               />
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Vui lòng nhập tên tác giả" }]}
+              rules={[
+                { required: true, message: "Vui lòng nhập tên tác giả" },
+                {
+                  max: 150,
+                  message: "Tên sách tối đa 150 kí tự",
+                },
+              ]}
               name="authorName"
               label={
                 <Typography.Text style={{ color: colorPrimary }}>
@@ -158,7 +170,13 @@ function BookForm(props: FormProps) {
               <Input placeholder={"Nhập tên tác giả"} />
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Vui lòng nhập mã sách" }]}
+              rules={[
+                { required: true, message: "Vui lòng nhập mã sách" },
+                {
+                  max: 50,
+                  message: "Tên sách tối đa 50 kí tự",
+                },
+              ]}
               name="bookID"
               label={
                 <Typography.Text style={{ color: colorPrimary }}>
@@ -182,7 +200,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập số ngày mượn tối đa"} />
+              <Input placeholder={"Nhập số ngày mượn tối đa"} type="number" />
             </Form.Item>
             <Form.Item
               name="isbn"

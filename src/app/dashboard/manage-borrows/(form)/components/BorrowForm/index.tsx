@@ -225,7 +225,7 @@ function BorrowForm(props: BorrowFormProps) {
           rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
           name={"phoneNumber"}
         >
-          <Input placeholder="Số điện thoại" allowClear />
+          <Input placeholder="Số điện thoại" allowClear type="number" />
         </Form.Item>
         <Form.Item
           label={
@@ -233,7 +233,13 @@ function BorrowForm(props: BorrowFormProps) {
               Email
             </Typography.Text>
           }
-          rules={[{ required: true, message: "Vui lòng nhập email" }]}
+          rules={[
+            { required: true, message: "Vui lòng nhập email" },
+            {
+              pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: "Email không hợp lệ",
+            },
+          ]}
           name={"email"}
         >
           <Input placeholder="Email" allowClear />
@@ -326,6 +332,9 @@ function BorrowForm(props: BorrowFormProps) {
                 disabled={action === FormAction.UPDATE}
                 format="DD/MM/YYYY"
                 style={{ width: "100%" }}
+                disabledDate={(current) => {
+                  return dayjs().diff(current) < 0;
+                }}
               />
             </Form.Item>
           </Col>
@@ -343,6 +352,9 @@ function BorrowForm(props: BorrowFormProps) {
                 format="DD/MM/YYYY"
                 name="returnDate"
                 style={{ width: "100%" }}
+                disabledDate={(current) => {
+                  return dayjs().diff(current) > 0;
+                }}
               />
             </Form.Item>
           </Col>

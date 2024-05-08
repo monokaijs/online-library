@@ -91,6 +91,7 @@ function BookcaseForm(props: BookcaseFormProps) {
               Ngăn sách
             </Typography.Text>
           }
+          rules={[{ required: true, message: "Vui lòng mã ngăn sách!" }]}
         >
           <Input placeholder={"Mã ngăn sách"} />
         </Form.Item>
@@ -101,6 +102,7 @@ function BookcaseForm(props: BookcaseFormProps) {
               Thể loại
             </Typography.Text>
           }
+          rules={[{ required: true, message: "Vui lòng thể loại!" }]}
         >
           <Input placeholder={"Thể loại"} />
         </Form.Item>
@@ -111,6 +113,7 @@ function BookcaseForm(props: BookcaseFormProps) {
               Thư viện
             </Typography.Text>
           }
+          rules={[{ required: true, message: "Vui lòng chọn thư viện!" }]}
         >
           <Select>
             {libraries?.data?.map((item: Location) => {

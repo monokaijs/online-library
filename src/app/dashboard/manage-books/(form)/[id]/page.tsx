@@ -82,7 +82,7 @@ export default function BookDetail() {
                 className="mb-1 w-full"
               >
                 <Typography.Title className="ma-0" level={4}>
-                  {data?.book?.name}
+                  {data?.book?.name}{data?.book?.authorName ? ' - ' + data?.book?.authorName : ""}
                 </Typography.Title>
                 <Dropdown
                   menu={{
@@ -127,9 +127,6 @@ export default function BookDetail() {
               <Typography.Text className="book-description mb-2">
                 {data?.book?.description}
               </Typography.Text>
-              <Typography.Title className="ma-0" level={5}>
-                Tác giả: {data?.book?.authorName}
-              </Typography.Title>
             </div>
           </Flex>
         </Card>
