@@ -319,7 +319,7 @@ export default function BookDetail() {
               },
               {
                 fieldName: "Hạn mức mượn",
-                value: data?.book.borrowingDateLimit + " ngày",
+                value: data?.book?.borrowingDateLimit + " ngày",
               },
             ]}
           />
