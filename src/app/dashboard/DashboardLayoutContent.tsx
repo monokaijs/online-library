@@ -85,6 +85,15 @@ export default function DashboardLayoutContent(props: any) {
                 label: <Link href={"/dashboard"}>Trang chủ</Link>,
               },
               {
+                key: "accounts",
+                icon: <SolutionOutlined />,
+                label: (
+                  <Link href={"/dashboard/manage-accounts"}>
+                    Quản lý người dùng
+                  </Link>
+                ),
+              },
+              {
                 key: "home",
                 icon: <HomeOutlined />,
                 label: (
@@ -107,15 +116,6 @@ export default function DashboardLayoutContent(props: any) {
                 icon: <BookOutlined />,
                 label: (
                   <Link href={"/dashboard/manage-books"}>Quản lý sách</Link>
-                ),
-              },
-              {
-                key: "accounts",
-                icon: <SolutionOutlined />,
-                label: (
-                  <Link href={"/dashboard/manage-accounts"}>
-                    Quản lý người dùng
-                  </Link>
                 ),
               },
               {
