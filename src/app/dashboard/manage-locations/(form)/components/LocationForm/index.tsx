@@ -102,7 +102,7 @@ function LocationForm(props: LocationFormProps) {
           }
           rules={[{ required: true, message: "Vui lòng nhập tên cơ sở" }]}
         >
-          <Input placeholder={"Tên cơ sở"} />
+          <Input allowClear placeholder={"Tên cơ sở"} />
         </Form.Item>
         <Form.Item
           name="address"
@@ -113,7 +113,7 @@ function LocationForm(props: LocationFormProps) {
           }
           rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
         >
-          <Input placeholder={"Địa chỉ"} />
+          <Input allowClear placeholder={"Địa chỉ"} />
         </Form.Item>
         <Form.Item
           name="phoneNumber"
@@ -124,7 +124,7 @@ function LocationForm(props: LocationFormProps) {
           }
           rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
         >
-          <Input placeholder={"Số điện thoại"} />
+          <Input allowClear placeholder={"Số điện thoại"} />
         </Form.Item>
         <Form.Item name="status" label={"Tình trạng"} initialValue="opening">
           <Radio.Group

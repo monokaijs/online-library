@@ -96,7 +96,7 @@ function AccountForm({ account }: { account?: Account }) {
           name="fullName"
           label={"Họ và tên"}
         >
-          <Input placeholder={"Nguyễn Văn A"} />
+          <Input allowClear placeholder={"Nguyễn Văn A"} />
         </Form.Item>
         <Form.Item
           rules={[
@@ -109,7 +109,7 @@ function AccountForm({ account }: { account?: Account }) {
           name="email"
           label={"Email"}
         >
-          <Input disabled={!!account} placeholder={"example@gmail.com"} />
+          <Input allowCleardisabled={!!account} placeholder={"example@gmail.com"} />
         </Form.Item>
         <Form.Item
           rules={[
@@ -122,10 +122,10 @@ function AccountForm({ account }: { account?: Account }) {
           name="phoneNumber"
           label={"Số điện thoại"}
         >
-          <Input placeholder={"Số điện thoại"} />
+          <Input allowClear placeholder={"Số điện thoại"} />
         </Form.Item>
         <Form.Item name="userId" label={"Mã người dùng"}>
-          <Input placeholder={"Mã người dùng"} />
+          <Input allowClear placeholder={"Mã người dùng"} />
         </Form.Item>
         <Form.Item name="role" label={"Vai trò"} initialValue={"user"}>
           <Radio.Group
@@ -146,7 +146,7 @@ function AccountForm({ account }: { account?: Account }) {
           />
         </Form.Item>
         <Form.Item name="identityNumber" label={"Số CCCD/CMND"}>
-          <Input placeholder={"Số CCCD/CMND"} type="number" />
+          <Input allowClear placeholder={"Số CCCD/CMND"} type="number" />
         </Form.Item>
         <Form.Item label={"Ngày sinh"} name={"birthday"}>
           <DatePicker

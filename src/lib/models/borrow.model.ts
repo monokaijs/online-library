@@ -15,9 +15,9 @@ export interface Borrow {
   book?: Book;
   library?: Location;
   phoneNumber: string;
-  borrowDate: string;
-  returnDate: string;
-  realReturnDate: string;
+  borrowDate: Date;
+  returnDate: Date;
+  realReturnDate: Date;
   deliveryMethod: string;
   email: string;
   note: string;
@@ -40,9 +40,9 @@ const BorrowSchema = new mongoose.Schema<Borrow>(
       ref: "Location",
     },
     phoneNumber: String,
-    borrowDate: String,
-    returnDate: String,
-    realReturnDate: String,
+    borrowDate: Date,
+    returnDate: Date,
+    realReturnDate: Date,
     deliveryMethod: String,
     email: String,
     note: String,

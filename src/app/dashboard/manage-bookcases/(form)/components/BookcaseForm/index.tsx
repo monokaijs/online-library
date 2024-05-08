@@ -93,7 +93,7 @@ function BookcaseForm(props: BookcaseFormProps) {
           }
           rules={[{ required: true, message: "Vui lòng mã ngăn sách!" }]}
         >
-          <Input placeholder={"Mã ngăn sách"} />
+          <Input allowClear placeholder={"Mã ngăn sách"} />
         </Form.Item>
         <Form.Item
           name="category"
@@ -104,7 +104,7 @@ function BookcaseForm(props: BookcaseFormProps) {
           }
           rules={[{ required: true, message: "Vui lòng thể loại!" }]}
         >
-          <Input placeholder={"Thể loại"} />
+          <Input allowClear placeholder={"Thể loại"} />
         </Form.Item>
         <Form.Item
           name="library"

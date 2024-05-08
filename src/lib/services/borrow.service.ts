@@ -20,6 +20,7 @@ class BorrowService {
     }
 
     payload.status = BorrowStatus.BORROWING;
+    
     const borrowRecord = await BorrowModel.create(payload);
     await bookService.update(book._id, {
       status: BookStatus.BORROWING,
@@ -251,7 +252,7 @@ class BorrowService {
       const overdued = dayjs().diff(borrow?.returnDate) > 0;
       const result = this.update(borrowId, {
         status: overdued ? BorrowStatus.OVERDUE : BorrowStatus.RETURNED,
-        realReturnDate: new Date().toString(),
+        realReturnDate: new Date(),
       });
 
       const book = await bookService.getById(borrow?.book);

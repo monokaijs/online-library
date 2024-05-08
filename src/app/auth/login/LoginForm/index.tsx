@@ -60,7 +60,7 @@ export default function LoginForm(props: LoginFormProps) {
       }}
     >
       <Form.Item label={"Email"} className={styles.item} name={"email"}>
-        <Input placeholder={"someone@example.com"} />
+        <Input allowClear placeholder={"someone@example.com"} />
       </Form.Item>
       <Form.Item label={"Password"} className={styles.item} name={"password"}>
         <Input.Password placeholder={"Password..."} />

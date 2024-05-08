@@ -167,7 +167,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập tên tác giả"} />
+              <Input allowClear placeholder={"Nhập tên tác giả"} />
             </Form.Item>
             <Form.Item
               rules={[
@@ -184,7 +184,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập mã sách"} />
+              <Input allowClear placeholder={"Nhập mã sách"} />
             </Form.Item>
             <Form.Item
               rules={[
@@ -200,7 +200,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập số ngày mượn tối đa"} type="number" />
+              <Input allowClear placeholder={"Nhập số ngày mượn tối đa"} type="number" />
             </Form.Item>
             <Form.Item
               name="isbn"
@@ -210,7 +210,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập ISBN"} />
+              <Input allowClear placeholder={"Nhập ISBN"} />
             </Form.Item>
             <Form.Item
               name="language"
@@ -220,7 +220,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập ngôn ngữ"} />
+              <Input allowClear placeholder={"Nhập ngôn ngữ"} />
             </Form.Item>
             <Form.Item
               name="publisher"
@@ -230,7 +230,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập nhà xuất bản"} />
+              <Input allowClear placeholder={"Nhập nhà xuất bản"} />
             </Form.Item>
             <Form.Item
               name="publishYear"
@@ -240,7 +240,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập năm xuất bản"} type="number" />
+              <Input allowClear placeholder={"Nhập năm xuất bản"} type="number" />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -311,7 +311,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập thể loại"} />
+              <Input allowClear placeholder={"Nhập thể loại"} />
             </Form.Item>
             <Form.Item
               name="description"

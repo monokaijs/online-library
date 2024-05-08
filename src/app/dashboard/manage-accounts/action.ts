@@ -59,7 +59,7 @@ export async function createAccountAction(_: any, account: Account) {
     await accountService.postAccount(account);
     return {
       success: true,
-      message: "ACCOUNT_CREATED",
+      message: "Tài khoản đã được tạo, vui lòng kiểm tra email",
     };
   } catch (error: any) {
     return {

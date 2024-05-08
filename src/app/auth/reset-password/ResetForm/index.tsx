@@ -59,7 +59,7 @@ export default function ResetForm(props: FormProps) {
       // }}
     >
       <Form.Item label={"Email"} className={styles.item} name={"email"}>
-        <Input placeholder={"someone@example.com"} />
+        <Input allowClear placeholder={"someone@example.com"} />
       </Form.Item>
       <Button
         type={"primary"}

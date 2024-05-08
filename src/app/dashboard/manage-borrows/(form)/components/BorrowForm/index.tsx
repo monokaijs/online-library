@@ -225,7 +225,7 @@ function BorrowForm(props: BorrowFormProps) {
           rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
           name={"phoneNumber"}
         >
-          <Input placeholder="Số điện thoại" allowClear type="number" />
+          <Input allowClear placeholder="Số điện thoại" type="number" />
         </Form.Item>
         <Form.Item
           label={
@@ -242,7 +242,7 @@ function BorrowForm(props: BorrowFormProps) {
           ]}
           name={"email"}
         >
-          <Input placeholder="Email" allowClear />
+          <Input allowClear placeholder="Email" disabled={true} />
         </Form.Item>
         <Form.Item
           label={
