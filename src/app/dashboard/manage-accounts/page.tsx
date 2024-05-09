@@ -14,6 +14,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "@/lib/utils/toast";
 import UserRole from "@/components/shared/UserRole";
+import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 
 function ManageAccounts() {
   const { token } = theme.useToken();
@@ -67,7 +68,7 @@ function ManageAccounts() {
     });
   }, [searchParams, pathname]);
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     setLoading(false);
   }, [state]);
 

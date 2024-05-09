@@ -19,6 +19,7 @@ import { getLibraryAction } from "../manage-locations/action";
 import { deleteBorrowAction, getBorrowAction } from "./action";
 import Status from "./components/BorrowStatus";
 import ViewBorrowModal from "./components/ViewBorrowModal";
+import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -86,7 +87,7 @@ function ManageBook() {
     });
   }, [searchParams, pathname]);
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     setLoading(false);
   }, [state]);
 
@@ -231,7 +232,7 @@ function ManageBook() {
           >
             <Select.Option value="all">Thư viện</Select.Option>
             {libraries?.data?.map((item: Location) => (
-              <Select.Option value={item._id}>{item.name}</Select.Option>
+              <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>
             ))}
           </Select>
           <Select

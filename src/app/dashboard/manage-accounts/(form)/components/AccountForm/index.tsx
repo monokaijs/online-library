@@ -3,7 +3,7 @@ import {
   createAccountAction,
   updateAccountAction,
 } from "@/app/dashboard/manage-accounts/action";
-import { UploadOutlined } from "@ant-design/icons";
+import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 import {
   Button,
   Card,
@@ -47,7 +47,7 @@ function AccountForm({ account }: { account?: Account }) {
     }
   }, [updateStatus]);
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     setLoading(false);
   }, [state, updateStatus]);
 
