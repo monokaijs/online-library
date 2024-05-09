@@ -58,13 +58,13 @@ export async function GET(req: NextRequest, res: NextRequest) {
   ]);
 
   borrows.forEach((borrow) => {
-    try {
-      mailingService.sendEmail(
-        borrow._id[0].email,
-        "D-Free Book | Thông báo sách quá hẹn",
-        BorrowReminderTemplate(borrow._id[0], borrow.borrows)
-      );
-    } catch (error) {}
+    // try {
+    //   mailingService.sendEmail(
+    //     borrow._id[0].email,
+    //     "D-Free Book | Thông báo sách quá hẹn",
+    //     BorrowReminderTemplate(borrow._id[0], borrow.borrows)
+    //   );
+    // } catch (error) {}
   });
 
   return Response.json({ data: borrows });

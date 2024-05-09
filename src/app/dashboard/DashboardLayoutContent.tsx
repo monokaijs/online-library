@@ -17,6 +17,7 @@ import {
   LockOutlined,
   LogoutOutlined,
   RetweetOutlined,
+  ReconciliationOutlined,
   SettingOutlined,
   SolutionOutlined,
   TableOutlined,
@@ -94,11 +95,27 @@ export default function DashboardLayoutContent(props: any) {
                 ),
               },
               {
-                key: "home",
-                icon: <HomeOutlined />,
+                key: "books",
+                icon: <BookOutlined />,
                 label: (
-                  <Link href={"/dashboard/manage-locations"}>
-                    Quản lý thư viện
+                  <Link href={"/dashboard/manage-books"}>Quản lý sách</Link>
+                ),
+              },
+              {
+                key: "borrows-returns",
+                icon: <RetweetOutlined />,
+                label: (
+                  <Link href={"/dashboard/manage-borrows"}>
+                    Mượn - trả sách
+                  </Link>
+                ),
+              },
+              {
+                key: "fines",
+                icon: <ReconciliationOutlined />,
+                label: (
+                  <Link href={"#"}>
+                    Quản lý tiền phạt
                   </Link>
                 ),
               },
@@ -112,18 +129,11 @@ export default function DashboardLayoutContent(props: any) {
                 ),
               },
               {
-                key: "books",
-                icon: <BookOutlined />,
+                key: "home",
+                icon: <HomeOutlined />,
                 label: (
-                  <Link href={"/dashboard/manage-books"}>Quản lý sách</Link>
-                ),
-              },
-              {
-                key: "borrows-returns",
-                icon: <RetweetOutlined />,
-                label: (
-                  <Link href={"/dashboard/manage-borrows"}>
-                    Mượn - trả sách
+                  <Link href={"/dashboard/manage-locations"}>
+                    Quản lý thư viện
                   </Link>
                 ),
               },

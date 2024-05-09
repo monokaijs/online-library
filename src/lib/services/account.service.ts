@@ -151,11 +151,12 @@ class AccountService {
       address: payload.address,
       balance: payload.balance,
       profilePicture: payload.profilePicture,
+      userId: payload.userId,
     });
 
     if (account.role !== RoleEnum.ADMIN) {
       // send verification email
-      await securityService.sendVerificationEmail(account);
+      // await securityService.sendVerificationEmail(account);
     }
     return account;
   }

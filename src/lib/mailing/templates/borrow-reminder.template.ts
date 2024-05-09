@@ -196,18 +196,19 @@ export const BorrowReminderTemplate = (
                                     try {
                                       const diff = dayjs(item.returnDate).diff(
                                         dayjs(),
-                                        "days"
+                                        "hour"
                                       );
+
                                       return `<tr>
-                                      <td>${item?.book?.[0].name}</td>
-                                      <td>${dayjs(item.returnDate).format(
+                                      <td style="padding: 12px; text-align: center">${item?.book?.[0].name}</td>
+                                      <td style="padding: 12px; text-align: center">${dayjs(item.returnDate).format(
                                         "DD/MM/YYYY"
                                       )}</td>
                                       <td style="color: ${
                                         diff > 0 ? "orange" : "red"
-                                      }">${
-                                        diff > 0 ? "Còn" : "Quá hạn"
-                                      } ${Math.abs(diff)} ngày</td>
+                                      }; text-align: center; pading: 12px; ">${
+                                        diff > 0 ? "Sắp đến hạn" : "Đã quá hạn"
+                                      }</td>
                                   </tr>`;
                                     } catch (error) {}
                                   })

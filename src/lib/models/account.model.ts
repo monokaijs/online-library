@@ -13,10 +13,7 @@ const AccountSchema = new mongoose.Schema<Account>({
     required: true,
     unique: true,
   },
-  userId: {
-    type: String,
-    unique: true,
-  },
+  userId: String,
   birthday: Date,
   fullName: String,
   phoneNumber: {

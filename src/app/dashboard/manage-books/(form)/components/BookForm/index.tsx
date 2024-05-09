@@ -103,7 +103,9 @@ function BookForm(props: FormProps) {
 
   const onFinish = (values: any) => {
     setFormLoading(true);
-    values.bookcase = JSON.parse(values?.bookcase)?._id;
+    if(values.bookcase){
+      values.bookcase = JSON.parse(values?.bookcase)?._id;
+    }
     if (action === FormAction.CREATE) {
       createBook(values);
     } else {
