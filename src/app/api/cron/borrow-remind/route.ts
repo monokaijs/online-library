@@ -8,11 +8,11 @@ import moment from "moment";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest, res: NextRequest) {
-  if (
-    req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
-    return Response.json({ success: false, message: "Unauthorized" });
-  }
+  // if (
+  //   req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
+  // ) {
+  //   return Response.json({ success: false, message: "Unauthorized" });
+  // }
   const currentDate = new Date();
   const targetDate = new Date(currentDate);
   targetDate.setDate(currentDate.getDate() + 5);
