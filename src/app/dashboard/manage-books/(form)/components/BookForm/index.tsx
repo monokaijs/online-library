@@ -103,7 +103,7 @@ function BookForm(props: FormProps) {
 
   const onFinish = (values: any) => {
     setFormLoading(true);
-    if(values.bookcase){
+    if (values.bookcase) {
       values.bookcase = JSON.parse(values?.bookcase)?._id;
     }
     if (action === FormAction.CREATE) {
@@ -132,7 +132,11 @@ function BookForm(props: FormProps) {
           <Col span={12}>
             <Form.Item
               rules={[
-                { required: true, message: "Vui lòng nhập tên sách" },
+                {
+                  required: true,
+                  message: "Vui lòng nhập tên sách",
+                  whitespace: true,
+                },
                 {
                   max: 150,
                   message: "Tên sách tối đa 150 kí tự",
@@ -156,7 +160,11 @@ function BookForm(props: FormProps) {
             </Form.Item>
             <Form.Item
               rules={[
-                { required: true, message: "Vui lòng nhập tên tác giả" },
+                {
+                  required: true,
+                  message: "Vui lòng nhập tên tác giả",
+                  whitespace: true,
+                },
                 {
                   max: 150,
                   message: "Tên sách tối đa 150 kí tự",
@@ -173,7 +181,11 @@ function BookForm(props: FormProps) {
             </Form.Item>
             <Form.Item
               rules={[
-                { required: true, message: "Vui lòng nhập mã sách" },
+                {
+                  required: true,
+                  message: "Vui lòng nhập mã sách",
+                  whitespace: true,
+                },
                 {
                   max: 50,
                   message: "Tên sách tối đa 50 kí tự",
@@ -202,7 +214,11 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input allowClear placeholder={"Nhập số ngày mượn tối đa"} type="number" />
+              <Input
+                allowClear
+                placeholder={"Nhập số ngày mượn tối đa"}
+                type="number"
+              />
             </Form.Item>
             <Form.Item
               name="isbn"
@@ -242,7 +258,11 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input allowClear placeholder={"Nhập năm xuất bản"} type="number" />
+              <Input
+                allowClear
+                placeholder={"Nhập năm xuất bản"}
+                type="number"
+              />
             </Form.Item>
           </Col>
           <Col span={12}>

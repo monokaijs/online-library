@@ -55,7 +55,7 @@ function AccountForm({ account }: { account?: Account }) {
     if (account) {
       form.setFieldsValue({
         ...account,
-        birthday: account.birthday ? dayjs(account.birthday) : '',
+        birthday: account.birthday ? dayjs(account.birthday) : "",
       });
     }
   }, [account]);
@@ -87,7 +87,11 @@ function AccountForm({ account }: { account?: Account }) {
       >
         <Form.Item
           rules={[
-            { required: true, message: "Vui lòng nhập họ tên!" },
+            {
+              required: true,
+              message: "Vui lòng nhập họ tên!",
+              whitespace: true,
+            },
             {
               max: 30,
               message: "Họ và tên tối đa 30 kí tự",
@@ -100,7 +104,11 @@ function AccountForm({ account }: { account?: Account }) {
         </Form.Item>
         <Form.Item
           rules={[
-            { required: true, message: "Vui lòng nhập email!" },
+            {
+              required: true,
+              message: "Vui lòng nhập email!",
+              whitespace: true,
+            },
             {
               pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
               message: "Email không hợp lệ",
@@ -109,11 +117,19 @@ function AccountForm({ account }: { account?: Account }) {
           name="email"
           label={"Email"}
         >
-          <Input allowClear disabled={!!account} placeholder={"example@gmail.com"} />
+          <Input
+            allowClear
+            disabled={!!account}
+            placeholder={"example@gmail.com"}
+          />
         </Form.Item>
         <Form.Item
           rules={[
-            { required: true, message: "Vui lòng nhập số điện thoại!" },
+            {
+              required: true,
+              message: "Vui lòng nhập số điện thoại!",
+              whitespace: true,
+            },
             {
               pattern: /^(?:\d*)$/,
               message: "Số điện thoại không hợp lệ",

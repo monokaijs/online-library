@@ -100,7 +100,13 @@ function LocationForm(props: LocationFormProps) {
               Tên cơ sở
             </Typography.Text>
           }
-          rules={[{ required: true, message: "Vui lòng nhập tên cơ sở" }]}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập tên cơ sở",
+              whitespace: true,
+            },
+          ]}
         >
           <Input allowClear placeholder={"Tên cơ sở"} />
         </Form.Item>
@@ -111,7 +117,13 @@ function LocationForm(props: LocationFormProps) {
               Địa chỉ
             </Typography.Text>
           }
-          rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập địa chỉ",
+              whitespace: true,
+            },
+          ]}
         >
           <Input allowClear placeholder={"Địa chỉ"} />
         </Form.Item>
@@ -122,7 +134,13 @@ function LocationForm(props: LocationFormProps) {
               Số điện thoại
             </Typography.Text>
           }
-          rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập số điện thoại",
+              whitespace: true,
+            },
+          ]}
         >
           <Input allowClear placeholder={"Số điện thoại"} />
         </Form.Item>

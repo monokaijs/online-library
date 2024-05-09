@@ -63,7 +63,7 @@ function BorrowForm(props: BorrowFormProps) {
 
   const [data, getUsersByName] = useFormState(getAccountsAction, {
     accounts: [],
-    limit: 50,
+    limit: 20,
     page: 1,
     totalPages: 0,
     totalDocs: 0,
@@ -222,7 +222,21 @@ function BorrowForm(props: BorrowFormProps) {
               Số điện thoại
             </Typography.Text>
           }
-          rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập số điện thoại",
+              whitespace: true,
+            },
+            {
+              min: 10,
+              message: "Số điện thoại tối thiểu 10 kí tự",
+            },
+            {
+              max: 11,
+              message: "Số điện thoại tối đa 11 kí tự",
+            },
+          ]}
           name={"phoneNumber"}
         >
           <Input allowClear placeholder="Số điện thoại" type="number" />
@@ -234,7 +248,11 @@ function BorrowForm(props: BorrowFormProps) {
             </Typography.Text>
           }
           rules={[
-            { required: true, message: "Vui lòng nhập email" },
+            {
+              required: true,
+              message: "Vui lòng nhập email",
+              whitespace: true,
+            },
             {
               pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
               message: "Email không hợp lệ",
@@ -250,7 +268,13 @@ function BorrowForm(props: BorrowFormProps) {
               Địa chỉ
             </Typography.Text>
           }
-          rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập địa chỉ",
+              whitespace: true,
+            },
+          ]}
           name={"address"}
         >
           <Input.TextArea placeholder={"Địa chỉ người nhận"} />
@@ -311,13 +335,10 @@ function BorrowForm(props: BorrowFormProps) {
           }
           name={"library"}
         >
-          <Input
-            placeholder="Thư viện"
-            disabled={action === FormAction.UPDATE}
-          />
+          <Input placeholder="Thư viện" disabled={true} />
         </Form.Item>
         <Row gutter={18}>
-          <Col xs={24} lg={12}>
+          <Col xs={24} lg={24}>
             <Form.Item
               label={
                 <Typography.Text style={{ color: colorPrimary }}>
@@ -338,7 +359,7 @@ function BorrowForm(props: BorrowFormProps) {
               />
             </Form.Item>
           </Col>
-          <Col xs={24} lg={12} className="return-date">
+          <Col xs={24} lg={24}>
             <Form.Item
               label={
                 <Typography.Text style={{ color: colorPrimary }}>

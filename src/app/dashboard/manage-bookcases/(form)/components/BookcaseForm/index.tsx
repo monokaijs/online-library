@@ -91,7 +91,13 @@ function BookcaseForm(props: BookcaseFormProps) {
               Ngăn sách
             </Typography.Text>
           }
-          rules={[{ required: true, message: "Vui lòng mã ngăn sách!" }]}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập mã ngăn sách!",
+              whitespace: true,
+            },
+          ]}
         >
           <Input allowClear placeholder={"Mã ngăn sách"} />
         </Form.Item>
@@ -102,7 +108,13 @@ function BookcaseForm(props: BookcaseFormProps) {
               Thể loại
             </Typography.Text>
           }
-          rules={[{ required: true, message: "Vui lòng thể loại!" }]}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập thể loại!",
+              whitespace: true,
+            },
+          ]}
         >
           <Input allowClear placeholder={"Thể loại"} />
         </Form.Item>
