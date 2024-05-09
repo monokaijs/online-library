@@ -6,9 +6,11 @@ import {
   createBorrowAction,
   updateBorrowAction,
 } from "@/app/dashboard/manage-borrows/action";
+import { getLibraryAction } from "@/app/dashboard/manage-locations/action";
 import { FormAction } from "@/constants/app.constant";
 import useDebounce from "@/lib/hooks/useDebounce";
 import { Book, BookStatus } from "@/lib/models/book.model";
+import { Location } from "@/lib/models/library.model";
 import { toast } from "@/lib/utils/toast";
 import {
   Button,
@@ -23,8 +25,8 @@ import {
   theme,
 } from "antd";
 import dayjs from "dayjs";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import "./style.css";
 
@@ -77,7 +79,7 @@ function BorrowForm(props: BorrowFormProps) {
   const [bookName, setBookName] = useState("");
   const [bookLoading, setBookLoading] = useState(false);
   const bookDebounce = useDebounce(bookName);
-  const [books, getBooksByName] = useFormState(getBookAction, {
+  const [books, getBooks] = useFormState(getBookAction, {
     data: [],
     limit: 50,
     page: 1,
@@ -85,8 +87,17 @@ function BorrowForm(props: BorrowFormProps) {
     totalDocs: 0,
   });
 
+  const [libraries, getLibaries] = useFormState(getLibraryAction, {
+    success: false,
+    message: "",
+  });
+
   useEffect(() => {
-    getBooksByName({
+    getLibaries();
+  }, []);
+
+  useEffect(() => {
+    getBooks({
       ...data,
       filter: {
         name: bookDebounce,
@@ -148,7 +159,9 @@ function BorrowForm(props: BorrowFormProps) {
 
       if (selected) {
         form.setFieldValue("book", JSON.stringify(selected));
-        form.setFieldValue("library", selected?.bookcase?.library?.name);
+        form.setFieldValue("library", selected?.library?._id);
+      } else {
+        form.setFieldValue("book", undefined);
       }
     }
   }, [books]);
@@ -282,6 +295,38 @@ function BorrowForm(props: BorrowFormProps) {
         <Form.Item
           label={
             <Typography.Text style={{ color: colorPrimary }}>
+              Thư viện
+            </Typography.Text>
+          }
+          name={"library"}
+          rules={[{ required: true, message: "Vui lòng chọn thư viện" }]}
+        >
+          <Select
+            disabled={action === FormAction.UPDATE}
+            onChange={(e) => {
+              getBooks({
+                ...data,
+                filter: {
+                  name: bookDebounce,
+                  status: BookStatus.AVAILABLE,
+                  library: e,
+                },
+              });
+              form.setFieldValue("book", undefined);
+            }}
+          >
+            {libraries?.data?.map((item: Location) => {
+              return (
+                <Select.Option key={item._id} value={item._id}>
+                  {item?.name}
+                </Select.Option>
+              );
+            })}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label={
+            <Typography.Text style={{ color: colorPrimary }}>
               Sách mượn
             </Typography.Text>
           }
@@ -296,10 +341,6 @@ function BorrowForm(props: BorrowFormProps) {
               onSearch={(e) => {
                 setBookName(e);
                 setBookLoading(true);
-              }}
-              onChange={(e) => {
-                const book: Book = JSON.parse(e);
-                form.setFieldValue("library", book?.bookcase?.library?.name);
               }}
               loading={bookLoading}
               filterOption={(input, option: any) =>
@@ -325,17 +366,6 @@ function BorrowForm(props: BorrowFormProps) {
               </Select.Option>
             </Select>
           )}
-        </Form.Item>
-
-        <Form.Item
-          label={
-            <Typography.Text style={{ color: colorPrimary }}>
-              Thư viện
-            </Typography.Text>
-          }
-          name={"library"}
-        >
-          <Input placeholder="Thư viện" disabled={true} />
         </Form.Item>
         <Row gutter={18}>
           <Col xs={24} lg={24}>

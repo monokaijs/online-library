@@ -51,6 +51,7 @@ function ManageAccountsHeader() {
         </Select>
         <Input
           placeholder={"Tìm kiếm bạn đọc..."}
+          allowClear
           addonAfter={<SearchOutlined />}
           value={query}
           onChange={(e) => {

@@ -10,11 +10,11 @@ import { useFormState } from "react-dom";
 import { deleteLibraryAction, getLibraryAction } from "./action";
 import ManageLocationsHeader from "./components/ManageLocationsHeader";
 import ViewLocationModal from "./components/ViewLocationModal";
+import dayjs from "dayjs";
 
 function ManageLocations() {
   const { token } = theme.useToken();
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [detail, setDetail] = useState<Location>();
 
@@ -77,18 +77,17 @@ function ManageLocations() {
       title: "Địa chỉ",
       dataIndex: "address",
       key: "address",
-      align: "center",
     },
     {
       title: "Thời gian mở cửa",
-      dataIndex: "address",
-      key: "address",
+      key: "openingTime",
       align: "center",
+      render: (item: Location) => dayjs(item.openingTime).format("HH:mm") + " - " + dayjs(item.closingTime).format("HH:mm"),
     },
     {
       title: "Số điện thoại",
-      dataIndex: "address",
-      key: "address",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
       align: "center",
     },
     {

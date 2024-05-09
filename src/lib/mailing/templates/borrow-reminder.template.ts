@@ -4,7 +4,8 @@ import dayjs from "dayjs";
 
 export const BorrowReminderTemplate = (
   account: Account,
-  borrows: Borrow[]
+  borrows: Borrow[],
+  hotlines: string[]
 ) => `<!DOCTYPE html>
 <html>
 
@@ -94,6 +95,10 @@ export const BorrowReminderTemplate = (
             border: 0;
             outline: none;
         }
+
+        * {
+            color: black !important;
+        }
     </style>
 
 </head>
@@ -103,7 +108,7 @@ export const BorrowReminderTemplate = (
     <!-- start preheader -->
     <div class="preheader"
         style="display: none; max-width: 0; max-height: 0; overflow: hidden; font-size: 1px; line-height: 1px; color: #fff; opacity: 0;">
-        Thông báo sách quá hẹn
+        Thông báo sắp đến hạn trả sách
     </div>
     <!-- end preheader -->
 
@@ -151,7 +156,7 @@ export const BorrowReminderTemplate = (
                             style="padding: 36px 24px 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; border-top: 3px solid #d4dadf;">
                             <h1
                                 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px;">
-                                Thông báo sách quá hẹn
+                                Thông báo sắp đến hạn trả sách
                             </h1>
                         </td>
                     </tr>
@@ -179,36 +184,33 @@ export const BorrowReminderTemplate = (
                             style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
                             <p style="margin: 0;">
                                 Xin chào ${account.fullName},<br /><br />
-                                D-Free Book hy vọng bạn đang có một ngày tốt lành. <br /><br />
-                                D-Free Book gửi email này để nhắc nhở về việc trả sách mà bạn đã mượn từ thư viện và đã
-                                quá hạn trả theo thỏa thuận. Bạn vui lòng trả sách trong thời gian sớm nhất để tránh
-                                phát sinh chi phí.<br /><br />
-                                Dưới đây là danh sách đến hạn:
+                                D Free Book hy vọng cậu đang có một ngày tốt lành. <br /><br />
+                                D Free Book gửi email này để nhắc nhở về việc trả sách mà cậu đã mượn từ thư viện và sắp đến hạn trả theo quy định. Cậu vui lòng trả sách trong thời gian sớm nhất để tránh phát sinh chi phí.<br /><br />
+                                Dưới đây là danh sách sách sắp đến hạn:
 
                             <table border width="100%" style="margin-top: 10px;">
                                 <tr>
                                     <th>Tên sách</th>
+                                    <th>Ngày mượn</th>
                                     <th>Ngày hẹn</th>
-                                    <th>Tình trạng</th>
+                                    <th>Còn lại</th>
                                 </tr>
                                 ${borrows
                                   .map((item: any) => {
                                     try {
-                                      const diff = dayjs(item.returnDate).diff(
-                                        dayjs(),
-                                        "hour"
-                                      );
-
                                       return `<tr>
-                                      <td style="padding: 12px; text-align: center">${item?.book?.[0].name}</td>
-                                      <td style="padding: 12px; text-align: center">${dayjs(item.returnDate).format(
-                                        "DD/MM/YYYY"
-                                      )}</td>
-                                      <td style="color: ${
-                                        diff > 0 ? "orange" : "red"
-                                      }; text-align: center; pading: 12px; ">${
-                                        diff > 0 ? "Sắp đến hạn" : "Đã quá hạn"
+                                      <td style="padding: 12px; text-align: center">${
+                                        item?.book?.[0].name
                                       }</td>
+                                      <td style="padding: 12px; text-align: center">${dayjs(
+                                        item.borrowDate
+                                      ).format("DD/MM/YYYY")}</td>
+                                      <td style="padding: 12px; text-align: center">${dayjs(
+                                        item.returnDate
+                                      ).format("DD/MM/YYYY")}</td>
+                                      <td style="text-align: center; pading: 12px; ">
+                                        5 ngày
+                                      </td>
                                   </tr>`;
                                     } catch (error) {}
                                   })
@@ -222,14 +224,12 @@ export const BorrowReminderTemplate = (
                     <tr>
                         <td align="left" bgcolor="#ffffff"
                             style="padding: 0 24px;; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                            <p style="margin: 0;">Nếu bạn đã trả sách nhưng vẫn nhận được email này, xin vui lòng bỏ
-                                qua. Nếu có bất kỳ trở ngại nào hoặc bạn cần thêm thời gian để trả sách, xin vui lòng
-                                liên hệ
-                                với chúng tôi ngay lập tức để chúng ta có thể thảo luận về các phương án khác nhau.
+                            <p style="margin: 0;">Nếu cậu đã trả sách nhưng vẫn nhận được email này, xin vui lòng bỏ
+                                qua. Nếu có bất kỳ trở ngại nào hoặc cậu cần thêm thời gian để trả sách, xin vui lòng
+                                liên hệ với DFB bằng cách đến gặp trực tiếp CTV tại thư viện hoặc gọi điện qua số hotline.
                                 <br /><br />
-
-                                Cảm ơn bạn đã hiểu và tuân thủ các quy định của thư viện, mong rằng bạn sẽ
-                                tiếp tục đồng hành cùng D-Free Book.
+                                Cảm ơn cậu đã hiểu và tuân thủ các quy định của thư viện, mong rằng cậu sẽ
+                                tiếp tục đồng hành cùng D Free Book.
                             </p>
                         </td>
                     </tr>
@@ -239,7 +239,12 @@ export const BorrowReminderTemplate = (
                     <tr>
                         <td align="left" bgcolor="#ffffff"
                             style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #d4dadf">
-                            <p style="margin: 0;">Trân trọng,<br> D-Free Books</p>
+                            <p style="margin: 0;">Trân trọng,<br> D Free Books</p>
+                            ${
+                                hotlines.map(item => `<p>${item}</p>`).join("")
+                            }
+                            <img src="https://i.imgur.com/WANVMWG.png" alt="Logo" border="0" height="48"
+                                    style="display: block; height: 50px;">
                         </td>
                     </tr>
                     <!-- end copy -->
@@ -270,7 +275,7 @@ export const BorrowReminderTemplate = (
                             style="padding: 12px 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666;">
                             <p style="margin: 0;">Đây là email quan trọng liên quan tới tài khoản của bạn, không thể
                                 unsubscribe.</p>
-                            <p style="margin: 0;">D-Free Books</p>
+                            <p style="margin: 0;">D Free Books</p>
                         </td>
                     </tr>
                     <!-- end unsubscribe -->

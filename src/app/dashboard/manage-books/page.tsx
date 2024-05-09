@@ -28,6 +28,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { deleteBookAction, getBookAction } from "./action";
 import ViewBookModal from "./components/ViewBookModal";
+import { Location } from "@/lib/models/library.model";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -136,11 +137,11 @@ function ManageBook() {
     searchParams.get("type") !== "trending"
       ? {
           title: "Thư viện",
-          dataIndex: "bookcase",
-          key: "bookcase",
+          dataIndex: "library",
+          key: "library",
           align: "center",
-          render: (bookcase: any) => {
-            return <div>{bookcase?.library?.name}</div>;
+          render: (library: Location) => {
+            return <div>{library?.name}</div>;
           },
         }
       : {
@@ -304,6 +305,7 @@ function ManageBook() {
           <Input
             className={"bg-input-group-after"}
             placeholder={"Tìm kiếm..."}
+            allowClear
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);

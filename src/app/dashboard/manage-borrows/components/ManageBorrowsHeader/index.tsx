@@ -9,6 +9,7 @@ export default function ManageBorrowsHeader() {
         <Input
           className={'bg-input-group-after'}
           placeholder={'Tìm kiếm...'}
+          allowClear
           addonAfter={<SearchOutlined/>}
         />
       </div>

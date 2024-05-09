@@ -29,8 +29,9 @@ class BookService {
             populate: "library",
           },
           "borrowRecord",
+          "library",
         ],
-        sort: { createdAt: -1 }
+        sort: { createdAt: -1 },
       };
 
       const filter: FilterQuery<BookDocument> = {};
@@ -47,6 +48,10 @@ class BookService {
 
       if (query?.type === "available") {
         filter.status = BookStatus.AVAILABLE;
+      }
+
+      if (query?.library) {
+        filter.library = query.library;
       }
 
       if (query?.type === "new") {

@@ -1,6 +1,7 @@
 import { AccountVerificationTemplate } from "@/lib/mailing/templates/account.verification.template";
 import { BorrowReminderTemplate } from "@/lib/mailing/templates/borrow-reminder.template";
 import { BorrowModel, BorrowStatus } from "@/lib/models/borrow.model";
+import { LibraryStatus, LocationModel } from "@/lib/models/library.model";
 import { dbService } from "@/lib/services/db.service";
 import mailingService from "@/lib/services/mailing.service";
 import moment from "moment";
@@ -12,16 +13,23 @@ export async function GET(req: NextRequest, res: NextRequest) {
   ) {
     return Response.json({ success: false, message: "Unauthorized" });
   }
+  const currentDate = new Date();
+  const targetDate = new Date(currentDate);
+  targetDate.setDate(currentDate.getDate() + 5);
+
+  targetDate.setHours(0, 0, 0, 0);
+
+  const nextDay = new Date(targetDate);
+  nextDay.setDate(targetDate.getDate() + 1);
+
   await dbService.connect();
   const borrows = await BorrowModel.aggregate([
     {
-      $addFields: {
-        dueDate: { $add: ["$returnDate", -2 * 24 * 60 * 60 * 1000] }, // Tính toán ngày hạn trả bằng cách thêm 2 ngày vào returnDate
-      },
-    },
-    {
       $match: {
-        dueDate: { $lt: new Date() },
+        returnDate: {
+          $gte: targetDate,
+          $lt: nextDay,
+        },
         status: BorrowStatus.BORROWING,
       },
     },
@@ -57,14 +65,21 @@ export async function GET(req: NextRequest, res: NextRequest) {
     },
   ]);
 
+  const libraries = await LocationModel.find({ status: LibraryStatus.OPENING });
+  const hotlines = libraries.map((item) => `Cơ sở ${item.name}: ${item.address} - Hotline: ${item.phoneNumber}`);
+
   borrows.forEach((borrow) => {
-    // try {
-    //   mailingService.sendEmail(
-    //     borrow._id[0].email,
-    //     "D-Free Book | Thông báo sách quá hẹn",
-    //     BorrowReminderTemplate(borrow._id[0], borrow.borrows)
-    //   );
-    // } catch (error) {}
+    try {
+      mailingService
+        .sendEmail(
+          borrow._id[0].email,
+          "D-Free Book | Thông báo sách quá hẹn",
+          BorrowReminderTemplate(borrow._id[0], borrow.borrows, hotlines)
+        )
+        .then(() => {
+          console.log(`Email was sent for ${borrow._id[0].email}`);
+        });
+    } catch (error) {}
   });
 
   return Response.json({ data: borrows });
