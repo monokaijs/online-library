@@ -50,13 +50,13 @@ function AccountDetailPage() {
   const history: Borrow[] | undefined = data?.history;
   const totalBorrow = history?.length ?? 0;
   const totalBorrowing =
-    history?.filter((item) => item.status === BorrowStatus.BORROWING).length ??
+    history?.filter((item) => item?.status === BorrowStatus.BORROWING).length ??
     0;
   const totalReturned =
-    history?.filter((item) => item.status !== BorrowStatus.BORROWING).length ??
+    history?.filter((item) => item?.status !== BorrowStatus.BORROWING).length ??
     0;
   const totalOverdued =
-    history?.filter((item) => item.status === BorrowStatus.OVERDUE).length ?? 0;
+    history?.filter((item) => item?.status === BorrowStatus.OVERDUE).length ?? 0;
 
   return (
     <div className="h-full flex flex-col overflow-hidden">

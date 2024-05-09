@@ -15,7 +15,7 @@ import { bookService } from "./book.service";
 class BorrowService {
   async create(payload: any) {
     const book = await bookService.getById(payload.book);
-    if (!book || book.status !== BookStatus.AVAILABLE) {
+    if (!book || book?.status !== BookStatus.AVAILABLE) {
       throw Error("Sách hiện không khả dụng");
     }
 
@@ -69,15 +69,15 @@ class BorrowService {
         user: { $ne: null, $in: existingUserIds },
       };
 
-      if (query.status == "borrowing") {
+      if (query?.status == "borrowing") {
         filter.status = "borrowing";
       }
 
-      if (query.status == "returned") {
+      if (query?.status == "returned") {
         filter.status = "returned";
       }
 
-      if (query.status == "ovedued") {
+      if (query?.status == "ovedued") {
         filter.status = "ovedued";
       }
 
@@ -196,12 +196,12 @@ class BorrowService {
       const user = await accountService.getAccountById(borrowRecord?.user?._id);
       const history = await BorrowModel.find({ user: user?._id });
       const borrowing = history.filter((item) => {
-        return item.status === BorrowStatus.BORROWING;
+        return item?.status === BorrowStatus.BORROWING;
       }).length;
 
       const returned = history.length - borrowing;
       const overdued = history.filter(
-        (item) => item.status === BorrowStatus.OVERDUE
+        (item) => item?.status === BorrowStatus.OVERDUE
       ).length;
 
       return JSON.parse(

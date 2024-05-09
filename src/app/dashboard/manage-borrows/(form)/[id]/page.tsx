@@ -156,7 +156,7 @@ export default function BorrowDetail() {
         </Flex>
       </div>
 
-      {borrowRecord.status === BorrowStatus.BORROWING && (
+      {borrowRecord?.status === BorrowStatus.BORROWING && (
         <Flex gap={4} justify="flex-end">
           <Button
             onClick={() => {

@@ -160,16 +160,16 @@ function ManageBook() {
         return (
           <Tag
             color={
-              record.status === BookStatus.AVAILABLE
+              record?.status === BookStatus.AVAILABLE
                 ? "green"
-                : record.status === BookStatus.OVERDUE || overdued
+                : record?.status === BookStatus.OVERDUE || overdued
                 ? "red"
                 : "yellow"
             }
           >
-            {record.status === BookStatus.AVAILABLE
+            {record?.status === BookStatus.AVAILABLE
               ? "Đang trên kệ"
-              : record.status === BookStatus.OVERDUE || overdued
+              : record?.status === BookStatus.OVERDUE || overdued
               ? "Quá hạn"
               : "Đang mượn"}
           </Tag>
@@ -181,7 +181,7 @@ function ManageBook() {
       key: "status",
       align: "center",
       render: (record: Book) => {
-        return record.borrowRecord && record.status !== BookStatus.AVAILABLE
+        return record.borrowRecord && record?.status !== BookStatus.AVAILABLE
           ? dayjs(record.borrowRecord?.borrowDate).format("DD/MM/YYYY")
           : "-";
       },
@@ -191,7 +191,7 @@ function ManageBook() {
       key: "status",
       align: "center",
       render: (record: Book) => {
-        return record.borrowRecord && record.status !== BookStatus.AVAILABLE
+        return record.borrowRecord && record?.status !== BookStatus.AVAILABLE
           ? dayjs(record.borrowRecord?.returnDate).format("DD/MM/YYYY")
           : "-";
       },
@@ -244,7 +244,7 @@ function ManageBook() {
                         `/dashboard/manage-borrows/create?book=${item?._id}`
                       );
                     },
-                    disabled: item.status !== BookStatus.AVAILABLE,
+                    disabled: item?.status !== BookStatus.AVAILABLE,
                   },
                   {
                     key: "d",

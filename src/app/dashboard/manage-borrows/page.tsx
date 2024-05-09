@@ -163,7 +163,7 @@ function ManageBook() {
       title: "Thao tác",
       key: "action",
       render: (item: any) => {
-        const borrowing = item.status === BorrowStatus.BORROWING;
+        const borrowing = item?.status === BorrowStatus.BORROWING;
         return (
           <div
             className={"flex justify-center"}

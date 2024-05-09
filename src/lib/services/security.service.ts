@@ -53,7 +53,7 @@ class SecurityService {
     const account = await accountService.getAccountByEmail(email, true);
     if (!account) throw new Error("Tài khoản không tồn tại");
     if (this.validatePassword(password, account.password)) {
-      if (account.status !== 'verified') throw new Error("Tài khoản của bạn chưa được xác thực, vui lòng kiểm tra Email và xác thực trước.");
+      if (account?.status !== 'verified') throw new Error("Tài khoản của bạn chưa được xác thực, vui lòng kiểm tra Email và xác thực trước.");
       return account;
     } else throw new Error("Sai mật khẩu");
   }
