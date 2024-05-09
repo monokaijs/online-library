@@ -70,6 +70,7 @@ export async function createAccountAction(_: any, account: Account) {
 }
 
 export async function getAccountByIdAction(prev: any, _id: string) {
+  await dbService.connect();
   try {
     return {
       account: await accountService.getAccountById(_id),
@@ -85,6 +86,7 @@ export async function getAccountByIdAction(prev: any, _id: string) {
 }
 
 export async function getAccountDetailAction(_prev: any, _id: string) {
+  await dbService.connect();
   try {
     return {
       data: await accountService.getAccountDetail(_id),

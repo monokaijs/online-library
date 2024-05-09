@@ -49,6 +49,7 @@ export async function deleteBookcaseAction(_: any, _id: string) {
 }
 
 export async function getBookcaseByIdAction(prev: any, _id: string) {
+  await dbService.connect();
   try {
     return {
       data: await bookcaseService.getById(_id),
@@ -67,6 +68,7 @@ export async function updateBookcaseAction(
   prev: any,
   data: Partial<BookcaseDocument>
 ) {
+  await dbService.connect();
   try {
     await bookcaseService.update(data._id, data);
     return { success: true, message: "Đã cập nhật ngăn sách" };

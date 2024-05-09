@@ -25,7 +25,7 @@ import "./style.css";
 export default function BorrowDetail() {
   const router = useRouter();
   const { id } = useParams();
-  const [{ data }, getBorrowDetail] = useFormState(getBorrowDetailAction, {
+  const [state, getBorrowDetail] = useFormState(getBorrowDetailAction, {
     data: undefined,
     success: false,
     message: "",
@@ -47,7 +47,7 @@ export default function BorrowDetail() {
     }
   }, [returnState]);
 
-  if (!data) {
+  if (!state?.data) {
     return (
       <div className="h-full flex items-center justify-center">
         <Spin />
@@ -55,10 +55,10 @@ export default function BorrowDetail() {
     );
   }
 
-  const user: Account | undefined = data?.borrowRecord?.user;
-  const borrowRecord: Borrow = data?.borrowRecord;
-  const book: Book | undefined = data?.borrowRecord?.book;
-  const analysis = data?.analysis;
+  const user: Account | undefined = state?.data?.borrowRecord?.user;
+  const borrowRecord: Borrow = state?.data?.borrowRecord;
+  const book: Book | undefined = state?.data?.borrowRecord?.book;
+  const analysis = state?.data?.analysis;
 
   return (
     <Card
@@ -128,7 +128,7 @@ export default function BorrowDetail() {
                 "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
             }}
             src={
-              data?.borrowRecord?.book?.picture ??
+              state?.data?.borrowRecord?.book?.picture ??
               "https://dynamicmediainstitute.org/wp-content/themes/dynamic-media-institute-theme/imagery/default-book.png"
             }
           />

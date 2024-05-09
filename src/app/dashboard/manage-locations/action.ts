@@ -51,6 +51,8 @@ export async function deleteLibraryAction(_: any, _id: string) {
 }
 
 export async function getLibraryByIdAction(prev: any, _id: string) {
+  await dbService.connect();
+
   try {
     return {
       data: await libraryService.getById(_id),
@@ -69,6 +71,8 @@ export async function updateLocationAction(
   prev: any,
   data: Partial<LibraryDocument>
 ) {
+  await dbService.connect();
+  
   try {
     await libraryService.update(data._id, data);
     return { success: true, message: "Đã cập nhật thư viện" };

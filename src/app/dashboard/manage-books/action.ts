@@ -93,6 +93,7 @@ export async function deleteBookAction(_: any, _id: string) {
 }
 
 export async function getBookByIdAction(prev: any, _id: string) {
+  await dbService.connect();
   try {
     return {
       data: await bookService.getById(_id),
@@ -108,6 +109,7 @@ export async function getBookByIdAction(prev: any, _id: string) {
 }
 
 export async function getBookDetailAction(prev: any, _id: string) {
+  await dbService.connect();
   try {
     return {
       data: await bookService.getBookDetail(_id),
@@ -126,6 +128,7 @@ export async function updateBookAction(
   prev: any,
   data: Partial<BookDocument>
 ) {
+  await dbService.connect();
   try {
     await bookService.update(data._id, data);
     return { success: true, message: "Đã cập nhật sách" };
