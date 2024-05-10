@@ -1,4 +1,5 @@
 "use client";
+import { getAccountsAction } from "@/app/dashboard/manage-accounts/action";
 import {
   createBookAction,
   getImagesAction,
@@ -94,12 +95,29 @@ function BookForm(props: FormProps) {
     form.setFieldValue("borrowingDateLimit", 35);
     if (data) {
       form.setFieldsValue(data);
-      form.setFieldValue("library", data?.bookcase?.library?._id);
-      setLibrary(data?.bookcase?.library?._id);
+      form.setFieldValue("library", data?.library);
+      setLibrary(data?.library);
       form.setFieldValue("bookcase", JSON.stringify(data?.bookcase));
       setImage(data.picture);
     }
   }, [data]);
+
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const nameDebounce = useDebounce(name);
+
+  const [account, getUsersByName] = useFormState(getAccountsAction, {
+    accounts: [],
+    limit: 20,
+    page: 1,
+    totalPages: 0,
+    totalDocs: 0,
+  });
+
+  useEffect(() => {
+    getUsersByName({ ...data, filter: { fullName: nameDebounce } });
+    setLoading(false);
+  }, [nameDebounce]);
 
   const onFinish = (values: any) => {
     setFormLoading(true);
@@ -221,14 +239,36 @@ function BookForm(props: FormProps) {
               />
             </Form.Item>
             <Form.Item
-              name="isbn"
+              name="giver"
               label={
                 <Typography.Text style={{ color: colorPrimary }}>
-                  ISBN
+                  Người tặng
                 </Typography.Text>
               }
             >
-              <Input allowClear placeholder={"Nhập ISBN"} />
+              <Select
+                loading={loading}
+                showSearch
+                onSearch={(e) => {
+                  setName(e);
+                  setLoading(true);
+                }}
+                filterOption={(input, option: any) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+              >
+                {account?.accounts.map((account: Account) => (
+                  <Select.Option
+                    label={account.fullName}
+                    key={account._id}
+                    value={account._id}
+                  >
+                    {account.fullName} (xxx{account.phoneNumber?.slice(-3)})
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
             <Form.Item
               name="language"

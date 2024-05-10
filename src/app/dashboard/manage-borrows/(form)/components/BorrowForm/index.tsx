@@ -102,6 +102,7 @@ function BorrowForm(props: BorrowFormProps) {
       filter: {
         name: bookDebounce,
         status: BookStatus.AVAILABLE,
+        library: searchParams.get("library"),
       },
     });
     setBookLoading(false);

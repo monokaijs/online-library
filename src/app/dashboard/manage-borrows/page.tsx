@@ -10,9 +10,14 @@ import {
   EyeOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Modal, Select, Table, theme } from "antd";
+import { Button, DatePicker, Input, Modal, Select, Table, theme } from "antd";
 import dayjs from "dayjs";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { getLibraryAction } from "../manage-locations/action";
@@ -83,6 +88,8 @@ function ManageBook() {
         query: searchParams.get("query") ?? "",
         status: searchParams.get("status") ?? "",
         library: searchParams.get("library") ?? "",
+        month: searchParams.get("month"),
+        year: searchParams.get("year"),
       },
     });
   }, [searchParams, pathname]);
@@ -232,7 +239,9 @@ function ManageBook() {
           >
             <Select.Option value="all">Thư viện</Select.Option>
             {libraries?.data?.map((item: Location) => (
-              <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>
+              <Select.Option key={item._id} value={item._id}>
+                {item.name}
+              </Select.Option>
             ))}
           </Select>
           <Select
@@ -260,7 +269,25 @@ function ManageBook() {
           />
         </div>
 
-        <div className={"flex justify-between"}>
+        <div className={"flex justify-between gap-8"}>
+          <DatePicker
+            format={"MM/YYYY"}
+            picker="month"
+            placeholder="Chọn tháng"
+            onChange={(e) => {
+              if (e) {
+                createQueryString({
+                  month: (e?.month() ?? 0) + 1,
+                  year: e?.year(),
+                });
+              } else {
+                createQueryString({
+                  month: undefined,
+                  year: undefined,
+                });
+              }
+            }}
+          />
           <Button
             type={"primary"}
             onClick={() => {

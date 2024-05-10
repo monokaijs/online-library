@@ -10,7 +10,11 @@ import Status from "@/app/dashboard/manage-borrows/components/BorrowStatus";
 import { BookStatus } from "@/lib/models/book.model";
 import { Borrow } from "@/lib/models/borrow.model";
 import { toast } from "@/lib/utils/toast";
-import { DeleteOutlined, EditOutlined, EllipsisOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EllipsisOutlined,
+} from "@ant-design/icons";
 import {
   Button,
   Card,
@@ -29,6 +33,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import "./style.css";
+import Link from "next/link";
 
 export default function BookDetail() {
   const router = useRouter();
@@ -65,6 +70,52 @@ export default function BookDetail() {
 
   const overdued = dayjs().diff(data?.borrowRecord?.returnDate) > 0;
 
+  const info = [
+    { fieldName: "Nhà xuất bản", value: data?.book?.publisher },
+    { fieldName: "Năm xuất bản", value: data?.book?.publishYear },
+    { fieldName: "Ngôn ngữ", value: data?.book?.language },
+    { fieldName: "Mã sách", value: data?.book?.bookID },
+    { fieldName: "Thể loại", value: data?.book?.bookcase?.category },
+    { fieldName: "Kệ sách", value: data?.book?.bookcase?.position },
+    {
+      fieldName: "Thư viện",
+      value: data?.book?.bookcase?.library?.name,
+    },
+    {
+      fieldName: "Trạng thái",
+      value: (
+        <Tag
+          color={
+            data?.book?.status === BookStatus.AVAILABLE
+              ? "green"
+              : data?.book?.status === BookStatus.OVERDUE || overdued
+              ? "red"
+              : "yellow"
+          }
+        >
+          {data?.book?.status === BookStatus.AVAILABLE
+            ? "Đang trên kệ"
+            : data?.book?.status === BookStatus.OVERDUE || overdued
+            ? "Quá hạn"
+            : "Đang mượn"}
+        </Tag>
+      ),
+    },
+    {
+      fieldName: "Hạn mức mượn",
+      value: data?.book?.borrowingDateLimit + " ngày",
+    },
+  ];
+
+  if (data?.book?.giver) {
+    info.push({
+      fieldName: "Người tặng",
+      value: (
+        <Link href={`/dashboard/manage-accounts/${data?.book?.giver?._id}`}>{data?.book?.giver?.fullName}</Link>
+      ),
+    });
+  }
+
   return (
     <Row className="h-full" gutter={24}>
       <Col span={17} className="flex flex-col h-full">
@@ -82,7 +133,8 @@ export default function BookDetail() {
                 className="mb-1 w-full"
               >
                 <Typography.Title className="ma-0" level={4}>
-                  {data?.book?.name}{data?.book?.authorName ? ' - ' + data?.book?.authorName : ""}
+                  {data?.book?.name}
+                  {data?.book?.authorName ? " - " + data?.book?.authorName : ""}
                 </Typography.Title>
                 <Dropdown
                   menu={{
@@ -282,44 +334,7 @@ export default function BookDetail() {
       </Col>
       <Col span={7} className="h-full">
         <Card className="h-full">
-          <ModalDetailInfo
-            records={[
-              { fieldName: "Nhà xuất bản", value: data?.book?.publisher },
-              { fieldName: "Năm xuất bản", value: data?.book?.publishYear },
-              { fieldName: "Ngôn ngữ", value: data?.book?.language },
-              { fieldName: "Mã sách", value: data?.book?.isbn },
-              { fieldName: "Thể loại", value: data?.book?.bookcase?.category },
-              { fieldName: "Kệ sách", value: data?.book?.bookcase?.position },
-              {
-                fieldName: "Thư viện",
-                value: data?.book?.bookcase?.library?.name,
-              },
-              {
-                fieldName: "Trạng thái",
-                value: (
-                  <Tag
-                    color={
-                      data?.book?.status === BookStatus.AVAILABLE
-                        ? "green"
-                        : data?.book?.status === BookStatus.OVERDUE || overdued
-                        ? "red"
-                        : "yellow"
-                    }
-                  >
-                    {data?.book?.status === BookStatus.AVAILABLE
-                      ? "Đang trên kệ"
-                      : data?.book?.status === BookStatus.OVERDUE || overdued
-                      ? "Quá hạn"
-                      : "Đang mượn"}
-                  </Tag>
-                ),
-              },
-              {
-                fieldName: "Hạn mức mượn",
-                value: data?.book?.borrowingDateLimit + " ngày",
-              },
-            ]}
-          />
+          <ModalDetailInfo records={info} />
         </Card>
       </Col>
     </Row>

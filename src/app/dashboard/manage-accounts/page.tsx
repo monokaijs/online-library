@@ -62,7 +62,7 @@ function ManageAccounts() {
       limit: Number(searchParams.get("limit") ?? 20),
       page: Number(searchParams.get("page") ?? 1),
       filter: {
-        fullName: searchParams.get("fullName") ?? "",
+        query: searchParams.get("query") ?? "",
         role: searchParams.get("role") ?? "",
       },
     });

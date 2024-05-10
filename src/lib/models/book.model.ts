@@ -16,7 +16,7 @@ export interface Book {
   library: Location,
   authorName: string;
   description: string;
-  isbn: string;
+  giver?: Account;
   bookID: string;
   category: string;
   name: string;
@@ -46,7 +46,10 @@ const BookSchema = new mongoose.Schema<Book>({
   category: String,
   authorName: String,
   description: String,
-  isbn: String,
+  giver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Account'
+  },
   name: String,
   publisher: String,
   publishYear: String,

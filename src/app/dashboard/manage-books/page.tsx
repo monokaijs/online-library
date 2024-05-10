@@ -37,7 +37,7 @@ function ManageBook() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [detail, setDetail] = useState<Bookcase>();
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(searchParams.get("name") ?? "");
   const queryDebounce = useDebounce(query);
 
   const createQueryString = useCallback(

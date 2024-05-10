@@ -62,7 +62,7 @@ export default function BorrowDetail() {
 
   return (
     <Card
-      className="h-full ma-auto"
+      className="h-full ma-auto borow-info"
       style={{ maxWidth: 1024 }}
       bodyStyle={{ height: "100%", display: "flex", flexDirection: "column" }}
     >
@@ -91,7 +91,7 @@ export default function BorrowDetail() {
             <Typography.Title className="ma-0 mb-4" level={4}>
               Bạn đọc: {user?.fullName}
             </Typography.Title>
-            <Flex gap={32}>
+            <Flex gap={64}>
               <ModalDetailInfo
                 title={false}
                 records={[
@@ -139,7 +139,7 @@ export default function BorrowDetail() {
             <ModalDetailInfo
               title={false}
               records={[
-                { fieldName: "Mã sách", value: book?.isbn },
+                { fieldName: "Mã sách", value: book?.bookID },
                 {
                   fieldName: "Thời gian",
                   value: `${dayjs(borrowRecord?.borrowDate).format(

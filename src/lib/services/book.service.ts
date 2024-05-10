@@ -158,6 +158,7 @@ class BookService {
           populate: "library",
         },
         "borrowRecord",
+        "giver",
       ]);
 
       const history = await borrowService.getAllByBookId(_id);

@@ -93,10 +93,12 @@ class AccountService {
 
       const filter: FilterQuery<AccountDocument> = {};
 
-      if (query?.fullName) {
+      if (query?.query) {
         filter.$or = [
-          { fullName: { $regex: new RegExp(query.fullName, "i") } },
-          { userId: { $regex: new RegExp(query.fullName, "i") } },
+          { fullName: { $regex: new RegExp(query.query, "i") } },
+          { userId: { $regex: new RegExp(query.query, "i") } },
+          { phoneNumber: { $regex: new RegExp(query.query, "i") } },
+          { email: { $regex: new RegExp(query.query, "i") } },
         ];
       }
 

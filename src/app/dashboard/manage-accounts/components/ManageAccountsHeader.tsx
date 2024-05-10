@@ -7,8 +7,8 @@ import { useCallback, useEffect, useState } from "react";
 
 function ManageAccountsHeader() {
   const router = useRouter();
-  const [query, setQuery] = useState("");
   const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("query") ?? "");
   const queryDebounce = useDebounce(query);
   const pathname = usePathname();
 
@@ -29,7 +29,7 @@ function ManageAccountsHeader() {
   );
 
   useEffect(() => {
-    createQueryString({ fullName: queryDebounce });
+    createQueryString({ query: queryDebounce });
   }, [queryDebounce]);
 
   return (

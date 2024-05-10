@@ -20,7 +20,7 @@ class BorrowService {
     }
 
     payload.status = BorrowStatus.BORROWING;
-    
+
     const borrowRecord = await BorrowModel.create(payload);
     await bookService.update(book._id, {
       status: BookStatus.BORROWING,
@@ -61,7 +61,7 @@ class BorrowService {
             },
           },
         ],
-        sort: { createdAt: -1 }
+        sort: { createdAt: -1 },
       };
 
       const filter: FilterQuery<BorrowDocument> = {
@@ -81,11 +81,27 @@ class BorrowService {
         filter.status = "ovedued";
       }
 
-      if(query.library){
-        filter.library = query.library
+      if (query.library) {
+        filter.library = query.library;
+      }
+
+      if (query?.month && query?.year) {
+        const startDate = new Date(query.year, query.month - 1, 1);
+        const endDate = new Date(query.year, query.month, 0, 23, 59, 59);
+
+        filter.createdAt = { $gte: startDate, $lte: endDate };
       }
 
       if (query?.query) {
+        const f: any = [{}];
+        for (const key in filter) {
+          if (key !== "book" && key !== "user") {
+            f.push({
+              [key]: filter[key],
+            });
+          }
+        }
+
         const res = (
           await BorrowModel.aggregate([
             {
@@ -120,6 +136,7 @@ class BorrowService {
                 ],
                 "book._id": { $in: existingBookIds },
                 "user._id": { $in: existingUserIds },
+                $and: f,
               },
             },
             {
