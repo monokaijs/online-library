@@ -11,10 +11,10 @@ export default function LoginPageContent({redirectUri}: {redirectUri:string}) {
     <div className={styles.wrapper}>
       <div className={styles.meta}>
         <Typography.Title>
-          Login
+          Đăng nhập
         </Typography.Title>
         <Typography.Paragraph>
-          Sign in to explore the biggest free library on the world. Haven't got an account? <Link href={'/auth/register'}>Create your account now</Link>.
+          Đăng nhập để khám phá thư viện miễn phí. Chưa có tài khoản? <Link href={'/auth/register'}>Bạn có thể tạo ở đây</Link>.
         </Typography.Paragraph>
       </div>
 

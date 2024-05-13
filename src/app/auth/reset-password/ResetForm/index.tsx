@@ -19,9 +19,9 @@ export default function ResetForm(props: FormProps) {
     success: false,
   });
   useEffect(() => {
-    if (state.message)
-      message[state.success ? "success" : "error"](state.message);
-    if (state.success) {
+    if (state?.message)
+      message[state?.success ? "success" : "error"](state?.message);
+    if (state?.success) {
       props.onSuccess && props.onSuccess();
     }
     setLoading(false);

@@ -2,13 +2,13 @@
 import { getLibraryAction } from "@/app/dashboard/manage-locations/action";
 import useDebounce from "@/lib/hooks/useDebounce";
 import { Location } from "@/lib/models/library.model";
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Input, Select } from "antd";
+import { SearchOutlined, UploadOutlined } from "@ant-design/icons";
+import { Button, Input, Select } from "antd";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
-export default function ManageBookcasesHeader() {
+export default function ManageBookHeader() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("query") ?? "");
@@ -46,7 +46,7 @@ export default function ManageBookcasesHeader() {
 
   return (
     <div className={"flex gap-8 justify-between mb-4"}>
-      <div className="flex items-center gap-8">
+      <div className="flex gap-8">
         <Select
           style={{ minWidth: 150 }}
           defaultValue={searchParams.get("library") ?? "all"}
@@ -63,26 +63,40 @@ export default function ManageBookcasesHeader() {
             </Select.Option>
           ))}
         </Select>
-
+        <Select
+          defaultValue={searchParams.get("type") ?? "all"}
+          style={{ minWidth: 150 }}
+          onChange={(e) => {
+            createQueryString({
+              type: e === "all" ? "" : e,
+            });
+          }}
+        >
+          <Select.Option value="all">Tất cả sách</Select.Option>
+          <Select.Option value="available">Sách trên kệ</Select.Option>
+          <Select.Option value="trending">Sách trending</Select.Option>
+        </Select>
         <Input
-          placeholder={"Tìm kiếm tủ sách..."}
+          className={"bg-input-group-after"}
+          placeholder={"Tìm kiếm..."}
           allowClear
-          addonAfter={<SearchOutlined />}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
           }}
+          addonAfter={<SearchOutlined />}
         />
       </div>
 
-      <div className={"flex justify-between"}>
+      <div className={"flex justify-between items-center gap-8"}>
+        <Button icon={<UploadOutlined />}>Tải lên</Button>
         <Button
           type={"primary"}
           onClick={() => {
-            router.push("/dashboard/manage-bookcases/create");
+            router.push("/dashboard/manage-books/create");
           }}
         >
-          Thêm tủ sách
+          Thêm sách
         </Button>
       </div>
     </div>

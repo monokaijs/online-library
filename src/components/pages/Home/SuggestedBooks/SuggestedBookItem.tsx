@@ -9,7 +9,7 @@ export default function SuggestedBookItem({book}: any) {
   const {token: {
     colorPrimary
   }} = theme.useToken();
-  const {quickView} = useAppSelector(state => state.app);
+  const {quickView} = useAppSelector(state => state?.app);
   const selected = quickView.selectedBook?.id === book.id;
   const dispatch = useAppDispatch();
 

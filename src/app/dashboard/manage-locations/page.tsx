@@ -18,22 +18,6 @@ function ManageLocations() {
   const searchParams = useSearchParams();
   const [detail, setDetail] = useState<Location>();
 
-  const createQueryString = useCallback(
-    (paramsToUpdate: any) => {
-      const updatedParams = new URLSearchParams(searchParams.toString());
-      Object.entries(paramsToUpdate).forEach(([key, value]: any) => {
-        if (value === null || value === undefined) {
-          updatedParams.delete(key);
-        } else {
-          updatedParams.set(key, value);
-        }
-      });
-
-      return updatedParams.toString();
-    },
-    [searchParams]
-  );
-
   const [state, getLibrary] = useFormState(getLibraryAction, {
     success: false,
     data: undefined,
@@ -51,7 +35,7 @@ function ManageLocations() {
 
   useEffect(() => {
     toast(deleteState);
-    if (deleteState.success) {
+    if (deleteState?.success) {
       getLibrary();
       setDetail(undefined);
     }

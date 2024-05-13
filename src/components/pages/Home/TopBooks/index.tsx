@@ -8,7 +8,7 @@ import {setQuickView} from "@/redux/slices/app.slice";
 
 function BookItem({book}: any) {
   if (!book.volumeInfo.imageLinks?.thumbnail) return <></>;
-  const {quickView} = useAppSelector(state => state.app);
+  const {quickView} = useAppSelector(state => state?.app);
   const dispatch = useAppDispatch();
   const selected = quickView.selectedBook?.id === book.id;
   return <div

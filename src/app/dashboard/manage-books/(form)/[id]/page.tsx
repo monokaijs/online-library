@@ -55,7 +55,7 @@ export default function BookDetail() {
 
   useEffect(() => {
     toast(deleteState);
-    if (deleteState.success) {
+    if (deleteState?.success) {
       router.push(`/dashboard/manage-books`);
     }
   }, [deleteState]);

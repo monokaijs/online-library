@@ -20,9 +20,9 @@ export default function LoginForm(props: LoginFormProps) {
     success: false,
   });
   useEffect(() => {
-    if (state.message)
-      message[state.success ? "success" : "error"](state.message);
-    if (state.success) {
+    if (state?.message)
+      message[state?.success ? "success" : "error"](state?.message);
+    if (state?.success) {
       props.onSuccess && props.onSuccess();
     }
     setLoading(false);
@@ -65,9 +65,9 @@ export default function LoginForm(props: LoginFormProps) {
       <Form.Item label={"Password"} className={styles.item} name={"password"}>
         <Input.Password placeholder={"Password..."} />
       </Form.Item>
-      <div className={styles.resetPassword}>
+      {/* <div className={styles.resetPassword}>
         <Link href={"/auth/reset-password"}>Reset Password</Link>
-      </div>
+      </div> */}
       <Button
         type={"primary"}
         htmlType={"submit"}
@@ -75,9 +75,9 @@ export default function LoginForm(props: LoginFormProps) {
         className={styles.signInBtn}
         loading={loading}
       >
-        Login
+        Đăng nhập
       </Button>
-      <Divider>Or sign in with</Divider>
+      <Divider style={{ fontSize: 14 }}>hoặc</Divider>
       <Button
         loading={loading}
         onClick={() => {
@@ -87,7 +87,7 @@ export default function LoginForm(props: LoginFormProps) {
         icon={<GoogleOutlined />}
         block
       >
-        Sign in with Google
+        Đăng nhập với google
       </Button>
     </Form>
   );

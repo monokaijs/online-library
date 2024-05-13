@@ -1,44 +1,37 @@
 "use client";
-import useDebounce from "@/lib/hooks/useDebounce";
 import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 import { Book, BookStatus } from "@/lib/models/book.model";
 import { Bookcase } from "@/lib/models/bookcase.model";
+import { Location } from "@/lib/models/library.model";
 import { toast } from "@/lib/utils/toast";
 import {
   BookOutlined,
   DeleteOutlined,
   EditOutlined,
-  EyeOutlined,
   EllipsisOutlined,
-  SearchOutlined,
+  EyeOutlined
 } from "@ant-design/icons";
 import {
   Button,
   Dropdown,
-  Input,
   Modal,
-  Select,
   Table,
-  Tag,
-  theme,
+  Tag
 } from "antd";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { deleteBookAction, getBookAction } from "./action";
+import ManageBookHeader from "./components/ManageBookHeader";
 import ViewBookModal from "./components/ViewBookModal";
-import { Location } from "@/lib/models/library.model";
 
 function ManageBook() {
-  const { token } = theme.useToken();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [detail, setDetail] = useState<Bookcase>();
-  const [query, setQuery] = useState(searchParams.get("name") ?? "");
-  const queryDebounce = useDebounce(query);
 
   const createQueryString = useCallback(
     (paramsToUpdate: any) => {
@@ -69,8 +62,7 @@ function ManageBook() {
     message: "",
   });
 
-  useEffect(() => {
-    setLoading(true);
+  const loadData = () => {
     getData({
       ...state,
       limit: Number(searchParams.get("limit") ?? 20),
@@ -78,24 +70,24 @@ function ManageBook() {
       filter: {
         query: searchParams.get("name") ?? "",
         type: searchParams.get("type") ?? "",
+        library: searchParams.get("library") ?? "",
       },
     });
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    loadData();
   }, [pathname, searchParams]);
 
   useDidMountEffect(() => {
     setLoading(false);
   }, [state]);
 
-  useDidMountEffect(() => {
-    createQueryString({
-      name: queryDebounce,
-    });
-  }, [queryDebounce]);
-
   useEffect(() => {
     toast(deleteState);
-    if (deleteState.success) {
-      getData(state);
+    if (deleteState?.success) {
+      loadData();
       setDetail(undefined);
     }
   }, [deleteState]);
@@ -283,57 +275,16 @@ function ManageBook() {
 
   return (
     <div>
-      {/* <Card className="mb-4">
-        <Typography.Title className="ma-0" level={3}>Quản lý sách</Typography.Title>
-      </Card> */}
-      <div className={"flex gap-8 justify-between mb-4"}>
-        <div className="flex gap-4">
-          <Select
-            defaultValue={searchParams.get("type") ?? "all"}
-            style={{ minWidth: 150 }}
-            onChange={(e) => {
-              createQueryString({
-                type: e === "all" ? "" : e,
-              });
-            }}
-          >
-            <Select.Option value="all">Tất cả sách</Select.Option>
-            <Select.Option value="available">Sách trên kệ</Select.Option>
-            <Select.Option value="trending">Sách trending</Select.Option>
-            {/* <Option value="overdued">Sách quá hạn</Option> */}
-          </Select>
-          <Input
-            className={"bg-input-group-after"}
-            placeholder={"Tìm kiếm..."}
-            allowClear
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-            }}
-            addonAfter={<SearchOutlined />}
-          />
-        </div>
-
-        <div className={"flex justify-between"}>
-          <Button
-            type={"primary"}
-            onClick={() => {
-              router.push("/dashboard/manage-books/create");
-            }}
-          >
-            Thêm sách
-          </Button>
-        </div>
-      </div>
+      <ManageBookHeader />
       <Table
         rowKey="_id"
         loading={loading}
         columns={columns}
         dataSource={state?.data}
         pagination={{
-          total: state.totalDocs,
-          pageSize: state.limit,
-          current: state.page,
+          total: state?.totalDocs,
+          pageSize: state?.limit,
+          current: state?.page,
           pageSizeOptions: [10, 20, 30, 50, 100],
           showSizeChanger: true,
         }}

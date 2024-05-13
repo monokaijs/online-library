@@ -7,6 +7,7 @@ import { dbService } from "@/lib/services/db.service";
 export interface GetBookcasesPayload {
   page?: number;
   limit?: number;
+  filter?: any;
 }
 
 export async function createBookcaseAction(prev: any, payload: Bookcase) {
@@ -27,8 +28,8 @@ export async function createBookcaseAction(prev: any, payload: Bookcase) {
 
 export async function getBookcaseAction(_: any, payload: GetBookcasesPayload) {
   await dbService.connect();
-  const { page = 1, limit = 20 } = payload;
-  return await bookcaseService.get(page, limit);
+  const { page = 1, limit = 20, filter } = payload;
+  return await bookcaseService.get(page, limit, filter);
 }
 
 export async function deleteBookcaseAction(_: any, _id: string) {

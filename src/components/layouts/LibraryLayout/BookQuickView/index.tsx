@@ -6,7 +6,7 @@ import {setQuickView} from "@/redux/slices/app.slice";
 
 export default function BookQuickView() {
   const dispatch = useAppDispatch();
-  const {quickView} = useAppSelector(state => state.app);
+  const {quickView} = useAppSelector(state => state?.app);
   const book = quickView.selectedBook;
   return <Layout.Sider
     collapsed={!quickView.opened}

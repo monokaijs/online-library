@@ -78,8 +78,7 @@ function ManageBook() {
     getLibraries();
   }, []);
 
-  useEffect(() => {
-    setLoading(true);
+  const loadData = () => {
     getData({
       ...state,
       limit: Number(searchParams.get("limit") ?? 20),
@@ -92,6 +91,11 @@ function ManageBook() {
         year: searchParams.get("year"),
       },
     });
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    loadData();
   }, [searchParams, pathname]);
 
   useDidMountEffect(() => {
@@ -100,8 +104,8 @@ function ManageBook() {
 
   useEffect(() => {
     toast(deleteState);
-    if (deleteState.success) {
-      getData(state);
+    if (deleteState?.success) {
+      loadData();
       setDetail(undefined);
     }
   }, [deleteState]);
@@ -304,9 +308,9 @@ function ManageBook() {
         columns={columns}
         dataSource={state?.data}
         pagination={{
-          total: state.totalDocs,
-          pageSize: state.limit,
-          current: state.page,
+          total: state?.totalDocs,
+          pageSize: state?.limit,
+          current: state?.page,
           pageSizeOptions: [10, 20, 30, 50, 100],
           showSizeChanger: true,
         }}

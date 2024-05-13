@@ -50,3 +50,8 @@ body {
 .ant-layout-sider-trigger{
   border-right: 2px solid rgba(5, 5, 5, 0.06);
 }
+
+.security .ant-menu-item{
+  background-color: transparent !important;
+  color: black !important;
+}

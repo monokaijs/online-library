@@ -37,7 +37,7 @@ function AccountDetailPage() {
 
   useEffect(() => {
     toast(deleteState);
-    if (deleteState.success) {
+    if (deleteState?.success) {
       router.push(`/dashboard/manage-books`);
     }
   }, [deleteState]);

@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import ManageBookcasesHeader from "./components/ManageBookcasesHeader";
 import ViewBookcaseModal from "./components/ViewBookcaseModal";
+import { Location } from "@/lib/models/library.model";
 
 function ManageBookcases() {
   const { token } = theme.useToken();
@@ -49,14 +50,24 @@ function ManageBookcases() {
     message: "",
   });
 
+  const loadData = () => {
+    getBookcases({
+      ...state,
+      filter: {
+        query: searchParams.get("query"),
+        library: searchParams.get("library"),
+      },
+    });
+  };
+
   useEffect(() => {
-    getBookcases(state);
-  }, []);
+    loadData();
+  }, [searchParams, pathname]);
 
   useEffect(() => {
     toast(deleteState);
-    if (deleteState.success) {
-      getBookcases(state);
+    if (deleteState?.success) {
+      loadData();
       setDetail(undefined);
     }
   }, [deleteState]);
@@ -72,6 +83,13 @@ function ManageBookcases() {
       align: "center",
     },
     {
+      title: "Thư viện",
+      dataIndex: "library",
+      key: "library",
+      align: "center",
+      render: (item: Location) => item?.name
+    },
+    {
       title: "Ngăn sách",
       dataIndex: "position",
       key: "position",
@@ -81,7 +99,6 @@ function ManageBookcases() {
       title: "Thể loại",
       dataIndex: "category",
       key: "category",
-      align: "center",
     },
     {
       title: "Thao tác",
@@ -143,9 +160,9 @@ function ManageBookcases() {
         columns={columns}
         dataSource={state?.data}
         pagination={{
-          total: state.totalDocs,
-          pageSize: state.limit,
-          current: state.page,
+          total: state?.totalDocs,
+          pageSize: state?.limit,
+          current: state?.page,
           pageSizeOptions: [10, 20, 30, 50, 100],
           showSizeChanger: true,
         }}

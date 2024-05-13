@@ -14,6 +14,7 @@ import {
   Button,
   Card,
   Col,
+  DatePicker,
   Form,
   Image,
   Input,
@@ -23,6 +24,7 @@ import {
   theme,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
@@ -78,7 +80,7 @@ function BookForm(props: FormProps) {
   useEffect(() => {
     setFormLoading(false);
     toast(createState);
-    if (createState.success) {
+    if (createState?.success) {
       router.back();
     }
   }, [createState]);
@@ -86,7 +88,7 @@ function BookForm(props: FormProps) {
   useEffect(() => {
     setFormLoading(false);
     toast(updateState);
-    if (updateState.success) {
+    if (updateState?.success) {
       router.back();
     }
   }, [updateState]);
@@ -120,6 +122,10 @@ function BookForm(props: FormProps) {
   }, [nameDebounce]);
 
   const onFinish = (values: any) => {
+    if (values.publishYear) {
+      values.publishYear = dayjs(values.publishYear).year();
+    }
+
     setFormLoading(true);
     if (values.bookcase) {
       values.bookcase = JSON.parse(values?.bookcase)?._id;
@@ -298,10 +304,10 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input
-                allowClear
-                placeholder={"Nhập năm xuất bản"}
-                type="number"
+              <DatePicker
+                picker="year"
+                style={{ width: "100%" }}
+                placeholder="Chọn năm xuất bản"
               />
             </Form.Item>
           </Col>

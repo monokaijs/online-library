@@ -30,10 +30,10 @@ function AccountForm({ account }: { account?: Account }) {
   });
 
   useEffect(() => {
-    if (state.message) {
-      message[state.success ? "success" : "error"](state.message);
+    if (state?.message) {
+      message[state?.success ? "success" : "error"](state?.message);
     }
-    if (state.success) {
+    if (state?.success) {
       router.back();
     }
   }, [state]);
@@ -162,7 +162,7 @@ function AccountForm({ account }: { account?: Account }) {
           />
         </Form.Item>
         <Form.Item name="identityNumber" label={"Số CCCD/CMND"}>
-          <Input allowClear placeholder={"Số CCCD/CMND"} type="number" />
+          <Input allowClear placeholder={"Số CCCD/CMND"} />
         </Form.Item>
         <Form.Item label={"Ngày sinh"} name={"birthday"}>
           <DatePicker

@@ -24,7 +24,7 @@ import {
   UserOutlined,
   BookOutlined,
   DoubleLeftOutlined,
-  DoubleRightOutlined
+  DoubleRightOutlined,
 } from "@ant-design/icons";
 import LogoMain from "@/assets/figures/logo-main.png";
 import LogoMainCollapsed from "@/assets/figures/logo-main-collapsed.png";
@@ -46,15 +46,15 @@ export default function DashboardLayoutContent(props: any) {
 
   useLayoutEffect(() => {
     function updateSize() {
-      if(window.innerWidth < 1300){
+      if (window.innerWidth < 1300) {
         setCollapsed(true);
-      }else{
+      } else {
         setCollapsed(false);
       }
     }
-    window.addEventListener('resize', updateSize);
+    window.addEventListener("resize", updateSize);
     updateSize();
-    return () => window.removeEventListener('resize', updateSize);
+    return () => window.removeEventListener("resize", updateSize);
   }, []);
 
   return (
@@ -65,12 +65,18 @@ export default function DashboardLayoutContent(props: any) {
         collapsed={collapsed}
         collapsible
         onCollapse={toggleCollapsed}
-        trigger={collapsed ? <DoubleRightOutlined style={{color: "black"}} /> : <DoubleLeftOutlined style={{color: "black"}} />}
+        trigger={
+          collapsed ? (
+            <DoubleRightOutlined style={{ color: "black" }} />
+          ) : (
+            <DoubleLeftOutlined style={{ color: "black" }} />
+          )
+        }
       >
         <div className={styles.siderContent}>
           <img
             onClick={() => {
-              router.push("/dashboard")
+              router.push("/dashboard");
             }}
             src={collapsed ? LogoMainCollapsed.src : LogoMain.src}
             alt={"Logo"}
@@ -79,6 +85,7 @@ export default function DashboardLayoutContent(props: any) {
           <Menu
             mode={"inline"}
             className={styles.menu}
+            defaultSelectedKeys={[pathname.split("/")[2] ?? "dashboard"]}
             items={[
               {
                 key: "dashboard",
@@ -86,7 +93,7 @@ export default function DashboardLayoutContent(props: any) {
                 label: <Link href={"/dashboard"}>Trang chủ</Link>,
               },
               {
-                key: "accounts",
+                key: "manage-accounts",
                 icon: <SolutionOutlined />,
                 label: (
                   <Link href={"/dashboard/manage-accounts"}>
@@ -95,14 +102,14 @@ export default function DashboardLayoutContent(props: any) {
                 ),
               },
               {
-                key: "books",
+                key: "manage-books",
                 icon: <BookOutlined />,
                 label: (
                   <Link href={"/dashboard/manage-books"}>Quản lý sách</Link>
                 ),
               },
               {
-                key: "borrows-returns",
+                key: "manage-borrows",
                 icon: <RetweetOutlined />,
                 label: (
                   <Link href={"/dashboard/manage-borrows"}>
@@ -111,16 +118,13 @@ export default function DashboardLayoutContent(props: any) {
                 ),
               },
               {
-                key: "fines",
+                key: "manage-fines",
                 icon: <ReconciliationOutlined />,
-                label: (
-                  <Link href={"#"}>
-                    Quản lý tiền phạt
-                  </Link>
-                ),
+                label: <Link href={"#"}>Quản lý tiền phạt</Link>,
+                disabled: true,
               },
               {
-                key: "bookcases",
+                key: "manage-bookcases",
                 icon: <TableOutlined />,
                 label: (
                   <Link href={"/dashboard/manage-bookcases"}>
@@ -129,7 +133,7 @@ export default function DashboardLayoutContent(props: any) {
                 ),
               },
               {
-                key: "home",
+                key: "manage-locations",
                 icon: <HomeOutlined />,
                 label: (
                   <Link href={"/dashboard/manage-locations"}>
@@ -142,12 +146,12 @@ export default function DashboardLayoutContent(props: any) {
                 icon: <SettingOutlined />,
                 label: `Thiết lập`,
                 children: [
-                  {
-                    key: "account",
-                    icon: <UserOutlined />,
-                    label: <Link href={"/dashboard/account"}>Tài khoản</Link>,
-                    onClick: () => router.push("/dashboard/account"),
-                  },
+                  // {
+                  //   key: "account",
+                  //   icon: <UserOutlined />,
+                  //   label: <Link href={"/dashboard/account"}>Tài khoản</Link>,
+                  //   onClick: () => router.push("/dashboard/account"),
+                  // },
                   {
                     key: "security",
                     icon: <LockOutlined />,
@@ -163,18 +167,23 @@ export default function DashboardLayoutContent(props: any) {
         <Layout className={styles.content}>
           <Layout.Header className={styles.header}>
             <div className={styles.right}>
-              <Badge count={10}>
-                <Button size={"large"} icon={<BellOutlined />} type={"text"} />
+              <Badge count={0}>
+                <Button
+                  disabled={true}
+                  size={"large"}
+                  icon={<BellOutlined />}
+                  type={"text"}
+                />
               </Badge>
               <Dropdown
                 menu={{
                   items: [
-                    {
-                      icon: <UserOutlined />,
-                      key: "user",
-                      label: "Tài khoản",
-                      onClick: () => router.push("/dashboard/account"),
-                    },
+                    // {
+                    //   icon: <UserOutlined />,
+                    //   key: "user",
+                    //   label: "Tài khoản",
+                    //   onClick: () => router.push("/dashboard/account"),
+                    // },
                     {
                       icon: <SettingOutlined />,
                       key: "settings",
@@ -201,7 +210,12 @@ export default function DashboardLayoutContent(props: any) {
                 trigger={["click"]}
               >
                 <div className={styles.user}>
-                  <Avatar size={32} icon={<UserOutlined />} />
+                  <Avatar
+                    size={32}
+                    src={account?.profilePicture}
+                    style={{ border: "1px solid #ccc" }}
+                    icon={<UserOutlined />}
+                  />
                   <div className={styles.name}>{account?.fullName}</div>
                 </div>
               </Dropdown>

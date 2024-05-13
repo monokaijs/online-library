@@ -115,7 +115,7 @@ function BorrowForm(props: BorrowFormProps) {
 
   useEffect(() => {
     toast(createState);
-    if (createState.success) {
+    if (createState?.success) {
       router.back();
     }
   }, [createState]);
@@ -127,7 +127,7 @@ function BorrowForm(props: BorrowFormProps) {
 
   useEffect(() => {
     toast(updateState);
-    if (updateState.success) {
+    if (updateState?.success) {
       router.back();
     }
   }, [updateState]);
@@ -250,10 +250,14 @@ function BorrowForm(props: BorrowFormProps) {
               max: 11,
               message: "Số điện thoại tối đa 11 kí tự",
             },
+            {
+              pattern: /^(?:\d*)$/,
+              message: "Số điện thoại không hợp lệ",
+            },
           ]}
           name={"phoneNumber"}
         >
-          <Input allowClear placeholder="Số điện thoại" type="number" />
+          <Input allowClear placeholder="Số điện thoại" />
         </Form.Item>
         <Form.Item
           label={

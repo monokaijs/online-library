@@ -55,8 +55,7 @@ function ManageAccounts() {
     message: "",
   });
 
-  useEffect(() => {
-    setLoading(true);
+  const loadData = () => {
     getAccounts({
       ...state,
       limit: Number(searchParams.get("limit") ?? 20),
@@ -66,6 +65,11 @@ function ManageAccounts() {
         role: searchParams.get("role") ?? "",
       },
     });
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    loadData();
   }, [searchParams, pathname]);
 
   useDidMountEffect(() => {
@@ -74,8 +78,8 @@ function ManageAccounts() {
 
   useEffect(() => {
     toast(deleteState);
-    if (deleteState.success) {
-      getAccounts(state);
+    if (deleteState?.success) {
+      loadData();
       setAccountDetail(undefined);
     }
   }, [deleteState]);
@@ -195,11 +199,11 @@ function ManageAccounts() {
         loading={loading}
         rowKey="_id"
         columns={columns}
-        dataSource={state.accounts}
+        dataSource={state?.accounts}
         pagination={{
-          total: state.totalDocs,
-          pageSize: state.limit,
-          current: state.page,
+          total: state?.totalDocs,
+          pageSize: state?.limit,
+          current: state?.page,
           pageSizeOptions: [10, 20, 30, 50, 100],
           showSizeChanger: true,
         }}

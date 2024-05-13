@@ -42,7 +42,7 @@ export default function BorrowDetail() {
 
   useEffect(() => {
     toast(returnState);
-    if (returnState.success) {
+    if (returnState?.success) {
       router.push(`/dashboard/manage-borrows`);
     }
   }, [returnState]);

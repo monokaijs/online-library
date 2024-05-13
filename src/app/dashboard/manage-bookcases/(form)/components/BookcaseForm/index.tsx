@@ -46,14 +46,14 @@ function BookcaseForm(props: BookcaseFormProps) {
 
   useEffect(() => {
     toast(createState);
-    if (createState.success) {
+    if (createState?.success) {
       router.back();
     }
   }, [createState]);
 
   useEffect(() => {
     toast(updateState);
-    if (updateState.success) {
+    if (updateState?.success) {
       router.back();
     }
   }, [updateState]);
