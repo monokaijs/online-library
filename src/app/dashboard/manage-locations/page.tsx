@@ -110,7 +110,7 @@ function ManageLocations() {
               onClick={() => {
                 Modal.confirm({
                   title: "Hành động này không thể hoàn tác!",
-                  content: `Xác nhận xóa tủ sách`,
+                  content: `Xác nhận xóa thư viện`,
                   okText: "Xóa",
                   cancelText: "Hủy",
                   onOk: () => {

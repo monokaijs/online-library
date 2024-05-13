@@ -104,7 +104,7 @@ function AccountDetailPage() {
                         onClick: () => {
                           Modal.confirm({
                             title: "Hành động này không thể hoàn tác!",
-                            content: `Xác nhận xóa sách`,
+                            content: `Xác nhận xóa tài khoản`,
                             okText: "Xóa",
                             cancelText: "Hủy",
                             onOk: () => {

@@ -43,6 +43,7 @@ function BorrowForm(props: BorrowFormProps) {
   } = theme.useToken();
 
   const [formLoading, setFormLoading] = useState(false);
+  const [dateLimit, setDateLimit] = useState(35);
   const router = useRouter();
   const [form] = Form.useForm();
 
@@ -54,8 +55,9 @@ function BorrowForm(props: BorrowFormProps) {
         returnDate: dayjs(detail.returnDate),
         user: JSON.stringify(detail.user),
         book: JSON.stringify(detail.book),
-        library: detail?.book?.bookcase?.library?.name,
+        library: detail?.library,
       });
+      setDateLimit(detail?.borrowingDateLimit ?? 35);
     }
   }, [detail]);
 
@@ -138,11 +140,12 @@ function BorrowForm(props: BorrowFormProps) {
 
   const onFinish = (values: any) => {
     setFormLoading(true);
-    values.library = JSON.parse(values.book)?.bookcase?.library?._id;
     values.book = JSON.parse(values.book)._id;
     values.user = JSON.parse(values.user)._id;
     values.borrowDate = new Date(values.borrowDate);
     values.returnDate = new Date(values.returnDate);
+
+    console.log(libraries);
 
     if (action === FormAction.CREATE) {
       createAction(values);
@@ -161,6 +164,7 @@ function BorrowForm(props: BorrowFormProps) {
       if (selected) {
         form.setFieldValue("book", JSON.stringify(selected));
         form.setFieldValue("library", selected?.library?._id);
+        setDateLimit(selected?.borrowingDateLimit ?? 35);
       } else {
         form.setFieldValue("book", undefined);
       }
@@ -347,6 +351,10 @@ function BorrowForm(props: BorrowFormProps) {
                 setBookName(e);
                 setBookLoading(true);
               }}
+              onChange={(e) => {
+                const book = JSON.parse(e);
+                setDateLimit(book?.borrowingDateLimit ?? 35);
+              }}
               loading={bookLoading}
               filterOption={(input, option: any) =>
                 (option?.label ?? "")
@@ -409,7 +417,10 @@ function BorrowForm(props: BorrowFormProps) {
                 name="returnDate"
                 style={{ width: "100%" }}
                 disabledDate={(current) => {
-                  return dayjs().diff(current) > 0;
+                  return (
+                    dayjs().diff(current) > 0 ||
+                    dayjs(current).diff(dayjs(), "day") > dateLimit
+                  );
                 }}
               />
             </Form.Item>
