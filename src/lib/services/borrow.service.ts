@@ -77,8 +77,8 @@ class BorrowService {
         filter.status = "returned";
       }
 
-      if (query?.status == "overdued") {
-        filter.status = "overdued";
+      if (query?.status == "overdue") {
+        filter.status = "overdue";
       }
 
       if (query.library) {

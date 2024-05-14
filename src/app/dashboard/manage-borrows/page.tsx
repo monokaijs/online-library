@@ -377,7 +377,7 @@ function ManageBook() {
             <Select.Option value="all">Tất cả</Select.Option>
             <Select.Option value="borrowing">Đang mượn</Select.Option>
             <Select.Option value="returned">Đã trả</Select.Option>
-            <Select.Option value="overdued">Quá hạn</Select.Option>
+            <Select.Option value="overdue">Quá hạn</Select.Option>
           </Select>
           <Input
             className={"bg-input-group-after"}
