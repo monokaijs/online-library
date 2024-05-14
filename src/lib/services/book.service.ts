@@ -50,6 +50,10 @@ class BookService {
         filter.status = BookStatus.AVAILABLE;
       }
 
+      if (query?.type === "borrowing") {
+        filter.status = BookStatus.BORROWING;
+      }
+
       if (query?.library) {
         filter.library = query.library;
       }

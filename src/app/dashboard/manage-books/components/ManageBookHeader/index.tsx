@@ -65,7 +65,7 @@ export default function ManageBookHeader() {
         </Select>
         <Select
           defaultValue={searchParams.get("type") ?? "all"}
-          style={{ minWidth: 150 }}
+          style={{ minWidth: 200 }}
           onChange={(e) => {
             createQueryString({
               type: e === "all" ? "" : e,
@@ -74,6 +74,7 @@ export default function ManageBookHeader() {
         >
           <Select.Option value="all">Tất cả sách</Select.Option>
           <Select.Option value="available">Sách trên kệ</Select.Option>
+          <Select.Option value="borrowing">Sách đang mượn</Select.Option>
           <Select.Option value="trending">Sách trending</Select.Option>
         </Select>
         <Input
