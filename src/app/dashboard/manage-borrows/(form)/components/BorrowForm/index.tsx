@@ -145,8 +145,6 @@ function BorrowForm(props: BorrowFormProps) {
     values.borrowDate = new Date(values.borrowDate);
     values.returnDate = new Date(values.returnDate);
 
-    console.log(libraries);
-
     if (action === FormAction.CREATE) {
       createAction(values);
     } else {
@@ -229,7 +227,7 @@ function BorrowForm(props: BorrowFormProps) {
           ) : (
             <Select disabled>
               <Select.Option value={JSON.stringify(detail.user)}>
-                {detail.user.fullName}
+                {detail?.user?.fullName}
               </Select.Option>
             </Select>
           )}

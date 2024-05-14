@@ -5,22 +5,17 @@ import UserRole from "@/components/shared/UserRole";
 import { Book } from "@/lib/models/book.model";
 import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
 import { toast } from "@/lib/utils/toast";
-import {
-  Button,
-  Card,
-  Flex,
-  Image,
-  Modal,
-  Spin,
-  Typography
-} from "antd";
+import { Button, Card, Flex, Image, Modal, Spin, Typography } from "antd";
 import dayjs from "dayjs";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
-import { getBorrowDetailAction, returnBookAction } from "../../action";
-import Status from "../../components/BorrowStatus";
-import "./style.css";
+import {
+  getBorrowDetailAction,
+  returnBookAction,
+} from "@/app/dashboard/manage-borrows/action";
+import Status from "@/app/dashboard/manage-borrows/components/BorrowStatus";
+import "@/app/dashboard/manage-borrows/(form)/[id]/style.css";
 
 export default function BorrowDetail() {
   const router = useRouter();

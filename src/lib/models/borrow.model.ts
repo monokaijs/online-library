@@ -23,6 +23,7 @@ export interface Borrow {
   note: string;
   address: string;
   status: BorrowStatus;
+  isDelete?: boolean;
 }
 
 const BorrowSchema = new mongoose.Schema<Borrow>(
@@ -50,6 +51,10 @@ const BorrowSchema = new mongoose.Schema<Borrow>(
     status: {
       type: String,
       enum: Object.values(BorrowStatus),
+    },
+    isDelete: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

@@ -41,6 +41,7 @@ const AccountSchema = new mongoose.Schema<Account>({
   googleId: {
     type: String,
   },
+  isDelete: Boolean
 }, {timestamps: true});
 
 export interface AccountDocument extends Document, Account {

@@ -41,6 +41,7 @@ import {
 import Status from "./components/BorrowStatus";
 import ViewBorrowModal from "./components/ViewBorrowModal";
 import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
+import BorrowDetail from "./components/BorrowDetail";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -282,7 +283,8 @@ function ManageBook() {
                     key: "view",
                     label: "Xem chi tiết",
                     onClick: () => {
-                      router.push(`/dashboard/manage-borrows/${item?._id}`);
+                      setDetail(item);
+                      // router.push(`/dashboard/manage-borrows/${item?._id}`);
                     },
                   },
                   {
@@ -441,12 +443,22 @@ function ManageBook() {
         }}
         onRow={(record: any) => ({
           onClick: () => {
-            router.push(`/dashboard/manage-borrows/${record?._id}`);
-            // setDetail(record);
+            // router.push(`/dashboard/manage-borrows/${record?._id}`);
+            setDetail(record);
           },
         })}
       />
-      <ViewBorrowModal
+      {/* <ViewBorrowModal
+        isOpen={!!detail}
+        onCancel={() => {
+          setDetail(undefined);
+        }}
+        detail={detail}
+        deleteAction={(arg: any) => {
+          deleteAction(arg);
+        }}
+      /> */}
+      <BorrowDetail
         isOpen={!!detail}
         onCancel={() => {
           setDetail(undefined);

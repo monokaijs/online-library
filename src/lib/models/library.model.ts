@@ -16,6 +16,7 @@ export interface Location {
   address: string;
   status: LibraryStatus;
   estDate: Date;
+  isDelete?: boolean;
 }
 
 const LocationSchema = new mongoose.Schema<Location>({
@@ -29,6 +30,7 @@ const LocationSchema = new mongoose.Schema<Location>({
     enum: Object.values(LibraryStatus),
   },
   estDate: Date,
+  isDelete: Boolean
 }, {timestamps: true});
 
 export interface LibraryDocument extends Document, Location {

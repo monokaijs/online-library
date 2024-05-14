@@ -257,6 +257,7 @@ function ManageBook() {
                         },
                       });
                     },
+                    disabled: item.status !== BookStatus.AVAILABLE
                   },
                 ],
               }}

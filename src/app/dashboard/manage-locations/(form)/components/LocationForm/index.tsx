@@ -140,6 +140,18 @@ function LocationForm(props: LocationFormProps) {
               message: "Vui lòng nhập số điện thoại",
               whitespace: true,
             },
+            {
+              min: 10,
+              message: "Số điện thoại tối thiểu 10 kí tự",
+            },
+            {
+              max: 11,
+              message: "Số điện thoại tối đa 11 kí tự",
+            },
+            {
+              pattern: /^(?:\d*)$/,
+              message: "Số điện thoại không hợp lệ",
+            },
           ]}
         >
           <Input allowClear placeholder={"Số điện thoại"} />

@@ -67,6 +67,7 @@ class BorrowService {
       const filter: FilterQuery<BorrowDocument> = {
         book: { $ne: null, $in: existingBookIds },
         user: { $ne: null, $in: existingUserIds },
+        isDelete: false,
       };
 
       if (query?.status == "borrowing") {
@@ -183,7 +184,7 @@ class BorrowService {
 
   async deleteById(_id: string): Promise<void> {
     try {
-      await BorrowModel.findByIdAndDelete(_id);
+      await this.update(_id, { isDelete: true });
     } catch (error: any) {
       throw new Error(error.message);
     }
@@ -211,7 +212,10 @@ class BorrowService {
     try {
       const borrowRecord = await this.getById(_id);
       const user = await accountService.getAccountById(borrowRecord?.user?._id);
-      const history = await BorrowModel.find({ user: user?._id });
+      const history = await BorrowModel.find({
+        user: user?._id,
+        isDelete: false,
+      });
       const borrowing = history.filter((item) => {
         return item?.status === BorrowStatus.BORROWING;
       }).length;
@@ -234,7 +238,7 @@ class BorrowService {
 
   async getAllByAccount(_id: string) {
     try {
-      return BorrowModel.find({ user: _id }).populate([
+      return BorrowModel.find({ user: _id, isDelete: false }).populate([
         "user",
         {
           path: "book",

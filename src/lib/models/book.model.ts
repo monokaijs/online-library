@@ -26,7 +26,8 @@ export interface Book {
   language: string;
   borrowingDateLimit: number;
   status: BookStatus;
-  borrowRecord?: Borrow
+  borrowRecord?: Borrow;
+  isDelete?: boolean;
 }
 
 const BookSchema = new mongoose.Schema<Book>({
@@ -60,6 +61,7 @@ const BookSchema = new mongoose.Schema<Book>({
     type: String,
     enum: Object.values(BookStatus),
   },
+  isDelete: Boolean
 }, { timestamps: true });
 
 export interface BookDocument extends Document, Book {}

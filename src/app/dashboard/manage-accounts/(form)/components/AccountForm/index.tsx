@@ -127,8 +127,16 @@ function AccountForm({ account }: { account?: Account }) {
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập số điện thoại!",
+              message: "Vui lòng nhập số điện thoại",
               whitespace: true,
+            },
+            {
+              min: 10,
+              message: "Số điện thoại tối thiểu 10 kí tự",
+            },
+            {
+              max: 11,
+              message: "Số điện thoại tối đa 11 kí tự",
             },
             {
               pattern: /^(?:\d*)$/,

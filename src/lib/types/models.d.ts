@@ -18,6 +18,7 @@ interface Account {
   balance: number;
   address: string;
   status: AccountStatus;
+  isDelete?: boolean;
 }
 
 interface AccountVerification {

@@ -6,6 +6,7 @@ export interface Bookcase {
   position: string;
   category: string;
   library: Location;
+  isDelete?: boolean;
 }
 
 const BookcaseSchema = new mongoose.Schema<Bookcase>({
@@ -15,6 +16,7 @@ const BookcaseSchema = new mongoose.Schema<Bookcase>({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Location'
   },
+  isDelete: Boolean,
 }, {timestamps: true});
 
 export interface BookcaseDocument extends Document, Bookcase {
