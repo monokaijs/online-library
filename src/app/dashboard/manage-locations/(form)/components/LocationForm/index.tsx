@@ -183,7 +183,7 @@ function LocationForm(props: LocationFormProps) {
                 </Typography.Text>
               }
               name="openingTime"
-              rules={[{ required: true, message: "Vui lòng chọn ngày mượn" }]}
+              rules={[{ required: true, message: "Vui lòng chọn giờ mở cửa" }]}
               initialValue={dayjs("1/1/2021 8:30")}
             >
               <TimePicker format="HH:mm" style={{ width: "100%" }} />
@@ -198,12 +198,17 @@ function LocationForm(props: LocationFormProps) {
               }
               name="closingTime"
               initialValue={dayjs("1/1/2021 17:30")}
-              rules={[{ required: true, message: "Vui lòng chọn ngày trả" }]}
+              rules={[
+                { required: true, message: "Vui lòng chọn giờ đóng cửa" },
+              ]}
             >
               <TimePicker format="HH:mm" style={{ width: "100%" }} />
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item name="description" label={"Ghi chú"}>
+          <Input.TextArea allowClear placeholder={"Ghi chú"} />
+        </Form.Item>
         <div className={"flex justify-end"}>
           <div className={"flex gap-9"}>
             <Button onClick={router.back}>Hủy bỏ</Button>
