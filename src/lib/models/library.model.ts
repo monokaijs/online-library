@@ -16,6 +16,7 @@ export interface Location {
   address: string;
   status: LibraryStatus;
   estDate: Date;
+  description: string;
   isDelete?: boolean;
 }
 
@@ -24,6 +25,7 @@ const LocationSchema = new mongoose.Schema<Location>({
   openingTime: String,
   closingTime: String,
   phoneNumber: String,
+  description: String,
   address: String,
   status: {
     type: String,

@@ -21,6 +21,7 @@ import {
   Popover,
   Select,
   Table,
+  Tooltip,
   theme,
 } from "antd";
 import dayjs from "dayjs";
@@ -311,9 +312,9 @@ function ManageBook() {
                     label: (
                       <div>
                         {item.status === BorrowStatus.BORROWING ? (
-                          <Popover title="Vui lòng hoàn thành lượt mượn">
+                          <Tooltip title="Vui lòng hoàn thành lượt mượn">
                             Xóa phiếu mượn
-                          </Popover>
+                          </Tooltip>
                         ) : (
                           "Xóa phiếu mượn"
                         )}
