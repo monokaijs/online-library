@@ -183,7 +183,7 @@ function LocationForm(props: LocationFormProps) {
                 </Typography.Text>
               }
               name="openingTime"
-              rules={[{ required: true, message: "Vui lòng chọn giờ mở cửa" }]}
+              rules={[{ required: true, message: "Vui lòng chọn giờ" }]}
               initialValue={dayjs("1/1/2021 8:30")}
             >
               <TimePicker format="HH:mm" style={{ width: "100%" }} />
@@ -197,9 +197,9 @@ function LocationForm(props: LocationFormProps) {
                 </Typography.Text>
               }
               name="closingTime"
-              initialValue={dayjs("1/1/2021 17:30")}
+              initialValue={dayjs("1/1/2021 22:00")}
               rules={[
-                { required: true, message: "Vui lòng chọn giờ đóng cửa" },
+                { required: true, message: "Vui lòng chọn giờ" },
               ]}
             >
               <TimePicker format="HH:mm" style={{ width: "100%" }} />
