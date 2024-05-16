@@ -68,7 +68,7 @@ function ManageBook() {
       limit: Number(searchParams.get("limit") ?? 20),
       page: Number(searchParams.get("page") ?? 1),
       filter: {
-        query: searchParams.get("name") ?? "",
+        query: searchParams.get("query") ?? "",
         type: searchParams.get("type") ?? "",
         library: searchParams.get("library") ?? "",
       },
