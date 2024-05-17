@@ -6,7 +6,6 @@ import { BorrowModel, BorrowStatus } from "@/lib/models/borrow.model";
 import { dbService } from "@/lib/services/db.service";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import moment from "moment";
 
 interface Props {
   type?: string | null;
@@ -16,15 +15,31 @@ interface Props {
 export async function getDashboard(prev: any, payload: Props) {
   await dbService.connect();
   try {
-    const { type = "day", picker } = payload;
+    let { type, picker } = payload;
+    type = !!type ? type : "month";
+    picker = !!picker ? picker : dayjs().format("MMYYYY");
 
     let groupStage = {};
     let sortStage = {};
     let format = "";
+    let matchStage = {};
+
+    dayjs.extend(customParseFormat);
+    const currentDate = dayjs();
+    let selectedDate = dayjs();
 
     switch (type) {
       case "date":
         format = "DDMMYYYY";
+        selectedDate = dayjs(picker, format);
+        matchStage = {
+          $match: {
+            createdAt: {
+              $gte: currentDate.startOf("month").toDate(),
+              $lte: currentDate.endOf("month").toDate(),
+            },
+          },
+        };
         groupStage = {
           $group: {
             _id: {
@@ -46,6 +61,15 @@ export async function getDashboard(prev: any, payload: Props) {
 
       case "year":
         format = "YYYY";
+        selectedDate = dayjs(picker, format);
+        matchStage = {
+          $match: {
+            createdAt: {
+              $gte: currentDate.subtract(3, "years").startOf("year").toDate(),
+              $lte: currentDate.endOf("year").toDate(),
+            },
+          },
+        };
         groupStage = {
           $group: {
             _id: { year: { $year: "$createdAt" } },
@@ -61,6 +85,15 @@ export async function getDashboard(prev: any, payload: Props) {
 
       default:
         format = "MMYYYY";
+        selectedDate = dayjs(picker, format);
+        matchStage = {
+          $match: {
+            createdAt: {
+              $gte: currentDate.startOf("year").toDate(),
+              $lte: currentDate.endOf("year").toDate(),
+            },
+          },
+        };
         groupStage = {
           $group: {
             _id: {
@@ -70,7 +103,6 @@ export async function getDashboard(prev: any, payload: Props) {
             count: { $sum: 1 },
           },
         };
-
         sortStage = {
           $sort: {
             "_id.year": 1,
@@ -80,22 +112,8 @@ export async function getDashboard(prev: any, payload: Props) {
         break;
     }
 
-    dayjs.extend(customParseFormat);
-    const date = dayjs(picker, format);
+    const aggregationPipeline: any = [matchStage, groupStage, sortStage];
 
-    const aggregationPipeline: any = [
-      groupStage,
-      sortStage,
-      {
-        $addFields: {
-          picker: {
-            year: date.isValid() ? date.year() : dayjs().year(),
-            month: date.isValid() ? date.month() + 1 : dayjs().month() + 1,
-            day: date.isValid() ? date.date() : dayjs().date(),
-          },
-        },
-      },
-    ];
     const accounts = await AccountModel.aggregate(aggregationPipeline);
     const books = await BookModel.aggregate(aggregationPipeline);
     const borrows = await BorrowModel.aggregate(aggregationPipeline);
@@ -110,13 +128,166 @@ export async function getDashboard(prev: any, payload: Props) {
       ...aggregationPipeline,
     ]);
 
+    const topDonate = await BookModel.aggregate([
+      {
+        $match: {
+          isDelete: { $ne: true },
+        },
+      },
+      {
+        $group: {
+          _id: "$giver",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+      {
+        $lookup: {
+          from: "accounts",
+          localField: "_id",
+          foreignField: "_id",
+          as: "giverDetails",
+        },
+      },
+      {
+        $unwind: "$giverDetails",
+      },
+      {
+        $project: {
+          _id: 0,
+          giver: "$giverDetails",
+          count: 1,
+        },
+      },
+    ]);
+
+    const topBorrow = await BorrowModel.aggregate([
+      {
+        $match: {
+          isDelete: false,
+        },
+      },
+      {
+        $group: {
+          _id: "$user",
+          borrowCount: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { borrowCount: -1 },
+      },
+      {
+        $lookup: {
+          from: "accounts",
+          localField: "_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $project: {
+          user: 1,
+          borrowCount: 1,
+        },
+      },
+    ]);
+
+    const fillMissingDates = (
+      data: any[],
+      type: string | null,
+      selectedDate: dayjs.Dayjs
+    ) => {
+      let filledData = [];
+      if (type === "date") {
+        const daysInMonth = currentDate.daysInMonth();
+        for (let day = 1; day <= daysInMonth; day++) {
+          const entry = data.find((d) => d._id.day === day);
+          const isSelected =
+            selectedDate.isValid() && selectedDate.date() === day;
+          const label = `${day.toString().padStart(2, "0")}`;
+          // /${(
+          //   currentDate.month() + 1
+          // )
+          //   .toString()
+          //   .padStart(2, "0")}
+          if (entry) {
+            filledData.push({ ...entry, selected: isSelected, label });
+          } else {
+            filledData.push({
+              _id: {
+                year: currentDate.year(),
+                month: currentDate.month() + 1,
+                day,
+              },
+              count: 0,
+              selected: isSelected,
+              label,
+            });
+          }
+        }
+      } else if (type === "month") {
+        for (let month = 1; month <= 12; month++) {
+          const entry = data.find((d) => d._id.month === month);
+          const isSelected =
+            selectedDate.isValid() && selectedDate.month() + 1 === month;
+          const label = `T${month}`;
+          // /${currentDate.year()}
+          if (entry) {
+            filledData.push({ ...entry, selected: isSelected, label });
+          } else {
+            filledData.push({
+              _id: { year: currentDate.year(), month },
+              count: 0,
+              selected: isSelected,
+              label,
+            });
+          }
+        }
+      } else if (type === "year") {
+        const startYear = currentDate.subtract(3, "years").year();
+        for (let year = startYear; year <= currentDate.year(); year++) {
+          const entry = data.find((d) => d._id.year === year);
+          const isSelected =
+            selectedDate.isValid() && selectedDate.year() === year;
+          const label = `${year}`;
+          if (entry) {
+            filledData.push({ ...entry, selected: isSelected, label });
+          } else {
+            filledData.push({
+              _id: { year },
+              count: 0,
+              selected: isSelected,
+              label,
+            });
+          }
+        }
+      }
+      return filledData.sort((a, b) => {
+        if (type === "date") {
+          return a._id.day - b._id.day;
+        } else if (type === "month") {
+          return a._id.month - b._id.month;
+        } else if (type === "year") {
+          return a._id.year - b._id.year;
+        }
+        return 0;
+      });
+    };
+
     return {
       success: true,
       data: {
-        accounts,
-        books,
-        borrows,
-        overdue,
+        accounts: fillMissingDates(accounts, type, selectedDate),
+        books: fillMissingDates(books, type, selectedDate),
+        borrows: fillMissingDates(borrows, type, selectedDate),
+        overdue: fillMissingDates(overdue, type, selectedDate),
+        topDonate: JSON.parse(JSON.stringify(topDonate)),
+        topBorrow: JSON.parse(JSON.stringify(topBorrow)),
       },
     };
   } catch (error: any) {

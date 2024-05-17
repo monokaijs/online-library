@@ -55,7 +55,6 @@ function ManageLocations() {
       title: "Cơ sở",
       dataIndex: "name",
       key: "name",
-      align: "center",
     },
     {
       title: "Địa chỉ",
@@ -63,16 +62,31 @@ function ManageLocations() {
       key: "address",
     },
     {
-      title: "Thời gian mở cửa",
-      key: "openingTime",
-      align: "center",
-      render: (item: Location) => dayjs(item.openingTime).format("HH:mm") + " - " + dayjs(item.closingTime).format("HH:mm"),
-    },
-    {
       title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       align: "center",
+    },
+    {
+      title: "Tình trạng",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      render: (item: string) =>
+        item === "opening"
+          ? "Đang hoạt động"
+          : item === "temporary_closed"
+          ? "Đang bảo trì"
+          : "Dừng hoạt động",
+    },
+    {
+      title: "Thời gian mở cửa",
+      key: "openingTime",
+      align: "center",
+      render: (item: Location) =>
+        dayjs(item.openingTime).format("HH:mm") +
+        " - " +
+        dayjs(item.closingTime).format("HH:mm"),
     },
     {
       title: "Thao tác",

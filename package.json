@@ -19,6 +19,7 @@
     "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0-rc.12",
     "dayjs": "^1.11.10",
+    "echarts": "^5.5.0",
     "googleapis": "^134.0.0",
     "http-status": "^1.7.3",
     "iron-session": "^8.0.1",

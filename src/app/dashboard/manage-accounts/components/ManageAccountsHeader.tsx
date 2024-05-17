@@ -29,7 +29,7 @@ function ManageAccountsHeader() {
   );
 
   useEffect(() => {
-    createQueryString({ query: queryDebounce });
+    createQueryString({ query: queryDebounce, page: undefined });
   }, [queryDebounce]);
 
   return (

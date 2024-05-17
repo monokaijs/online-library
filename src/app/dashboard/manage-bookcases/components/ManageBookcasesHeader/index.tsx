@@ -41,7 +41,7 @@ export default function ManageBookcasesHeader() {
   );
 
   useEffect(() => {
-    createQueryString({ query: queryDebounce });
+    createQueryString({ query: queryDebounce, page: undefined });
   }, [queryDebounce]);
 
   return (

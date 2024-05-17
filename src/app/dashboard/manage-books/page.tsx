@@ -9,15 +9,9 @@ import {
   DeleteOutlined,
   EditOutlined,
   EllipsisOutlined,
-  EyeOutlined
+  EyeOutlined,
 } from "@ant-design/icons";
-import {
-  Button,
-  Dropdown,
-  Modal,
-  Table,
-  Tag
-} from "antd";
+import { Button, Dropdown, Modal, Table, Tag } from "antd";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -98,7 +92,7 @@ function ManageBook() {
       key: "index",
       render: (_: any, record: any, index: number) => {
         ++index;
-        return index;
+        return index + (state.page - 1) * state.limit;
       },
       align: "center",
     },
@@ -257,7 +251,7 @@ function ManageBook() {
                         },
                       });
                     },
-                    disabled: item.status !== BookStatus.AVAILABLE
+                    disabled: item.status !== BookStatus.AVAILABLE,
                   },
                 ],
               }}

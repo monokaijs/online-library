@@ -42,7 +42,7 @@ import {
 import Status from "./components/BorrowStatus";
 import ViewBorrowModal from "./components/ViewBorrowModal";
 import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
-import BorrowDetail from "./components/BorrowDetail";
+import BorrowDetail from "../manage-borrows/components/BorrowDetail";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -113,10 +113,10 @@ function ManageBook() {
       page: Number(searchParams.get("page") ?? 1),
       filter: {
         query: searchParams.get("query") ?? "",
-        status: searchParams.get("status") ?? "",
         library: searchParams.get("library") ?? "",
         month: searchParams.get("month"),
         year: searchParams.get("year"),
+        overdue: true,
       },
     });
   };
@@ -178,13 +178,13 @@ function ManageBook() {
       //   return <div>{library.name}</div>;
       // },
     },
-    {
-      title: "Ngày mượn",
-      dataIndex: "borrowDate",
-      key: "borrowDate",
-      align: "center",
-      render: (item: string) => dayjs(item).format("DD/MM/YYYY"),
-    },
+    // {
+    //   title: "Ngày mượn",
+    //   dataIndex: "borrowDate",
+    //   key: "borrowDate",
+    //   align: "center",
+    //   render: (item: string) => dayjs(item).format("DD/MM/YYYY"),
+    // },
     {
       title: "Ngày hẹn",
       dataIndex: "returnDate",
@@ -193,10 +193,41 @@ function ManageBook() {
       render: (item: string) => dayjs(item).format("DD/MM/YYYY"),
     },
     {
-      title: "Trạng thái",
-      key: "status",
+      title: "Số ngày quá",
+      key: "returnDate",
+      dataIndex: "returnDate",
       align: "center",
-      render: (record: Borrow) => <Status data={record} />,
+      render: (item: string) => Math.ceil(dayjs().diff(item, "hours") / 24),
+    },
+    {
+      title: "Tiền phạt",
+      key: "returnDate",
+      dataIndex: "returnDate",
+      align: "center",
+      render: (item: string) => {
+        if (!dayjs(item).isValid()) {
+          return "-";
+        }
+
+        const days = Math.ceil(dayjs().diff(item, "hours") / 24);
+        let amount = 0;
+        if (days < 15) {
+          amount = 1000;
+        } else if (days < 50) {
+          amount = 15000;
+        } else if (days < 100) {
+          amount = 20000;
+        } else {
+          amount = 25000;
+        }
+
+        return (days * amount)
+          ?.toLocaleString("it-IT", {
+            style: "currency",
+            currency: "VND",
+          })
+          ?.replace("VND", "đ");
+      },
     },
     {
       title: "Thao tác",
@@ -320,20 +351,6 @@ function ManageBook() {
               </Select.Option>
             ))}
           </Select>
-          <Select
-            style={{ minWidth: 150 }}
-            defaultValue={searchParams.get("status") ?? "all"}
-            onChange={(e) => {
-              createQueryString({
-                status: e == "all" ? "" : e,
-              });
-            }}
-          >
-            <Select.Option value="all">Tất cả</Select.Option>
-            <Select.Option value="borrowing">Đang mượn</Select.Option>
-            <Select.Option value="returned">Đã trả</Select.Option>
-            <Select.Option value="overdue">Quá hạn</Select.Option>
-          </Select>
           <Input
             className={"bg-input-group-after"}
             placeholder={"Nhập tên sách, bạn đọc..."}
@@ -364,14 +381,6 @@ function ManageBook() {
               }
             }}
           />
-          <Button
-            type={"primary"}
-            onClick={() => {
-              router.push(`/dashboard/manage-borrows/create`);
-            }}
-          >
-            Thêm phiếu mượn
-          </Button>
         </div>
       </div>
       <Table
@@ -420,9 +429,7 @@ function ManageBook() {
         deleteAction={(arg: any) => {
           deleteAction(arg);
         }}
-        loadData={() => {
-          loadData();
-        }}
+        loadData={loadData}
       />
     </div>
   );

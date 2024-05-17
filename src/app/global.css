@@ -55,3 +55,8 @@ body {
   background-color: transparent !important;
   color: black !important;
 }
+
+.ant-modal.statistic{
+  width: unset !important;
+  min-width: 520px;
+}

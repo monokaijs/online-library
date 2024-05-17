@@ -120,8 +120,7 @@ export default function DashboardLayoutContent(props: any) {
               {
                 key: "manage-fines",
                 icon: <ReconciliationOutlined />,
-                label: <Link href={"#"}>Quản lý tiền phạt</Link>,
-                disabled: true,
+                label: <Link href={"/dashboard/manage-fines"}>Quản lý tiền phạt</Link>,
               },
               {
                 key: "manage-bookcases",

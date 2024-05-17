@@ -93,6 +93,10 @@ class BorrowService {
         filter.createdAt = { $gte: startDate, $lte: endDate };
       }
 
+      if (query?.overdue){
+        filter.returnDate = { $lte: new Date() };
+      }
+
       if (query?.query) {
         const f: any = [{}];
         for (const key in filter) {
