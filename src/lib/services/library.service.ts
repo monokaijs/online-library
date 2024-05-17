@@ -40,8 +40,9 @@ class LibraryService {
 
   async deleteById(_id: string): Promise<void> {
     try {
-      const isLocationClear = await BookModel.countDocuments({ library: _id });
-      if (isLocationClear > 0) {
+      const bookcount = await BookModel.countDocuments({ library: _id });
+      const bookcasecount = await BookcaseModel.countDocuments({ library: _id });
+      if (bookcount > 0 || bookcasecount > 0) {
         throw Error("Vui lòng chuyển hết sách khỏi thư viện.");
       }
       await LocationModel.findByIdAndDelete(_id);
