@@ -7,9 +7,9 @@ import {
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import { Button, Card, Modal, Tooltip, Typography } from "antd";
-import { init, getInstanceByDom } from "echarts";
+import type { ECharts, EChartsOption, SetOptionOpts } from "echarts";
+import { getInstanceByDom, init } from "echarts";
 import { useEffect, useRef, type CSSProperties } from "react";
-import type { EChartsOption, ECharts, SetOptionOpts } from "echarts";
 
 export interface ReactEChartsProps {
   option: EChartsOption;
@@ -91,10 +91,18 @@ interface StatisticCardProps {
   data?: Count[];
   positive?: boolean;
   type?: string;
+  currency?: boolean;
 }
 
 export default function StatisticCard(props: StatisticCardProps) {
-  const { hint, title, diffUnit, data, positive = true } = props;
+  const {
+    hint,
+    title,
+    diffUnit,
+    data,
+    positive = true,
+    currency = false,
+  } = props;
 
   const selectedIndex = data?.findIndex((item) => item.selected) ?? -1;
   const amount = data?.[selectedIndex]?.count ?? 0;
@@ -161,7 +169,14 @@ export default function StatisticCard(props: StatisticCardProps) {
         >
           <div className="flex w-full items-end" style={{ flex: 1, gap: 8 }}>
             <Typography.Title style={{ margin: 0, fontSize: 30 }}>
-              {formatNumberWithCommas(amount)}
+              {currency
+                ? amount
+                    ?.toLocaleString("it-IT", {
+                      style: "currency",
+                      currency: "VND",
+                    })
+                    ?.replace("VND", "đ")
+                : formatNumberWithCommas(amount)}
             </Typography.Title>
             <Typography.Title
               style={{ margin: 0, fontSize: 14, marginBottom: 4 }}
@@ -180,7 +195,16 @@ export default function StatisticCard(props: StatisticCardProps) {
                 }}
               >
                 {diff > 0 ? <CaretUpFilled /> : <CaretDownFilled />}
-                <div>{Math.abs(diff)}</div>
+                <div>
+                  {currency
+                    ? diff
+                        ?.toLocaleString("it-IT", {
+                          style: "currency",
+                          currency: "VND",
+                        })
+                        ?.replace("VND", "đ")
+                    : Math.abs(diff)}
+                </div>
               </div>
             </>
           )}

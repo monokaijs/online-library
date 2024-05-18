@@ -137,9 +137,10 @@ export default function DashboardPageContent() {
             positive={false}
           />
           <StatisticCard
-            data={[]}
+            data={data?.fines}
             title={"Tổng phí phạt"}
             hint={"Tổng phí phạt"}
+            currency={true}
             diffUnit={""}
           />
         </div>

@@ -2,7 +2,7 @@
 
 import { AccountModel } from "@/lib/models/account.model";
 import { BookModel } from "@/lib/models/book.model";
-import { BorrowModel, BorrowStatus } from "@/lib/models/borrow.model";
+import { Borrow, BorrowModel, BorrowStatus } from "@/lib/models/borrow.model";
 import { dbService } from "@/lib/services/db.service";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -48,6 +48,7 @@ export async function getDashboard(prev: any, payload: Props) {
               day: { $dayOfMonth: "$createdAt" },
             },
             count: { $sum: 1 },
+            items: { $push: "$$ROOT" },
           },
         };
         sortStage = {
@@ -74,6 +75,7 @@ export async function getDashboard(prev: any, payload: Props) {
           $group: {
             _id: { year: { $year: "$createdAt" } },
             count: { $sum: 1 },
+            items: { $push: "$$ROOT" },
           },
         };
         sortStage = {
@@ -101,6 +103,7 @@ export async function getDashboard(prev: any, payload: Props) {
               month: { $month: "$createdAt" },
             },
             count: { $sum: 1 },
+            items: { $push: "$$ROOT" },
           },
         };
         sortStage = {
@@ -121,7 +124,6 @@ export async function getDashboard(prev: any, payload: Props) {
       {
         $match: {
           returnDate: { $lt: new Date() },
-          isDelete: false,
           status: BorrowStatus.BORROWING,
         },
       },
@@ -219,6 +221,7 @@ export async function getDashboard(prev: any, payload: Props) {
             filledData.push({ ...entry, selected: isSelected, label });
           } else {
             filledData.push({
+              ...entry,
               _id: {
                 year: currentDate.year(),
                 month: currentDate.month() + 1,
@@ -241,6 +244,7 @@ export async function getDashboard(prev: any, payload: Props) {
             filledData.push({ ...entry, selected: isSelected, label });
           } else {
             filledData.push({
+              ...entry,
               _id: { year: currentDate.year(), month },
               count: 0,
               selected: isSelected,
@@ -259,6 +263,7 @@ export async function getDashboard(prev: any, payload: Props) {
             filledData.push({ ...entry, selected: isSelected, label });
           } else {
             filledData.push({
+              ...entry,
               _id: { year },
               count: 0,
               selected: isSelected,
@@ -279,17 +284,55 @@ export async function getDashboard(prev: any, payload: Props) {
       });
     };
 
-    return {
+    const fines = fillMissingDates(overdue, type, selectedDate);
+
+    const finesCaculate = fines.map((fine) => {
+      if (fine.items) {
+        const total = fine.items?.reduce(
+          (sum: any, borrow: Partial<Borrow>) => {
+            const returnDate = dayjs(borrow.returnDate);
+            if (returnDate.isValid()) {
+              const days = dayjs().diff(returnDate, "days");
+
+              let amount = 0;
+              if (days < 15) {
+                amount = 1000;
+              } else if (days < 50) {
+                amount = 15000;
+              } else if (days < 100) {
+                amount = 20000;
+              } else {
+                amount = 25000;
+              }
+
+              return sum + days * amount;
+            } else {
+              return sum;
+            }
+          },
+          0
+        );
+
+        fine.count = total;
+      }
+
+      return fine;
+    });
+
+    const data = {
       success: true,
       data: {
         accounts: fillMissingDates(accounts, type, selectedDate),
         books: fillMissingDates(books, type, selectedDate),
         borrows: fillMissingDates(borrows, type, selectedDate),
         overdue: fillMissingDates(overdue, type, selectedDate),
-        topDonate: JSON.parse(JSON.stringify(topDonate)),
-        topBorrow: JSON.parse(JSON.stringify(topBorrow)),
+        fines: finesCaculate,
+        topDonate: topDonate,
+        topBorrow: topBorrow,
       },
     };
+
+    return JSON.parse(JSON.stringify(data));
   } catch (error: any) {
     return {
       success: false,

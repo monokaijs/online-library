@@ -64,9 +64,7 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
   const book: Book | undefined = state?.data?.borrowRecord?.book;
   const analysis: any = state?.data?.analysis;
   const borrowing = borrowRecord?.status === BorrowStatus.BORROWING;
-  const overdued = Math.ceil(
-    dayjs().diff(borrowRecord?.returnDate, "hours") / 24
-  );
+  const overdued = dayjs().diff(borrowRecord?.returnDate, "days")
   let amount = 0;
   if (overdued < 15) {
     amount = 1000;

@@ -197,7 +197,7 @@ function ManageBook() {
       key: "returnDate",
       dataIndex: "returnDate",
       align: "center",
-      render: (item: string) => Math.ceil(dayjs().diff(item, "hours") / 24),
+      render: (item: string) => dayjs().diff(item, "days"),
     },
     {
       title: "Tiền phạt",
@@ -209,7 +209,7 @@ function ManageBook() {
           return "-";
         }
 
-        const days = Math.ceil(dayjs().diff(item, "hours") / 24);
+        const days = dayjs().diff(item, "days");
         let amount = 0;
         if (days < 15) {
           amount = 1000;

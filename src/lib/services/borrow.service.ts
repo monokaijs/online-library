@@ -95,6 +95,7 @@ class BorrowService {
 
       if (query?.overdue){
         filter.returnDate = { $lte: new Date() };
+        filter.status = { $eq: BookStatus.BORROWING }
       }
 
       if (query?.query) {
