@@ -1,6 +1,7 @@
 "use client";
 import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
 import { BookStatus } from "@/lib/models/book.model";
+import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Modal, Tag } from "antd";
 import dayjs from "dayjs";
@@ -16,7 +17,7 @@ interface ViewBookModalProps {
 export default function ViewBookModal(props: ViewBookModalProps) {
   const { onCancel, detail, deleteAction } = props;
   const router = useRouter();
-  const overdued = dayjs().diff(detail?.returnDate) > 0;
+  const overdued = getDaysDiff(detail?.borrowRecord?.returnDate) < 0;
 
   return (
     <Modal
@@ -46,7 +47,7 @@ export default function ViewBookModal(props: ViewBookModalProps) {
                     ? "green"
                     : detail?.status === BookStatus.OVERDUE || overdued
                     ? "red"
-                    : "yellow"
+                    : "orange"
                 }
               >
                 {detail?.status === BookStatus.AVAILABLE

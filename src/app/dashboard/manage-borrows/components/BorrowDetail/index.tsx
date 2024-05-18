@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import Status from "../BorrowStatus";
+import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 
 interface ViewBorrowModalProps {
   isOpen: boolean;
@@ -64,7 +65,7 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
   const book: Book | undefined = state?.data?.borrowRecord?.book;
   const analysis: any = state?.data?.analysis;
   const borrowing = borrowRecord?.status === BorrowStatus.BORROWING;
-  const overdued = dayjs().diff(borrowRecord?.returnDate, "days")
+  const overdued = getDaysDiff(borrowRecord?.returnDate);
   let amount = 0;
   if (overdued < 15) {
     amount = 1000;
@@ -199,9 +200,9 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
                     {
                       fieldName: "Tình trạng",
                       value:
-                        overdued > 0 && borrowing
-                          ? `Quá hẹn ${overdued} ngày / Tiền phạt: ${(
-                              overdued * amount
+                        overdued < 0 && borrowing
+                          ? `Quá hẹn ${Math.abs(overdued)} ngày / Tiền phạt: ${(
+                              Math.abs(overdued) * amount
                             )
                               ?.toLocaleString("it-IT", {
                                 style: "currency",

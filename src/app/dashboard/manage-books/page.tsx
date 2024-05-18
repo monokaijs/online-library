@@ -19,6 +19,7 @@ import { useFormState } from "react-dom";
 import { deleteBookAction, getBookAction } from "./action";
 import ManageBookHeader from "./components/ManageBookHeader";
 import ViewBookModal from "./components/ViewBookModal";
+import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 
 function ManageBook() {
   const [loading, setLoading] = useState(true);
@@ -142,7 +143,7 @@ function ManageBook() {
       key: "status",
       align: "center",
       render: (record: Book) => {
-        const overdued = dayjs().diff(record.borrowRecord?.returnDate) > 0;
+        const overdued = getDaysDiff(record.borrowRecord?.returnDate) < 0;
         return (
           <Tag
             color={
@@ -150,7 +151,7 @@ function ManageBook() {
                 ? "green"
                 : record?.status === BookStatus.OVERDUE || overdued
                 ? "red"
-                : "yellow"
+                : "orange"
             }
           >
             {record?.status === BookStatus.AVAILABLE

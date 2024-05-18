@@ -21,6 +21,7 @@ import {
   Popover,
   Select,
   Table,
+  Tag,
   Tooltip,
   theme,
 } from "antd";
@@ -43,6 +44,7 @@ import Status from "./components/BorrowStatus";
 import ViewBorrowModal from "./components/ViewBorrowModal";
 import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 import BorrowDetail from "../manage-borrows/components/BorrowDetail";
+import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -155,13 +157,13 @@ function ManageBook() {
       align: "center",
       render: (item: Book) => item?.name,
     },
-    {
-      title: "Thư viện",
-      dataIndex: "library",
-      key: "library",
-      align: "center",
-      render: (item: Location) => item?.name,
-    },
+    // {
+    //   title: "Thư viện",
+    //   dataIndex: "library",
+    //   key: "library",
+    //   align: "center",
+    //   render: (item: Location) => item?.name,
+    // },
     {
       title: "Tên bạn đọc",
       dataIndex: "user",
@@ -193,23 +195,30 @@ function ManageBook() {
       render: (item: string) => dayjs(item).format("DD/MM/YYYY"),
     },
     {
+      title: "Ngày trả thực tế",
+      dataIndex: "realReturnDate",
+      key: "realReturnDate",
+      align: "center",
+      render: (item: string) => !!item ? dayjs(item).format("DD/MM/YYYY") : "-",
+    },
+    {
       title: "Số ngày quá",
       key: "returnDate",
-      dataIndex: "returnDate",
       align: "center",
-      render: (item: string) => dayjs().diff(item, "days"),
+      render: (item: Borrow) => {
+        if (item.status === BorrowStatus.BORROWING) {
+          return Math.abs(getDaysDiff(item?.returnDate));
+        } else {
+          return Math.abs(getDaysDiff(item.returnDate, item.realReturnDate));
+        }
+      },
     },
     {
       title: "Tiền phạt",
       key: "returnDate",
-      dataIndex: "returnDate",
       align: "center",
-      render: (item: string) => {
-        if (!dayjs(item).isValid()) {
-          return "-";
-        }
-
-        const days = dayjs().diff(item, "days");
+      render: (item: Borrow) => {
+        const days = Math.abs(getDaysDiff(item.returnDate, item.realReturnDate));
         let amount = 0;
         if (days < 15) {
           amount = 1000;
@@ -228,6 +237,18 @@ function ManageBook() {
           })
           ?.replace("VND", "đ");
       },
+    },
+    {
+      title: "Trạng thái",
+      key: "status",
+      dataIndex: "status",
+      align: "center",
+      render: (item: string) =>
+        item === BorrowStatus.BORROWING ? (
+          <Tag color="orange">Chưa thu</Tag>
+        ) : (
+          <Tag color="green">Đã thu</Tag>
+        ),
     },
     {
       title: "Thao tác",

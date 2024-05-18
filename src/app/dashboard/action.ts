@@ -4,6 +4,7 @@ import { AccountModel } from "@/lib/models/account.model";
 import { BookModel } from "@/lib/models/book.model";
 import { Borrow, BorrowModel, BorrowStatus } from "@/lib/models/borrow.model";
 import { dbService } from "@/lib/services/db.service";
+import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
@@ -292,7 +293,7 @@ export async function getDashboard(prev: any, payload: Props) {
           (sum: any, borrow: Partial<Borrow>) => {
             const returnDate = dayjs(borrow.returnDate);
             if (returnDate.isValid()) {
-              const days = dayjs().diff(returnDate, "days");
+              const days = Math.ceil(getDaysDiff(returnDate));
 
               let amount = 0;
               if (days < 15) {

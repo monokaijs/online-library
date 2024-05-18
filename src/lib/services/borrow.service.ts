@@ -11,6 +11,7 @@ import { FilterQuery } from "mongoose";
 import { AccountModel } from "./../models/account.model";
 import accountService from "./account.service";
 import { bookService } from "./book.service";
+import { getDaysDiff } from "../utils/getDaysDiff";
 
 class BorrowService {
   async create(payload: any) {
@@ -93,9 +94,11 @@ class BorrowService {
         filter.createdAt = { $gte: startDate, $lte: endDate };
       }
 
+      const today = new Date();
+      today.setHours(0, 1, 1, 1)
       if (query?.overdue){
-        filter.returnDate = { $lte: new Date() };
-        filter.status = { $eq: BookStatus.BORROWING }
+        filter.returnDate = { $lte: today };
+        filter.status = { $ne: BorrowStatus.RETURNED }
       }
 
       if (query?.query) {
@@ -275,7 +278,7 @@ class BorrowService {
   async returnBook(borrowId: string) {
     try {
       const borrow: any = await this.getById(borrowId);
-      const overdued = dayjs().diff(borrow?.returnDate) > 0;
+      const overdued = getDaysDiff(borrow?.returnDate) < 0;
       const result = this.update(borrowId, {
         status: overdued ? BorrowStatus.OVERDUE : BorrowStatus.RETURNED,
         realReturnDate: new Date(),
