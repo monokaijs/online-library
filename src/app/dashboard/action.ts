@@ -121,10 +121,14 @@ export async function getDashboard(prev: any, payload: Props) {
     const accounts = await AccountModel.aggregate(aggregationPipeline);
     const books = await BookModel.aggregate(aggregationPipeline);
     const borrows = await BorrowModel.aggregate(aggregationPipeline);
+
+    
+    const today = new Date();
+    today.setHours(0, 1, 1, 1)
     const overdue = await BorrowModel.aggregate([
       {
         $match: {
-          returnDate: { $lt: new Date() },
+          returnDate: { $lte: today },
           status: BorrowStatus.BORROWING,
         },
       },
