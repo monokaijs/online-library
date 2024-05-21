@@ -297,7 +297,7 @@ export async function getDashboard(prev: any, payload: Props) {
           (sum: any, borrow: Partial<Borrow>) => {
             const returnDate = dayjs(borrow.returnDate);
             if (returnDate.isValid()) {
-              const days = Math.ceil(getDaysDiff(returnDate));
+              const days = Math.abs(Math.ceil(getDaysDiff(returnDate)));
 
               let amount = 0;
               if (days < 15) {
