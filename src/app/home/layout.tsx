@@ -1,6 +1,6 @@
 import {ConfigProvider} from "antd";
-import LandingPageHeader from "@/app/home/LandingPageHeader";
-import LandingPageFooter from "@/app/home/LandingPageFooter";
+import LandingPageHeader from "@/app/home/components/LandingPageHeader";
+import LandingPageFooter from "@/app/home/components/LandingPageFooter";
 
 export default async function DashboardLayout({children}: any) {
   return (
@@ -11,6 +11,7 @@ export default async function DashboardLayout({children}: any) {
           colorText: '#717171',
           colorLink: '#006D75',
           colorTextHeading: "#717171",
+          fontSize: 14,
         },
         components: {
           Typography: {
