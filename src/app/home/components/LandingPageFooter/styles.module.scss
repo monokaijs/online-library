@@ -1,0 +1,20 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: rgba(33, 35, 38, 0.1) 10px -10px 10px -10px;
+}
+
+.footer {
+  width: 1152px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: 86px;
+
+  .logo {
+    width: 140px;
+    align-self: center;
+    margin-left: -16px;
+  }
+}

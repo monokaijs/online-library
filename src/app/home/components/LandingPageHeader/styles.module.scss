@@ -1,0 +1,51 @@
+.wrapper {
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f7fa;
+  box-shadow: rgba(33, 35, 38, 0.1) 0 10px 10px -10px;
+  overflow: hidden;
+}
+
+.header {
+  width: 1152px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .logo {
+    width: 140px;
+    align-self: center;
+  }
+
+  .navbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    span {
+      color: #595959;
+      padding-inline: 16px;
+      padding-block: 20px;
+      cursor: pointer;
+      font-weight: 500;
+
+      &:hover {
+        color: #4A6F73;
+      }
+    }
+  }
+
+  .loginButton {
+    font-size: 14px;
+    color: #4A6F73;
+
+    &:hover {
+      color: #4A6F73 !important;
+    }
+  }
+
+  .registerButton {
+    font-size: 14px;
+  }
+}

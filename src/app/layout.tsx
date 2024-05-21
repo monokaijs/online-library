@@ -5,11 +5,17 @@ import ThemeProvider from "@/components/providers/ThemeProvider";
 import {AntdRegistry} from "@ant-design/nextjs-registry";
 import 'antd-css-utilities/utility.min.css';
 import LoadingProvider from "@/components/providers/LoadingProvider";
+import {Lexend_Deca} from "next/font/google";
+
+const lexendDeca = Lexend_Deca({
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  subsets: ['latin'],
+});
 
 export default function RootLayout({children}: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
-    <body>
+    <body className={lexendDeca.className}>
       <AntdRegistry>
         <ThemeProvider>
           <LoadingProvider/>
