@@ -5,7 +5,7 @@ import Activities from "@/app/home/components/Activities";
 import Contact from "@/app/home/components/Contact";
 
 export default async function LandingPage() {
-  return <div>
+  return <div style={{marginTop: 84}}>
     <Banner/>
     <Introduction/>
     <Books/>

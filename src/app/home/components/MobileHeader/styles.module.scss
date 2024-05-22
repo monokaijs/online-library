@@ -1,0 +1,96 @@
+.wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f7fa;
+  box-shadow: rgba(33, 35, 38, 0.1) 0 10px 10px -10px;
+  overflow: hidden;
+  z-index: 200;
+}
+
+.header {
+  width: 1152px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .logo {
+    width: 140px;
+    align-self: center;
+  }
+
+  .navbar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    background: #fff;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    transition: all 0.3s linear;
+    a {
+      padding-block: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      &:hover {
+        color: #4A6F73 !important;
+      }
+    }
+
+    .active {
+      color: #4A6F73 !important;
+      &:before {
+        position: absolute;
+        content: "";
+        height: 3px;
+        width: 20px;
+        background-color: #4A6F73;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+      }
+    }
+
+    .closeButton {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .overlay {
+    z-index: 999;
+    position: fixed;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: rgb(1, 1, 1, 0.3);
+    transition: all 0.3s linear;
+  }
+
+  .loginButton {
+    font-size: 14px !important;
+    color: #4A6F73;
+
+    &:hover {
+      color: #4A6F73 !important;
+    }
+  }
+
+  .registerButton {
+    font-size: 14px !important;
+  }
+}
