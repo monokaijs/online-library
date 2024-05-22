@@ -4,6 +4,7 @@ import styles from "./styles.module.scss";
 import {Col, Row, Typography} from "antd";
 import PartnersAndCommunications from "./PartnersAndCommunications";
 import {activities} from "./data";
+import Fundraising from "./Fundraising";
 
 export default function Activities() {
   return (
@@ -30,6 +31,7 @@ export default function Activities() {
         </div>
       </div>
       <PartnersAndCommunications/>
+      <Fundraising/>
     </div>
   )
 }
