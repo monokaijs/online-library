@@ -9,12 +9,53 @@
   width: 1152px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding-block: 86px;
+  padding-block: 64px;
 
   .logo {
     width: 140px;
     align-self: center;
-    margin-left: -16px;
+  }
+
+  .socialIcon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eee;
+    border-radius: 999px;
+    cursor: pointer;
+
+    &:hover {
+      svg {
+        color: #4A6F73;
+        transition: all 0.3s linear;
+      }
+    }
+
+    svg {
+      color: #595959;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .textHover {
+    color: #717171;
+    cursor: pointer;
+    padding: 4px 0;
+    &:hover {
+      color: #4A6F73;
+      transition: all 0.3s linear;
+    }
+  }
+
+  .emailInput {
+    border: none;
+    font-size: 14px;
+    font-weight: 400;
+    &::placeholder {
+      color: #717171;
+    }
   }
 }

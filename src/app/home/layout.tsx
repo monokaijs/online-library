@@ -1,6 +1,7 @@
 import {ConfigProvider} from "antd";
-import LandingPageHeader from "@/app/home/components/LandingPageHeader";
 import LandingPageFooter from "@/app/home/components/LandingPageFooter";
+import Header from "@/app/home/components/Header";
+import MobileHeader from "@/app/home/components/MobileHeader";
 
 export default async function DashboardLayout({children}: any) {
   return (
@@ -16,11 +17,28 @@ export default async function DashboardLayout({children}: any) {
         components: {
           Typography: {
             titleMarginBottom: 0,
-            titleMarginTop: 0
+            titleMarginTop: 0,
+            fontWeightStrong: 500
+          },
+          Input: {
+            colorBgContainer: "#eee"
           }
         }
       }}>
-      <LandingPageHeader/>
+      <div className="visible lg-hidden">
+        <Header/>
+        <div>
+          <div>
+            Trang chủ
+          </div>
+          <div>
+            Trang chủ
+          </div>
+        </div>
+      </div>
+      <div className="lg-visible hidden">
+        <MobileHeader/>
+      </div>
       {children}
       <LandingPageFooter/>
     </ConfigProvider>
