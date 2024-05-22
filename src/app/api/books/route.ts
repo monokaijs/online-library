@@ -1,9 +1,7 @@
 import { bookService } from "@/lib/services/book.service";
 import { dbService } from "@/lib/services/db.service";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest } from "next/server";
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: Request, res: Response) {
   await dbService.connect();
   const { searchParams } = new URL(req.url ?? "");
   const page = Number(searchParams.get("page") ?? 1);
