@@ -8,7 +8,8 @@
 }
 
 .container {
-  width: 1152px;
+  max-width: 1176px;
+  padding-inline: 12px;
   margin: 0 auto;
 
   .contentLeft {

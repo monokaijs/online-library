@@ -14,7 +14,9 @@
 }
 
 .header {
-  width: 1152px;
+  max-width: 1176px;
+  width: 1176px;
+  padding-inline: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;

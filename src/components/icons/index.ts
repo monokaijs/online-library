@@ -1,3 +1,5 @@
-import {BookOpenCover} from "./BookOpenCover"
+import {BookOpenCover} from "./BookOpenCover";
+import {Book} from "./Book";
+import {Quotes} from "./Quotes";
 
-export default {BookOpenCover}
+export default {BookOpenCover, Book, Quotes}

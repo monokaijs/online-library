@@ -11,14 +11,15 @@ export default async function DashboardLayout({children}: any) {
           colorPrimary: '#4A6F73',
           colorText: '#717171',
           colorLink: '#006D75',
-          colorTextHeading: "#717171",
+          colorTextHeading: "#4D4D4D",
           fontSize: 14,
         },
         components: {
           Typography: {
             titleMarginBottom: 0,
             titleMarginTop: 0,
-            fontWeightStrong: 500
+            fontWeightStrong: 600,
+            fontSizeHeading1: 36
           },
           Input: {
             colorBgContainer: "#eee"
