@@ -253,6 +253,7 @@ function BookForm(props: FormProps) {
               }
             >
               <Select
+                placeholder="Chọn người tặng"
                 loading={loading}
                 showSearch
                 onSearch={(e) => {
@@ -275,6 +276,16 @@ function BookForm(props: FormProps) {
                   </Select.Option>
                 ))}
               </Select>
+            </Form.Item>
+            <Form.Item
+              name="noPages"
+              label={
+                <Typography.Text style={{ color: colorPrimary }}>
+                  Số trang
+                </Typography.Text>
+              }
+            >
+              <Input type="number" allowClear placeholder={"Nhập số trang"} />
             </Form.Item>
             <Form.Item
               name="language"
@@ -330,6 +341,7 @@ function BookForm(props: FormProps) {
                       setLibrary(e);
                       form.setFieldValue("bookcase", undefined);
                     }}
+                    placeholder="Chọn thư viện"
                   >
                     {app?.data?.libaries.map((item: any) => (
                       <Select.Option value={item._id} key={item._id}>
@@ -354,6 +366,7 @@ function BookForm(props: FormProps) {
                       const bookcase: Bookcase = JSON.parse(e);
                       form.setFieldValue("category", bookcase?.category);
                     }}
+                    placeholder="Chọn kệ sách"
                   >
                     {app?.data?.bookcases.map(
                       (item: any) =>

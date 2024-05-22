@@ -323,6 +323,7 @@ function BorrowForm(props: BorrowFormProps) {
               });
               form.setFieldValue("book", undefined);
             }}
+            placeholder="Chọn thư viện"
           >
             {libraries?.data?.map((item: Location) => {
               return (

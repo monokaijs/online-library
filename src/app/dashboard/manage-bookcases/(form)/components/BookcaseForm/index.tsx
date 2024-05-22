@@ -127,7 +127,7 @@ function BookcaseForm(props: BookcaseFormProps) {
           }
           rules={[{ required: true, message: "Vui lòng chọn thư viện!" }]}
         >
-          <Select>
+          <Select placeholder="Chọn thư viện">
             {libraries?.data?.map((item: Location) => {
               return (
                 <Select.Option key={item._id} value={item._id}>
