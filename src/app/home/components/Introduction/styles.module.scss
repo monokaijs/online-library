@@ -14,9 +14,23 @@
   }
 
   .image {
+    position: relative;
+    overflow: hidden;
     height: 368px;
     width: 358px;
-    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      transition: transform .5s;
+    }
+    &:hover {
+      img {
+        transform: scale(1.2);
+      }
+    }
   }
 
   .info {

@@ -22,4 +22,10 @@
       height: 20px;
     }
   }
+
+  &:hover {
+    cursor: pointer;
+    transition: all 0.3s linear;
+    box-shadow: rgba(99, 99, 99, 0.6) 0 4px 10px 0;
+  }
 }
