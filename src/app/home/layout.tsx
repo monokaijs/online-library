@@ -17,12 +17,24 @@ export default async function DashboardLayout({children}: any) {
         components: {
           Typography: {
             titleMarginBottom: 0,
-            titleMarginTop: 0
+            titleMarginTop: 0,
+            fontWeightStrong: 500
+          },
+          Input: {
+            colorBgContainer: "#eee"
           }
         }
       }}>
       <div className="visible lg-hidden">
         <Header/>
+        <div>
+          <div>
+            Trang chủ
+          </div>
+          <div>
+            Trang chủ
+          </div>
+        </div>
       </div>
       <div className="lg-visible hidden">
         <MobileHeader/>
