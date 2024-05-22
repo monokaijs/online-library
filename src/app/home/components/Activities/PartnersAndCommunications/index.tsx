@@ -30,7 +30,7 @@ export default function PartnersAndCommunications() {
           Hợp tác với hơn 17+ doanh nghiệp, câu lạc bộ,...
         </Typography.Text>
       </div>
-      <div className="mt-16 flex flex-col gap-12 overflow-hidden pb-1">
+      <div className="mt-16 flex flex-col gap-12 overflow-hidden py-1">
         <div className="group flex gap-5">
           <div className="flex animate-loop-scroll gap-12">
             {partnersOne.map(item => (
