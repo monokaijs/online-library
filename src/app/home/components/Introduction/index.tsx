@@ -42,14 +42,16 @@ const introList = [
 ];
 export default function Introduction() {
   return (
-    <div className="relative">
+    <div id="introduction" className="relative">
       <div className={`${styles.container}`}>
         {introList.map((item, index) => (
           <div
             style={{flexDirection: ((index + 1) % 2 !== 0) ? "row" : "row-reverse"}}
             key={item.id}
             className={`${styles.introItem}  md-flex-col`}>
-            <img className={styles.image} src={item.image} alt="intro"/>
+            <div className={styles.image}>
+              <img  src={item.image} alt="intro"/>
+            </div>
             <div className={styles.info}>
               <div className={styles.tag}>
                 {item.icon}
@@ -59,8 +61,7 @@ export default function Introduction() {
               <Typography.Title className={styles.title}>{item.title}</Typography.Title>
               <div>
                 {item.description.map(item => (
-                  <div className={styles.description} contentEditable='true'
-                       dangerouslySetInnerHTML={{__html: item}}></div>
+                  <div className={styles.description} dangerouslySetInnerHTML={{__html: item}}></div>
                 ))}
               </div>
             </div>

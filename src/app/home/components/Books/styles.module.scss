@@ -1,0 +1,80 @@
+.wrapper {
+  background-color: #f5f6f8;
+}
+
+.container {
+  max-width: 1176px;
+  margin: 0 auto;
+  padding: 42px 12px;
+
+  .favoriteBookItem {
+    display: flex;
+    gap: 24px;
+
+    .image {
+      width: 150px;
+      height: 230px;
+      cursor: pointer;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .5s;
+      }
+
+      &:hover {
+        img {
+          transform: scale(1.2);
+        }
+      }
+    }
+
+    .info {
+      flex: 1;
+
+      h4 {
+        font-size: 25px;
+        font-weight: 400;
+
+        &:hover {
+          color: #4A6F73;
+          cursor: pointer;
+        }
+      }
+
+      .author {
+        color: rgba(0, 0, 0, 0.6);
+        padding-block: 18px;
+        display: block;
+
+        &:hover {
+          cursor: pointer;
+          transition: all 0.3s linear;
+          color: #000;
+        }
+      }
+
+      .rate {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        gap: 26px;
+
+        .rateCount {
+          color: rgba(0, 0, 0, 0.3);
+
+        }
+      }
+
+      .description {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 0;
+        color: rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+}

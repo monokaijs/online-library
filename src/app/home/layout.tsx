@@ -23,19 +23,14 @@ export default async function DashboardLayout({children}: any) {
           },
           Input: {
             colorBgContainer: "#eee"
+          },
+          Rate: {
+            colorFillContent: "#DEDEDE",
           }
         }
       }}>
       <div className="visible lg-hidden">
         <Header/>
-        <div>
-          <div>
-            Trang chủ
-          </div>
-          <div>
-            Trang chủ
-          </div>
-        </div>
       </div>
       <div className="lg-visible hidden">
         <MobileHeader/>
