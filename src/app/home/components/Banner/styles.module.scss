@@ -1,0 +1,81 @@
+.background {
+  background-image: url("../../../../../public/images/background-banner.svg");
+  width: 100%;
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-size: 71%;
+  background-color: #f6f8f8;
+}
+
+.container {
+  width: 1152px;
+  margin: 0 auto;
+
+  .contentLeft {
+    padding-top: 125px;
+    .box {
+      height: 40px;
+      width: max-content;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-inline: 16px;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.1);
+
+      span {
+        color: #fff;
+      }
+    }
+
+    .title {
+      color: #fff;
+      font-size: 42px;
+      width: 100%;
+      max-width: 73%;
+      margin-block: 16px;
+    }
+
+    .description {
+      color: #fff;
+      font-weight: 300 !important;
+      letter-spacing: 1.2px;
+      width: 100%;
+      max-width: 90%;
+    }
+
+    .registerButton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      width: max-content;
+      height: 52px;
+      color: #fff;
+      background-color: #F7AB7C;
+      padding: 14px 32px;
+      margin-top: 32px;
+      border: none;
+      text-decoration: none;
+
+      &:hover {
+        color: #F7AB7C;
+        background-color: #fff;
+        transition: all 0.3s linear;
+      }
+    }
+  }
+
+  .contentRight {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    span {
+      color: #59959C;
+      font-weight: 300;
+      font-style: italic;
+      margin-top: 16px;
+    }
+  }
+}
