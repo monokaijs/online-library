@@ -23,7 +23,7 @@ export default function MobileHeader() {
         <img src={LogoMain.src} alt={"Logo"} className={styles.logo}/>
         <Button
           onClick={() => setIsCollapsed(true)}
-          size="large" type="text" className="mr-2"
+          size="large" type="text"
           icon={<MenuFoldOutlined/>}/>
         <div style={{transform: `${isCollapsed ? "translateX(0px)" : "translateX(300px)"}`}} className={styles.navbar}>
           <div style={{marginLeft:-12}}>
