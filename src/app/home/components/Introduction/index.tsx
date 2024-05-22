@@ -1,6 +1,6 @@
 "use client";
 
-import {BookOutlined, UserOutlined} from "@ant-design/icons";
+import { UserOutlined} from "@ant-design/icons";
 import styles from "./styles.module.scss";
 import {Typography} from "antd";
 import {Book} from "@/components/icons/Book";
@@ -70,9 +70,9 @@ export default function Introduction() {
         <MessageBrought/>
       </div>
       <div className="lg-hidden">
-        <img className={styles.backgroundOne} src="/images/intro-bg-1.svg" alt=""/>
-        <img className={styles.backgroundTwo} src="/images/intro-bg-2.svg" alt=""/>
-        <img className={styles.backgroundThree} src="/images/intro-bg-3.svg" alt=""/>
+        <img className={styles.spreadOne} src="/images/spread-1.svg" alt=""/>
+        <img className={styles.spreadTwo} src="/images/spread-2.svg" alt=""/>
+        <img className={styles.spreadThree} src="/images/spread-3.svg" alt=""/>
       </div>
     </div>
   )
