@@ -1,10 +1,12 @@
 "use client";
 
 import styles from "./styles.module.scss";
-import {Image, Typography} from "antd";
+import {Typography} from "antd";
 import {BookOpenCover} from "@/components/icons/BookOpenCover";
+import Link from "next/link";
 
 export default function Banner() {
+
   return (
     <div id="home">
       <div className={styles.background}>
@@ -21,7 +23,7 @@ export default function Banner() {
               viện. Khám phá hàng ngàn đầu sách thuộc nhiều thể loại khác nhau và tận hưởng niềm đam mê đọc sách bất cứ
               lúc nào, bất cứ nơi đâu.
             </p>
-            <a href="#" className={styles.registerButton}>Đăng ký</a>
+            <Link href="/auth/register" className={styles.registerButton}>Đăng ký</Link>
           </div>
           <div className={styles.contentRight}>
             <img

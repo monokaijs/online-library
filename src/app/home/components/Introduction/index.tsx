@@ -1,6 +1,6 @@
 "use client";
 
-import {BookOutlined, UserOutlined} from "@ant-design/icons";
+import { UserOutlined} from "@ant-design/icons";
 import styles from "./styles.module.scss";
 import {Typography} from "antd";
 import {Book} from "@/components/icons/Book";
@@ -42,14 +42,16 @@ const introList = [
 ];
 export default function Introduction() {
   return (
-    <div className="relative">
+    <div id="introduction" className="relative">
       <div className={`${styles.container}`}>
         {introList.map((item, index) => (
           <div
             style={{flexDirection: ((index + 1) % 2 !== 0) ? "row" : "row-reverse"}}
             key={item.id}
             className={`${styles.introItem}  md-flex-col`}>
-            <img className={styles.image} src={item.image} alt="intro"/>
+            <div className={styles.image}>
+              <img  src={item.image} alt="intro"/>
+            </div>
             <div className={styles.info}>
               <div className={styles.tag}>
                 {item.icon}
@@ -59,8 +61,7 @@ export default function Introduction() {
               <Typography.Title className={styles.title}>{item.title}</Typography.Title>
               <div>
                 {item.description.map(item => (
-                  <div className={styles.description} contentEditable='true'
-                       dangerouslySetInnerHTML={{__html: item}}></div>
+                  <div className={styles.description} dangerouslySetInnerHTML={{__html: item}}></div>
                 ))}
               </div>
             </div>
@@ -69,9 +70,9 @@ export default function Introduction() {
         <MessageBrought/>
       </div>
       <div className="lg-hidden">
-        <img className={styles.backgroundOne} src="/images/intro-bg-1.svg" alt=""/>
-        <img className={styles.backgroundTwo} src="/images/intro-bg-2.svg" alt=""/>
-        <img className={styles.backgroundThree} src="/images/intro-bg-3.svg" alt=""/>
+        <img className={styles.spreadOne} src="/images/spread-1.svg" alt=""/>
+        <img className={styles.spreadTwo} src="/images/spread-2.svg" alt=""/>
+        <img className={styles.spreadThree} src="/images/spread-3.svg" alt=""/>
       </div>
     </div>
   )

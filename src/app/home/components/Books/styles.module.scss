@@ -1,0 +1,174 @@
+.wrapper {
+  position: relative;
+  background-color: #f5f6f8;
+  z-index: 200;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 1176px;
+  margin: 0 auto;
+  padding: 42px 12px;
+  position: relative;
+  z-index: 200;
+  .favoriteBookItem {
+    display: flex;
+    gap: 24px;
+
+    .image {
+      width: 150px;
+      height: 230px;
+      cursor: pointer;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .5s;
+      }
+
+      &:hover {
+        img {
+          transform: scale(1.2);
+        }
+      }
+    }
+
+    .info {
+      flex: 1;
+
+      h4 {
+        font-size: 25px;
+        font-weight: 400;
+
+        &:hover {
+          color: #4A6F73;
+          cursor: pointer;
+        }
+      }
+
+      .author {
+        color: rgba(0, 0, 0, 0.6);
+        padding-block: 18px;
+        display: block;
+
+        &:hover {
+          cursor: pointer;
+          transition: all 0.3s linear;
+          color: #000;
+        }
+      }
+
+      .rate {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        gap: 26px;
+
+        .rateCount {
+          color: rgba(0, 0, 0, 0.3);
+
+        }
+      }
+
+      .description {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 0;
+        color: rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+
+  .newPublishBooks {
+    margin-top: 100px;
+
+    .newPublishItem {
+      width: 188px;
+
+      .image {
+        width: 188px;
+        height: 288px;
+        cursor: pointer;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform .5s;
+        }
+
+        &:hover {
+          img {
+            transform: scale(1.2);
+          }
+        }
+
+      }
+
+      h4 {
+        font-weight: 400;
+        margin-top: 24px;
+
+        &:hover {
+          color: #4A6F73;
+          cursor: pointer;
+        }
+      }
+
+      .author {
+        font-size: 16px;
+        color: rgba(0, 0, 0, 0.6);
+        padding-block: 12px;
+        display: block;
+
+        &:hover {
+          cursor: pointer;
+          transition: all 0.3s linear;
+          color: #000;
+        }
+      }
+    }
+  }
+
+}
+
+.spreadOne {
+  position: absolute;
+  width: 400px;
+  height: 460px;
+  top: 100px;
+  left: 0;
+  z-index: 2;
+}
+
+.spreadTwo {
+  position: absolute;
+  content: "";
+  width: 300px;
+  height:400px;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.spreadThree {
+  position: absolute;
+  width: 360px;
+  height: 300px;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+}
+
+
+.spreadFour {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  top: 400px;
+  right: 0;
+  z-index: 2;
+}

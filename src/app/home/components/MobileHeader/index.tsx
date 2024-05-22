@@ -5,6 +5,7 @@ import LogoMain from "@/assets/figures/logo-main.png";
 import {Link as LinkS} from "react-scroll";
 import {CloseOutlined, MenuFoldOutlined} from "@ant-design/icons";
 import {useState} from "react";
+import {useRouter} from "next/navigation";
 
 export const navigationConfigsLandingPage = [
   {key: "home", title: "Trang chủ", path: "home"},
@@ -16,6 +17,7 @@ export const navigationConfigsLandingPage = [
 
 export default function MobileHeader() {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const router = useRouter();
 
   return (
     <div className={styles.wrapper}>
@@ -43,6 +45,16 @@ export default function MobileHeader() {
               {item.title}
             </LinkS>
           ))}
+          <Button
+            onClick={() => router.push("/auth/login")}
+            className={styles.loginButton}
+            size="large"
+            type="text">Đăng nhập</Button>
+          <Button
+            onClick={() => router.push("/auth/register")}
+            className={styles.registerButton}
+            size="large"
+            type="primary">Đăng ký</Button>
           <Button
             className={styles.closeButton}
             onClick={() => setIsCollapsed(false)}

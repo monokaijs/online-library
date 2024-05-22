@@ -16,12 +16,14 @@ export default function RootLayout({children}: Readonly<{ children: ReactNode }>
   return (
     <html lang="en">
     <body className={lexendDeca.className}>
-      <AntdRegistry>
-        <ThemeProvider>
-          <LoadingProvider/>
-          {children}
-        </ThemeProvider>
-      </AntdRegistry>
+      <div style={{overflowX: "hidden"}}>
+        <AntdRegistry>
+          <ThemeProvider>
+            <LoadingProvider/>
+            {children}
+          </ThemeProvider>
+        </AntdRegistry>
+      </div>
     </body>
     </html>
   );
