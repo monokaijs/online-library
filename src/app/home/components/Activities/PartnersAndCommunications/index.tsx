@@ -1,32 +1,27 @@
 "use client";
 
 import styles from "./styles.module.scss";
-import {Col, Row, Typography} from "antd";
-import {partnersOne, partnersTwo} from "./data";
-
-const activities = [
-  {
-    id: 1,
-    icon: "/images/activity-1.svg",
-    title: "Mượn sách miễn phí",
-    description: "Tận hưởng kho sách phong phú tại D Free Book hoàn toàn miễn phí. Bạn có thể mượn và đọc sách mà không tốn bất kỳ chi phí nào."
-  },
-  {
-    id: 2,
-    icon: "/images/activity-2.svg",
-    title: "Các buổi Workshop",
-    description: "Tham gia các buổi workshop thú vị về sách, viết lách, và nhiều chủ đề hấp dẫn khác. Học hỏi và kết nối với những người có cùng đam mê."
-  },
-  {
-    id: 3,
-    icon: "/images/activity-3.svg",
-    title: "Đổi sách lấy cây",
-    description: "Tham gia chương trình đổi sách cũ lấy cây xanh. Góp phần bảo vệ môi trường của bạn bằng những cây xanh."
-  },
-]
-
+import {Button, Typography} from "antd";
+import {communications, partnersOne, partnersTwo} from "./data";
+import {ArrowLeftOutlined, ArrowRightOutlined} from "@ant-design/icons";
+import Image from "next/image";
+import {Swiper, SwiperSlide} from "swiper/react";
+import "swiper/css";
+import {useCallback, useRef} from "react";
 
 export default function PartnersAndCommunications() {
+  const sliderRef = useRef<any>();
+
+  const handlePrev = useCallback(() => {
+    if (!sliderRef.current) return;
+    sliderRef.current.swiper.slidePrev();
+  }, []);
+
+  const handleNext = useCallback(() => {
+    if (!sliderRef.current) return;
+    sliderRef.current.swiper.slideNext();
+  }, []);
+
   return (
     <div className={styles.wrapper}>
       <div>
@@ -40,7 +35,7 @@ export default function PartnersAndCommunications() {
           <div className="flex animate-loop-scroll gap-12">
             {partnersOne.map(item => (
               <div key={item.id} className={styles.partnerItem}>
-                <img src={item.image} alt="activity"/>
+                <Image width={54} height={54} src={item.image} alt="activity"/>
                 <Typography.Text>{item.name}</Typography.Text>
               </div>
             ))}
@@ -48,7 +43,7 @@ export default function PartnersAndCommunications() {
           <div className="flex animate-loop-scroll gap-12" aria-hidden="true">
             {partnersOne.map(item => (
               <div key={item.id} className={styles.partnerItem}>
-                <img src={item.image} alt="activity"/>
+                <Image width={54} height={54} src={item.image} alt="activity"/>
                 <Typography.Text>{item.name}</Typography.Text>
               </div>
             ))}
@@ -58,7 +53,7 @@ export default function PartnersAndCommunications() {
           <div className="flex animate-loop-scroll-right gap-12">
             {partnersTwo.map(item => (
               <div key={item.id} className={styles.partnerItem}>
-                <img src={item.image} alt="activity"/>
+                <Image width={54} height={54} src={item.image} alt="activity"/>
                 <Typography.Text>{item.name}</Typography.Text>
               </div>
             ))}
@@ -66,7 +61,7 @@ export default function PartnersAndCommunications() {
           <div className="flex animate-loop-scroll-right gap-12" aria-hidden="true">
             {partnersTwo.map(item => (
               <div key={item.id} className={styles.partnerItem}>
-                <img src={item.image} alt="activity"/>
+                <Image width={54} height={54} src={item.image} alt="activity"/>
                 <Typography.Text>{item.name}</Typography.Text>
               </div>
             ))}
@@ -74,17 +69,67 @@ export default function PartnersAndCommunications() {
         </div>
       </div>
       <div className={styles.communicationWrapper}>
-        <Row gutter={[24, 24]}>
-          {activities.map(item => (
-            <Col xs={24} md={12} lg={8} key={item.id}>
-              <div className={styles.activityItem}>
-                <img src={item.icon} alt="activity"/>
-                <Typography.Title level={4} className="py-4 text-center">{item.title}</Typography.Title>
-                <Typography.Paragraph className="text-center">{item.description}</Typography.Paragraph>
-              </div>
-            </Col>
+        <Swiper
+          className="w-full"
+          spaceBetween={24}
+          ref={sliderRef}
+          breakpoints={{
+            640: {
+              slidesPerView: 1
+            },
+            768: {
+              slidesPerView: 2
+            },
+            1024: {
+              slidesPerView: 2
+            },
+            1240: {
+              slidesPerView: 3
+            },
+          }}
+        >
+          {communications.map((item) => (
+            <SwiperSlide key={item.id}>
+              <a style={{textDecoration: "none"}} target="_blank" href={item.url}>
+                <div className={styles.communicationItem}>
+                  <div className={styles.banner}>
+                    <img
+                      src={item.banner}
+                      alt="banner"/>
+                  </div>
+                  <div className={styles.content}>
+                    <div className="flex flex-col justify-center items-center">
+                      <img
+                        src={item.logo}
+                        alt="logo"/>
+                      <Typography.Title level={4}>{item.title}</Typography.Title>
+                    </div>
+                    <Button size="large" type="link">
+                      Xem thêm
+                      <ArrowRightOutlined/>
+                    </Button>
+                  </div>
+                </div>
+              </a>
+            </SwiperSlide>
           ))}
-        </Row>
+        </Swiper>
+        <div className="mt-6 flex justify-center gap-12">
+          <Button
+            onClick={handlePrev}
+            className={styles.actionButton}
+            variant="outline"
+            shape="circle"
+            icon={<ArrowLeftOutlined/>}
+          />
+          <Button
+            onClick={handleNext}
+            className={styles.actionButton}
+            variant="outline"
+            shape="circle"
+             icon={<ArrowRightOutlined/>}
+          />
+        </div>
       </div>
     </div>
   )

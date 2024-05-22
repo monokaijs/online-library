@@ -10,12 +10,14 @@
     align-items: center;
     border-radius: 8px;
     gap: 16px;
+
     img {
       width: 54px;
       height: 54px;
       border-radius: 999px;
       object-fit: cover;
     }
+
     span {
       font-size: 20px;
       color: #4d4d4d;
@@ -24,6 +26,7 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
+
     &:hover {
       cursor: pointer;
       transition: all 0.3s linear;
@@ -33,7 +36,88 @@
 
   .communicationWrapper {
     max-width: 1176px;
-    margin: 64px auto 0;
+    margin: 64px auto 24px;
     padding-inline: 12px;
+    overflow: hidden;
+
+    .communicationItem {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      border-radius: 8px;
+      margin-bottom: 12px;
+
+      &:hover {
+        .content {
+          transform: scale(1.05);
+          box-shadow: rgba(74, 111, 115, 0.5) 0 4px 10px 0;
+        }
+      }
+
+      .banner {
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
+        height: 286px;;
+
+        img {
+          width: 100%;
+          border-radius: 8px;
+          object-fit: cover;
+          height: 100%;
+        }
+      }
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: rgba(99, 99, 99, 0.15) 0 2px 12px 0;
+        margin-inline: 16px;
+        margin-top: -98px;
+        height: 196px;
+        transition: transform .5s;
+
+        img {
+          object-fit: cover;
+          height: 33px;
+        }
+
+        h4 {
+          font-size: 20px;
+          text-align: center;
+          padding-top: 18px;
+          padding-bottom: 17px;
+        }
+
+        button {
+          font-size: 16px;
+          font-weight: 500;
+          color: #4A6F73;
+        }
+      }
+    }
+  }
+
+  .actionButton {
+    width: 50px !important;
+    height: 50px !important;
+    border: none;
+    box-shadow: rgba(99, 99, 99, 0.15) 0 2px 8px 0;
+    margin-bottom: 42px;
+    transition: all 0.3s linear !important;
+
+    &:hover {
+      background-color: #F7AB7C;
+
+      span {
+        color: #fff;
+      }
+    }
   }
 }
