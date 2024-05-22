@@ -15,13 +15,13 @@ const data = [
     id: 1,
     icon: <HeartOutlined/>,
     title: "Sứ mệnh",
-    description: "Chữa lành cộng đồng bằng sự tử tế, lan tỏa văn hóa đọc"
+    description: "Chữa lành cộng đồng bằng sự tử tế, lan tỏa văn hóa đọc."
   },
   {
     id: 1,
     icon: <BookOutlined/>,
     title: "Giá trị cốt lõi",
-    description: "D Free Book có xuất phát điểm là một thư viện cộng đồng cho mượn sách miễn phí và đặt cọc niềm tin. Chúng mình là những người trẻ có một niềm tin mãnh liệt vào sự tử tế, tri thức cũng như những điều tốt đẹp trong cuộc sống. \n"
+    description: "D Free Book có xuất phát điểm là một thư viện cộng đồng cho mượn sách miễn phí và đặt cọc niềm tin. Chúng mình là những người trẻ có một niềm tin mãnh liệt vào sự tử tế, tri thức cũng như những điều tốt đẹp trong cuộc sống."
   }
 ]
 
@@ -38,7 +38,7 @@ export default function MessageBrought() {
                 <div className={styles.icon}>
                   {item.icon}
                 </div>
-                <Typography.Title className="py-4 text-center">{item.title}</Typography.Title>
+                <Typography.Title level={4} className="py-4 text-center">{item.title}</Typography.Title>
                 <Typography.Paragraph className="text-center">{item.description}</Typography.Paragraph>
               </div>
             </Col>
