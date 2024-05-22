@@ -118,14 +118,12 @@ export default function PartnersAndCommunications() {
           <Button
             onClick={handlePrev}
             className={styles.actionButton}
-            variant="outline"
             shape="circle"
             icon={<ArrowLeftOutlined/>}
           />
           <Button
             onClick={handleNext}
             className={styles.actionButton}
-            variant="outline"
             shape="circle"
              icon={<ArrowRightOutlined/>}
           />

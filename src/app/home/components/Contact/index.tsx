@@ -1,6 +1,6 @@
 export default function Contact() {
   return (
-    <div style={{marginBottom: 800}}>
+    <div>
       Contact
     </div>
   )
