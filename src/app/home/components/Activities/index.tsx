@@ -2,7 +2,7 @@
 
 import styles from "./styles.module.scss";
 import {Col, Row, Typography} from "antd";
-import {BookOutlined, EyeOutlined, HeartOutlined} from "@ant-design/icons";
+import PartnersAndCommunications from "./PartnersAndCommunications";
 
 
 const activities = [
@@ -26,19 +26,19 @@ const activities = [
   },
   {
     id: 4,
-   icon: "/images/activity-4.svg",
+    icon: "/images/activity-4.svg",
     title: "Tặng cây chào tân sinh viên",
     description: "Chào đón các tân sinh viên với món quà đặc biệt - một cây xanh nhỏ để bạn mang đến một khởi đầu mới tươi mát và ý nghĩa."
   },
   {
     id: 5,
-   icon: "/images/activity-5.svg",
+    icon: "/images/activity-5.svg",
     title: "Tặng sách",
     description: "D Free Book tổ chức các chương trình tặng sách miễn phí cho cộng đồng, giúp lan tỏa tri thức và niềm đam mê đọc sách."
   },
   {
     id: 6,
-   icon: "/images/activity-6.svg",
+    icon: "/images/activity-6.svg",
     title: "Chuyến đi tỉnh xa xây dựng tủ sách",
     description: "Thực hiện các chuyến đi thiện nguyện đến những vùng xa, xây dựng tủ sách và mang tri thức đến với trẻ em ở những nơi khó khăn."
   }
@@ -69,6 +69,7 @@ export default function Activities() {
           </Row>
         </div>
       </div>
+      <PartnersAndCommunications/>
     </div>
   )
 }

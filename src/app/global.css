@@ -35,3 +35,33 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/*animate loop scroll*/
+
+.animate-loop-scroll {
+  animation: loop-scroll 80s linear infinite;
+}
+
+@keyframes loop-scroll {
+  0% {
+    transform: translateX(0)
+  }
+
+  to {
+    transform: translateX(-100%)
+  }
+}
+
+@keyframes loop-scroll-right {
+  0% {
+    transform: translateX(-100%)
+  }
+
+  to {
+    transform: translateX(0)
+  }
+}
+
+.animate-loop-scroll-right {
+  animation: loop-scroll-right 80s linear infinite
+}
