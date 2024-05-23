@@ -1,9 +1,9 @@
 import {ConfigProvider} from "antd";
-import LandingPageFooter from "@/app/home/components/LandingPageFooter";
-import Header from "@/app/home/components/Header";
-import MobileHeader from "@/app/home/components/MobileHeader";
+import Header from "./Header";
+import MobileHeader from "./MobileHeader";
+import Footer from "./Footer";
 
-export default async function DashboardLayout({children}: any) {
+export default async function LandingPageLayout({children}: any) {
   return (
     <ConfigProvider
       theme={{
@@ -36,7 +36,7 @@ export default async function DashboardLayout({children}: any) {
         <MobileHeader/>
       </div>
       {children}
-      <LandingPageFooter/>
+      <Footer/>
     </ConfigProvider>
   )
 }

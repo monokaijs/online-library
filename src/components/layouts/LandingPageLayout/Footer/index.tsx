@@ -29,7 +29,7 @@ export const supports = [
   {key: "information", title: "Thông tin", path: "#"},
 ]
 
-export default function LandingPageFooter() {
+export default function Footer() {
   return (
     <div className={styles.wrapper}>
       <Row className={styles.footer} gutter={[32, 32]}>
