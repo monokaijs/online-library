@@ -58,7 +58,7 @@ class DbService {
           email: DEFAULT_ACCOUNT_EMAIL,
           password: hashSync(DEFAULT_ACCOUNT_PASSWORD, 10),
           roles: RoleEnum.ADMIN,
-          isActivated: true,
+          status: 'verified',
         });
       } catch (e) {
         console.error(e);
