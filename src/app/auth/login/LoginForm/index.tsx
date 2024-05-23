@@ -41,7 +41,7 @@ export default function LoginForm(props: LoginFormProps) {
 
   const login = useGoogleLogin({
     flow: "auth-code",
-    onSuccess: ({ code }) => gConnectAction({ code: code, type: "google" }),
+    onSuccess: ({ code }) => gConnectAction({ code: code, type: "google", redirect_uri:"postmessage" }),
     onNonOAuthError: () => {
       setLoading(false);
     },
