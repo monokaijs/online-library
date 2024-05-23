@@ -92,7 +92,7 @@ export async function returnBookAction(_prev: any, borrowId: string) {
   await dbService.connect();
   try {
     const data = await borrowService.returnBook(borrowId);
-    return { success: true, data, message: "Phiếu mượn đã hoàn tất" };
+    return { success: true, data };
   } catch (error: any) {
     return { success: false, message: error.message };
   }

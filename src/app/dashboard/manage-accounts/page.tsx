@@ -90,7 +90,7 @@ function ManageAccounts() {
       key: "index",
       render: (_: any, record: any, index: number) => {
         ++index;
-        return index;
+        return index + (state.page - 1) * state.limit;
       },
       align: "center",
     },

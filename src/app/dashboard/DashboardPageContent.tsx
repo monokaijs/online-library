@@ -2,7 +2,7 @@
 import { getDashboard } from "@/app/dashboard/action";
 import StatisticCard from "@/app/dashboard/components/StatisticCard";
 import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
-import { Card, Col, DatePicker, Row, Select, Tabs } from "antd";
+import { Card, DatePicker, Select, Typography } from "antd";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -24,7 +24,12 @@ export default function DashboardPageContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [{ data }, getData] = useFormState(getDashboard, {} as any);
+  const [{ data }, getData] = useFormState(getDashboard, {
+    data: {
+      topDonate: [],
+      topBorrow: [],
+    },
+  } as any);
 
   const type = searchParams.get("type");
   const typeValid = type == "date" || type == "month" || type == "year";
@@ -71,95 +76,420 @@ export default function DashboardPageContent() {
     });
   }, [searchParams, pathname]);
 
-  console.log(data);
-
   return (
-    <>
-      <div className="flex items-center gap-8 mb-6">
-        <Select
-          style={{ minWidth: 120 }}
-          onChange={(e) => {
-            setPicker(e);
+    <div className="h-full flex flex-col overflow-hidden gap-12">
+      <div>
+        <div className="flex items-center gap-8 mb-6">
+          <Select
+            style={{ minWidth: 120 }}
+            onChange={(e) => {
+              setPicker(e);
+            }}
+            defaultValue={picker}
+          >
+            <Select.Option value="date">Theo ngày</Select.Option>
+            <Select.Option value="month">Theo tháng</Select.Option>
+            <Select.Option value="year">Theo năm</Select.Option>
+          </Select>
+          <DatePicker
+            picker={picker}
+            value={currentDate}
+            placeholder={`Chọn ${placeholder[picker] ?? "thời gian"}`}
+            format={formater[picker] ?? "MM/YYYY"}
+            onChange={(e) => {
+              setCurrentDate(e);
+            }}
+            disabledDate={(current) => {
+              return dayjs().diff(current) < 0;
+            }}
+          />
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+            gap: 20,
           }}
-          defaultValue={picker}
         >
-          <Select.Option value="date">Theo ngày</Select.Option>
-          <Select.Option value="month">Theo tháng</Select.Option>
-          <Select.Option value="year">Theo năm</Select.Option>
-        </Select>
-        <DatePicker
-          picker={picker}
-          value={currentDate}
-          placeholder={`Chọn ${placeholder[picker] ?? "thời gian"}`}
-          format={formater[picker] ?? "MM/YYYY"}
-          onChange={(e) => {
-            setCurrentDate(e);
-          }}
-          disabledDate={(current) => {
-            return dayjs().diff(current) < 0;
-          }}
-        />
+          <StatisticCard
+            data={data?.accounts}
+            title={"Tổng số người dùng"}
+            hint={"Tổng số người dùng mới"}
+            diffUnit={"bạn đọc"}
+          />
+          <StatisticCard
+            data={data?.books}
+            title={"Tổng số sách"}
+            hint={"Tổng số sách mới"}
+            diffUnit={"quyển"}
+          />
+          <StatisticCard
+            data={data?.borrows}
+            title={"Tổng số lượt mượn"}
+            hint={"Tổng số lượt mượn mới"}
+            diffUnit={"lượt"}
+          />
+          <StatisticCard
+            data={data?.overdue}
+            title={"Số sách mượn quá hạn"}
+            hint={"Tổng số mượn quá"}
+            diffUnit={"lượt"}
+            positive={false}
+          />
+          <StatisticCard
+            data={data?.fines}
+            title={"Tổng phí phạt"}
+            hint={"Tổng phí phạt"}
+            currency={true}
+            diffUnit={""}
+          />
+        </div>
       </div>
       <div
         style={{
+          flex: 1,
           display: "grid",
-          gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-          gap: 20,
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: 24,
+          overflow: "hidden",
         }}
       >
-        <StatisticCard
-          data={data?.accounts}
-          title={"Tổng số người dùng"}
-          hint={"Tổng số người dùng mới"}
-          diffUnit={"bạn đọc"}
-        />
-        <StatisticCard
-          data={data?.books}
-          title={"Tổng số sách"}
-          hint={"Tổng số sách mới"}
-          diffUnit={"quyển"}
-        />
-        <StatisticCard
-          data={data?.borrows}
-          title={"Tổng số lượt mượn"}
-          hint={"Tổng số lượt mượn mới"}
-          diffUnit={"lượt"}
-        />
-        <StatisticCard
-          data={data?.overdue}
-          title={"Số sách mượn quá hạn"}
-          hint={"Tổng số mượn quá"}
-          diffUnit={"lượt"}
-          positive={false}
-        />
-        <StatisticCard
-          data={[]}
-          title={"Tổng phí phạt"}
-          hint={"Tổng phí phạt"}
-          diffUnit={""}
-        />
+        <Card
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            flex: 1,
+            height: "100%",
+          }}
+          bodyStyle={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}
+        >
+          <Typography.Title className="mb-4" level={4}>
+            Người ủng hộ hàng đầu
+          </Typography.Title>
+          <div
+            style={{
+              border: "1px solid #DFDFDF",
+              flex: 1,
+              borderRadius: 8,
+              overflow: "auto",
+            }}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(10, 1fr)",
+              }}
+            >
+              <div
+                style={{
+                  gridColumn: "span 1 / span 1",
+                  borderBottom: "1px solid #DFDFDF",
+                  padding: "12px 0",
+                  textAlign: "center",
+                  fontWeight: 600,
+                }}
+              >
+                STT
+              </div>
+              <div
+                style={{
+                  gridColumn: "span 3 / span 3",
+                  borderBottom: "1px solid #DFDFDF",
+                  padding: "12px 0",
+                  fontWeight: 600,
+                  paddingLeft: 16,
+                }}
+              >
+                Họ và tên
+              </div>
+              <div
+                style={{
+                  gridColumn: "span 2 / span 2",
+                  borderBottom: "1px solid #DFDFDF",
+                  padding: "12px 0",
+                  textAlign: "center",
+                  fontWeight: 600,
+                }}
+              >
+                Điện thoại
+              </div>
+              <div
+                style={{
+                  gridColumn: "span 2 / span 2",
+                  borderBottom: "1px solid #DFDFDF",
+                  padding: "12px 0",
+                  textAlign: "center",
+                  fontWeight: 600,
+                }}
+              >
+                Mã
+              </div>
+              <div
+                style={{
+                  gridColumn: "span 2 / span 2",
+                  borderBottom: "1px solid #DFDFDF",
+                  padding: "12px 0",
+                  textAlign: "center",
+                  fontWeight: 600,
+                }}
+              >
+                Số sách
+              </div>
+            </div>
+            {data?.topDonate?.map((item: any, index: number) => {
+              const giver: Account | undefined = item?.giver;
+              const count: number | undefined = item?.count;
+              return (
+                <div
+                  key={index}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(10, 1fr)",
+                  }}
+                >
+                  <div
+                    style={{
+                      gridColumn: "span 1 / span 1",
+                      borderBottom: "1px solid #DFDFDF",
+                      padding: "12px 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    {index + 1}
+                  </div>
+                  <div
+                    style={{
+                      gridColumn: "span 3 / span 3",
+                      borderBottom: "1px solid #DFDFDF",
+                      padding: "12px 0",
+                      paddingLeft: 16,
+                    }}
+                  >
+                    {giver?.fullName}
+                  </div>
+                  <div
+                    style={{
+                      gridColumn: "span 2 / span 2",
+                      borderBottom: "1px solid #DFDFDF",
+                      padding: "12px 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    {giver?.phoneNumber}
+                  </div>
+                  <div
+                    style={{
+                      gridColumn: "span 2 / span 2",
+                      borderBottom: "1px solid #DFDFDF",
+                      padding: "12px 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    {giver?.userId ?? "-"}
+                  </div>
+                  <div
+                    style={{
+                      gridColumn: "span 2 / span 2",
+                      borderBottom: "1px solid #DFDFDF",
+                      padding: "12px 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    {count}
+                  </div>
+                </div>
+              );
+            })}
+
+            {data?.topDonate?.length === 0 && (
+              <Typography.Title
+                level={5}
+                type="secondary"
+                style={{
+                  textAlign: "center",
+                  padding: "50px 0",
+                  fontWeight: 400,
+                }}
+              >
+                Không có dữ liệu.
+              </Typography.Title>
+            )}
+          </div>
+        </Card>
+        <Card
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            flex: 1,
+            height: "100%",
+          }}
+          bodyStyle={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}
+        >
+          <Typography.Title className="mb-4" level={4}>
+            Người mượn sách hàng đầu
+          </Typography.Title>
+          <div
+            style={{
+              border: "1px solid #DFDFDF",
+              flex: 1,
+              borderRadius: 8,
+              overflow: "auto",
+            }}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(10, 1fr)",
+              }}
+            >
+              <div
+                style={{
+                  gridColumn: "span 1 / span 1",
+                  borderBottom: "1px solid #DFDFDF",
+                  padding: "12px 0",
+                  textAlign: "center",
+                  fontWeight: 600,
+                }}
+              >
+                STT
+              </div>
+              <div
+                style={{
+                  gridColumn: "span 3 / span 3",
+                  borderBottom: "1px solid #DFDFDF",
+                  padding: "12px 0",
+                  fontWeight: 600,
+                  paddingLeft: 16,
+                }}
+              >
+                Họ và tên
+              </div>
+              <div
+                style={{
+                  gridColumn: "span 2 / span 2",
+                  borderBottom: "1px solid #DFDFDF",
+                  padding: "12px 0",
+                  textAlign: "center",
+                  fontWeight: 600,
+                }}
+              >
+                Điện thoại
+              </div>
+              <div
+                style={{
+                  gridColumn: "span 2 / span 2",
+                  borderBottom: "1px solid #DFDFDF",
+                  padding: "12px 0",
+                  textAlign: "center",
+                  fontWeight: 600,
+                }}
+              >
+                Mã
+              </div>
+              <div
+                style={{
+                  gridColumn: "span 2 / span 2",
+                  borderBottom: "1px solid #DFDFDF",
+                  padding: "12px 0",
+                  textAlign: "center",
+                  fontWeight: 600,
+                }}
+              >
+                Số sách
+              </div>
+            </div>
+            {data?.topBorrow?.map((item: any, index: number) => {
+              const user: Account | undefined = item?.user;
+              const count: number | undefined = item?.borrowCount;
+              return (
+                <div
+                  key={index}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(10, 1fr)",
+                  }}
+                >
+                  <div
+                    style={{
+                      gridColumn: "span 1 / span 1",
+                      borderBottom: "1px solid #DFDFDF",
+                      padding: "12px 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    {index + 1}
+                  </div>
+                  <div
+                    style={{
+                      gridColumn: "span 3 / span 3",
+                      borderBottom: "1px solid #DFDFDF",
+                      padding: "12px 0",
+                      paddingLeft: 16,
+                    }}
+                  >
+                    {user?.fullName}
+                  </div>
+                  <div
+                    style={{
+                      gridColumn: "span 2 / span 2",
+                      borderBottom: "1px solid #DFDFDF",
+                      padding: "12px 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    {user?.phoneNumber}
+                  </div>
+                  <div
+                    style={{
+                      gridColumn: "span 2 / span 2",
+                      borderBottom: "1px solid #DFDFDF",
+                      padding: "12px 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    {user?.userId ?? "-"}
+                  </div>
+                  <div
+                    style={{
+                      gridColumn: "span 2 / span 2",
+                      borderBottom: "1px solid #DFDFDF",
+                      padding: "12px 0",
+                      textAlign: "center",
+                    }}
+                  >
+                    {count}
+                  </div>
+                </div>
+              );
+            })}
+            {data?.topBorrow?.length === 0 && (
+              <Typography.Title
+                level={5}
+                type="secondary"
+                style={{
+                  textAlign: "center",
+                  padding: "50px 0",
+                  fontWeight: 400,
+                }}
+              >
+                Không có dữ liệu.
+              </Typography.Title>
+            )}
+          </div>
+        </Card>
       </div>
-      <Row style={{ marginTop: 20 }}>
-        <Col span={24}>
-          <Card bodyStyle={{ padding: 0 }}>
-            <Tabs
-              tabBarStyle={{ padding: "0px 20px", paddingTop: 10 }}
-              items={[
-                {
-                  key: "reader",
-                  label: "Bạn đọc",
-                  children: "something",
-                },
-                {
-                  key: "borrow",
-                  label: "Lượt mượn",
-                  children: "something else",
-                },
-              ]}
-            />
-          </Card>
-        </Col>
-      </Row>
-    </>
+    </div>
   );
 }

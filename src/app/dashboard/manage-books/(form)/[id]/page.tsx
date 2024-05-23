@@ -34,6 +34,7 @@ import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import "./style.css";
 import Link from "next/link";
+import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 
 export default function BookDetail() {
   const router = useRouter();
@@ -68,7 +69,7 @@ export default function BookDetail() {
     );
   }
 
-  const overdued = dayjs().diff(data?.borrowRecord?.returnDate) > 0;
+  const overdued = getDaysDiff(data?.borrowRecord?.returnDate) < 0;
 
   const info = [
     { fieldName: "Nhà xuất bản", value: data?.book?.publisher },
@@ -90,7 +91,7 @@ export default function BookDetail() {
               ? "green"
               : data?.book?.status === BookStatus.OVERDUE || overdued
               ? "red"
-              : "yellow"
+              : "orange"
           }
         >
           {data?.book?.status === BookStatus.AVAILABLE
