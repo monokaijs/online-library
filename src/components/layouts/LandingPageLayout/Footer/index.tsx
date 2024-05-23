@@ -17,7 +17,7 @@ const socials = [
 export const pages = [
   {key: "home", title: "Trang chủ", path: "home"},
   {key: "introduction", title: "Về D Free Books", path: "introduction"},
-  {key: "book", title: "Sách", path: "book"},
+  {key: "book", title: "Sách", path: "books"},
   {key: "activities", title: "Hoạt động", path: "activities"},
   {key: "contact", title: "Liên hệ", path: "contact"}
 ]
