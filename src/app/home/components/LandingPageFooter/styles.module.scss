@@ -1,0 +1,70 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: rgba(33, 35, 38, 0.1) 10px -10px 10px -10px;
+}
+
+.footer {
+  max-width: 1176px;
+  width: 1176px;
+  padding-inline: 12px;
+  display: flex;
+  justify-content: space-between;
+  padding-block: 64px;
+
+  .logo {
+    width: 140px;
+    align-self: center;
+  }
+
+  .socialIcon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eee;
+    border-radius: 999px;
+    cursor: pointer;
+
+    &:hover {
+      svg {
+        path {
+          fill: #4A6F73 !important;
+        }
+
+        color: #4A6F73 !important;
+        transition: all 0.3s linear;
+      }
+    }
+
+    svg {
+      color: #595959;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .textHover {
+    color: #717171;
+    cursor: pointer;
+    padding: 4px 0;
+
+    &:hover {
+      color: #4A6F73;
+      transition: all 0.3s linear;
+    }
+  }
+
+  .emailInput {
+    border: none;
+    font-size: 14px;
+    font-weight: 400;
+    width: 100%;
+
+    &::placeholder {
+      color: #717171;
+    }
+  }
+}
