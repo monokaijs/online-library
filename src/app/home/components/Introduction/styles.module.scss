@@ -1,0 +1,116 @@
+.container {
+  max-width: 1176px;
+  padding-inline: 12px;
+  margin: 0 auto;
+  padding-block: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  position: relative;
+  z-index: 20 !important;
+
+  .introItem {
+    display: flex;
+    gap: 48px;
+  }
+
+  .image {
+    position: relative;
+    overflow: hidden;
+    height: 368px;
+    width: 358px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      transition: transform .5s;
+    }
+
+    &:hover {
+      img {
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  .info {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    .tag {
+      height: 40px;
+      width: max-content;
+      background-color: rgba(74, 111, 115, 0.15);
+      color: #4A6F73;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px 16px;
+      gap: 12px;
+
+      span {
+        color: #4A6F73;
+      }
+    }
+
+    .title {
+      font-size: 36px;
+      font-weight: 600;
+      padding-top: 16px;
+    }
+
+    .description {
+      color: #717171;
+      margin-top: 16px;
+    }
+  }
+
+}
+
+.spreadOne {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  top: 100px;
+  left: 0;
+  z-index: 2;
+}
+
+.spreadTwo {
+  position: absolute;
+  content: "";
+  width: 300px;
+  height: 300px;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.spreadThree {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+}
+
+
+@media only screen and (max-width: 576px) {
+  .container {
+    .introItem {
+      gap: 12px;
+
+      .info {
+        align-items: center;
+          text-align: center;
+      }
+    }
+  }
+}
