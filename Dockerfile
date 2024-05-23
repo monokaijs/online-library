@@ -9,6 +9,9 @@ RUN apk add --no-cache git \
 # Build Image
 FROM node:20-alpine AS BUILD
 
+ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
+ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
+
 WORKDIR /app
 COPY --from=BASE /app/node_modules ./node_modules
 COPY . .
