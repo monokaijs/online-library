@@ -30,7 +30,7 @@ export default function ModalDetailInfo(props: ModalDetailInfoProps) {
           records.map((record, index) => {
             return (
               <div className={styles.record} key={index}>
-                <div className={styles.label}>
+                <div className={styles.label + " detail-label"}>
                   {record?.icon && (
                     <Typography.Text style={{ color: colorPrimary }}>
                       {record?.icon}

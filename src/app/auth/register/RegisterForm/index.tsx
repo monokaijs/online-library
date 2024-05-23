@@ -12,11 +12,11 @@ export default function RegisterForm() {
     success: false,
   });
   useEffect(() => {
-    if (state.message) message[state.success ? 'success' : 'error'](state.message);
+    if (state?.message) message[state?.success ? 'success' : 'error'](state?.message);
     setLoading(false);
   }, [state]);
 
-  if (state.success) return <>
+  if (state?.success) return <>
     <Alert
       type={'success'}
       message={'Thành công'}

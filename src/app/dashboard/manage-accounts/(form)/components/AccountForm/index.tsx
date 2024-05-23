@@ -3,9 +3,10 @@ import {
   createAccountAction,
   updateAccountAction,
 } from "@/app/dashboard/manage-accounts/action";
-import { UploadOutlined } from "@ant-design/icons";
+import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 import {
   Button,
+  Card,
   DatePicker,
   Form,
   Input,
@@ -15,11 +16,12 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
 function AccountForm({ account }: { account?: Account }) {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const [state, formAction] = useFormState(createAccountAction, {} as any);
   const [updateStatus, updateAccount] = useFormState(updateAccountAction, {
@@ -28,10 +30,10 @@ function AccountForm({ account }: { account?: Account }) {
   });
 
   useEffect(() => {
-    if (state.message) {
-      message[state.success ? "success" : "error"](state.message);
+    if (state?.message) {
+      message[state?.success ? "success" : "error"](state?.message);
     }
-    if (state.success) {
+    if (state?.success) {
       router.back();
     }
   }, [state]);
@@ -45,16 +47,21 @@ function AccountForm({ account }: { account?: Account }) {
     }
   }, [updateStatus]);
 
+  useDidMountEffect(() => {
+    setLoading(false);
+  }, [state, updateStatus]);
+
   useEffect(() => {
     if (account) {
       form.setFieldsValue({
         ...account,
-        birthday: dayjs(account.birthday),
+        birthday: account.birthday ? dayjs(account.birthday) : "",
       });
     }
   }, [account]);
 
   const onFinish = (values: any) => {
+    setLoading(true);
     values.birthday = new Date(values.birthday);
 
     if (account) {
@@ -66,90 +73,151 @@ function AccountForm({ account }: { account?: Account }) {
   };
 
   return (
-    <Form
-      onFinish={onFinish}
-      labelCol={{ flex: "200px" }}
-      labelAlign="left"
-      labelWrap
-      form={form}
-    >
-      <Form.Item
-        rules={[{ required: true, message: "Vui lòng nhập họ tên!" }]}
-        name="fullName"
-        label={"Họ và tên"}
+    <Card style={{ width: 714, margin: "0 auto" }}>
+      <Typography.Title level={4} className="mb-8">
+        {account ? "Cập nhật" : "Thêm"} người dùng
+      </Typography.Title>
+      <Form
+        disabled={loading}
+        onFinish={onFinish}
+        labelCol={{ flex: "200px" }}
+        labelAlign="left"
+        labelWrap
+        form={form}
       >
-        <Input placeholder={"Nguyễn Văn A"} />
-      </Form.Item>
-      <Form.Item
-        rules={[{ required: true, message: "Vui lòng nhập email!" }]}
-        name="email"
-        label={"Email"}
-      >
-        <Input disabled={!!account} placeholder={"example@gmail.com"} />
-      </Form.Item>
-      <Form.Item
-        rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
-        name="phoneNumber"
-        label={"Số điện thoại"}
-      >
-        <Input placeholder={"Số điện thoại..."} />
-      </Form.Item>
-      <Form.Item name="role" label={"Vai trò"}>
-        <Radio.Group
-          options={[
+        <Form.Item
+          rules={[
             {
-              label: "Bạn đọc",
-              value: "user",
+              required: true,
+              message: "Vui lòng nhập họ tên!",
+              whitespace: true,
             },
             {
-              label: "Quản lý",
-              value: "admin",
+              max: 30,
+              message: "Họ và tên tối đa 30 kí tự",
             },
           ]}
-        />
-      </Form.Item>
-      <Form.Item name="identityNumber" label={"Số CCCD/CMND"}>
-        <Input placeholder={"Số CCCD/CMND..."} />
-      </Form.Item>
-      <Form.Item label={"Ngày sinh"} name={"birthday"}>
-        <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
-      </Form.Item>
-      <Form.Item name="gender" label={"Giới tính"}>
-        <Radio.Group
-          options={[
+          name="fullName"
+          label={"Họ và tên"}
+        >
+          <Input allowClear placeholder={"Nguyễn Văn A"} />
+        </Form.Item>
+        <Form.Item
+          rules={[
             {
-              label: "Nam",
-              value: "male",
+              required: true,
+              message: "Vui lòng nhập email!",
+              whitespace: true,
             },
             {
-              label: "Nữ",
-              value: "female",
-            },
-            {
-              label: "Khác",
-              value: "orther",
+              pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: "Email không hợp lệ",
             },
           ]}
-        />
-      </Form.Item>
-      <Form.Item name="address" label={"Địa chỉ"}>
-        <Input.TextArea placeholder={"Địa chỉ..."} />
-      </Form.Item>
-      <div className={"flex justify-end"}>
-        <div className={"flex gap-9"}>
-          <Button
-            onClick={() => {
-              router.back();
+          name="email"
+          label={"Email"}
+        >
+          <Input
+            allowClear
+            disabled={!!account}
+            placeholder={"example@gmail.com"}
+          />
+        </Form.Item>
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập số điện thoại",
+              whitespace: true,
+            },
+            {
+              min: 10,
+              message: "Số điện thoại tối thiểu 10 kí tự",
+            },
+            {
+              max: 11,
+              message: "Số điện thoại tối đa 11 kí tự",
+            },
+            {
+              pattern: /^(?:\d*)$/,
+              message: "Số điện thoại không hợp lệ",
+            },
+          ]}
+          name="phoneNumber"
+          label={"Số điện thoại"}
+        >
+          <Input allowClear placeholder={"Số điện thoại"} />
+        </Form.Item>
+        <Form.Item name="userId" label={"Mã người dùng"}>
+          <Input allowClear placeholder={"Mã người dùng"} />
+        </Form.Item>
+        <Form.Item name="role" label={"Vai trò"} initialValue={"user"}>
+          <Radio.Group
+            options={[
+              {
+                label: "Bạn đọc",
+                value: "user",
+              },
+              {
+                label: "Thủ thư",
+                value: "manager",
+              },
+              {
+                label: "Quản trị viên",
+                value: "admin",
+              },
+            ]}
+          />
+        </Form.Item>
+        <Form.Item name="identityNumber" label={"Số CCCD/CMND"}>
+          <Input allowClear placeholder={"Số CCCD/CMND"} />
+        </Form.Item>
+        <Form.Item label={"Ngày sinh"} name={"birthday"}>
+          <DatePicker
+            style={{ width: "100%" }}
+            format="DD/MM/YYYY"
+            disabledDate={(current) => {
+              return dayjs().diff(current) < 0;
             }}
-          >
-            Hủy bỏ
-          </Button>
-          <Button htmlType="submit" type={"primary"}>
-            {account ? "Lưu lại" : "Thêm bạn đọc"}
-          </Button>
+          />
+        </Form.Item>
+        <Form.Item name="gender" label={"Giới tính"} initialValue={"male"}>
+          <Radio.Group
+            options={[
+              {
+                label: "Nam",
+                value: "male",
+              },
+              {
+                label: "Nữ",
+                value: "female",
+              },
+              {
+                label: "Khác",
+                value: "orther",
+              },
+            ]}
+          />
+        </Form.Item>
+        <Form.Item name="address" label={"Địa chỉ"}>
+          <Input.TextArea placeholder={"Địa chỉ"} />
+        </Form.Item>
+        <div className={"flex justify-end"}>
+          <div className={"flex gap-9"}>
+            <Button
+              onClick={() => {
+                router.back();
+              }}
+            >
+              Hủy bỏ
+            </Button>
+            <Button htmlType="submit" type={"primary"} loading={loading}>
+              {account ? "Lưu lại" : "Thêm người dùng"}
+            </Button>
+          </div>
         </div>
-      </div>
-    </Form>
+      </Form>
+    </Card>
   );
 }
 

@@ -58,7 +58,7 @@ export default function ViewBorrowModal(props: ViewBorrowModalProps) {
           onClick={() => {
             Modal.confirm({
               title: "Hành động này không thể hoàn tác!",
-              content: `Xác nhận xóa sách`,
+              content: `Xác nhận xóa phiếu mượn`,
               okText: "Xóa",
               cancelText: "Hủy",
               onOk: () => {

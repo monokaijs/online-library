@@ -8,19 +8,16 @@ export enum LibraryStatus {
 }
 
 export interface Location {
+  _id?: any;
   name: string;
   openingTime: string;
   closingTime: string;
   phoneNumber: string;
-  address: {
-    text: string;
-    coordinate: {
-      lat: number;
-      lng: number;
-    },
-  };
+  address: string;
   status: LibraryStatus;
   estDate: Date;
+  description: string;
+  isDelete?: boolean;
 }
 
 const LocationSchema = new mongoose.Schema<Location>({
@@ -28,18 +25,14 @@ const LocationSchema = new mongoose.Schema<Location>({
   openingTime: String,
   closingTime: String,
   phoneNumber: String,
-  address: {
-    text: String,
-    coordinate: {
-      lat: Number,
-      lng: Number,
-    }
-  },
+  description: String,
+  address: String,
   status: {
     type: String,
     enum: Object.values(LibraryStatus),
   },
   estDate: Date,
+  isDelete: Boolean
 }, {timestamps: true});
 
 export interface LibraryDocument extends Document, Location {

@@ -8,6 +8,7 @@ interface Account {
   googleId?: string;
   fullName: string;
   email: string;
+  userId: string;
   phoneNumber: string;
   identityNumber: string;
   password: string;
@@ -17,6 +18,7 @@ interface Account {
   balance: number;
   address: string;
   status: AccountStatus;
+  isDelete?: boolean;
 }
 
 interface AccountVerification {

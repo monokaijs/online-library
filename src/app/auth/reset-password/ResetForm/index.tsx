@@ -19,9 +19,9 @@ export default function ResetForm(props: FormProps) {
     success: false,
   });
   useEffect(() => {
-    if (state.message)
-      message[state.success ? "success" : "error"](state.message);
-    if (state.success) {
+    if (state?.message)
+      message[state?.success ? "success" : "error"](state?.message);
+    if (state?.success) {
       props.onSuccess && props.onSuccess();
     }
     setLoading(false);
@@ -59,7 +59,7 @@ export default function ResetForm(props: FormProps) {
       // }}
     >
       <Form.Item label={"Email"} className={styles.item} name={"email"}>
-        <Input placeholder={"someone@example.com"} />
+        <Input allowClear placeholder={"someone@example.com"} />
       </Form.Item>
       <Button
         type={"primary"}

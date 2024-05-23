@@ -1,4 +1,5 @@
 "use client";
+import { getAccountsAction } from "@/app/dashboard/manage-accounts/action";
 import {
   createBookAction,
   getImagesAction,
@@ -7,11 +8,13 @@ import {
 } from "@/app/dashboard/manage-books/action";
 import { FormAction } from "@/constants/app.constant";
 import useDebounce from "@/lib/hooks/useDebounce";
+import { Bookcase } from "@/lib/models/bookcase.model";
 import { toast } from "@/lib/utils/toast";
 import {
   Button,
   Card,
   Col,
+  DatePicker,
   Form,
   Image,
   Input,
@@ -21,11 +24,10 @@ import {
   theme,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { Option } from "antd/es/mentions";
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
-
 interface FormProps {
   action: FormAction;
   data?: any;
@@ -33,6 +35,8 @@ interface FormProps {
 
 function BookForm(props: FormProps) {
   const router = useRouter();
+  const [formLoading, setFormLoading] = useState(false);
+
   const { action, data } = props;
   const {
     token: { colorPrimary },
@@ -53,7 +57,7 @@ function BookForm(props: FormProps) {
     message: "",
   });
 
-  const isCustomImage = !images.data?.includes(imageSelected) && imageSelected;
+  const isCustomImage = !images?.data?.includes(imageSelected) && imageSelected;
 
   useEffect(() => {
     getLibrary();
@@ -74,31 +78,58 @@ function BookForm(props: FormProps) {
   });
 
   useEffect(() => {
+    setFormLoading(false);
     toast(createState);
-    if (createState.success) {
+    if (createState?.success) {
       router.back();
     }
   }, [createState]);
 
   useEffect(() => {
+    setFormLoading(false);
     toast(updateState);
-    if (updateState.success) {
+    if (updateState?.success) {
       router.back();
     }
   }, [updateState]);
 
   useEffect(() => {
-    console.log(data)
+    form.setFieldValue("borrowingDateLimit", 35);
     if (data) {
       form.setFieldsValue(data);
-      form.setFieldValue("library", data?.bookcase?.library?._id);
-      setLibrary(data?.bookcase?.library?._id);
-      form.setFieldValue("bookcase", data?.bookcase?._id);
+      form.setFieldValue("library", data?.library);
+      setLibrary(data?.library);
+      form.setFieldValue("bookcase", JSON.stringify(data?.bookcase));
       setImage(data.picture);
     }
   }, [data]);
 
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const nameDebounce = useDebounce(name);
+
+  const [account, getUsersByName] = useFormState(getAccountsAction, {
+    accounts: [],
+    limit: 20,
+    page: 1,
+    totalPages: 0,
+    totalDocs: 0,
+  });
+
+  useEffect(() => {
+    getUsersByName({ ...data, filter: { fullName: nameDebounce } });
+    setLoading(false);
+  }, [nameDebounce]);
+
   const onFinish = (values: any) => {
+    if (values.publishYear) {
+      values.publishYear = dayjs(values.publishYear).year();
+    }
+
+    setFormLoading(true);
+    if (values.bookcase) {
+      values.bookcase = JSON.parse(values?.bookcase)?._id;
+    }
     if (action === FormAction.CREATE) {
       createBook(values);
     } else {
@@ -109,6 +140,9 @@ function BookForm(props: FormProps) {
 
   return (
     <Card>
+      <Typography.Title level={4} className="mb-8">
+        {action == FormAction.UPDATE ? "Cập nhật" : "Thêm mới"} sách
+      </Typography.Title>
       <Form
         form={form}
         labelCol={{ flex: "120px" }}
@@ -116,11 +150,22 @@ function BookForm(props: FormProps) {
         labelWrap
         className={"form-item-label-no-colon"}
         onFinish={onFinish}
+        disabled={formLoading}
       >
         <Row gutter={32}>
           <Col span={12}>
             <Form.Item
-              rules={[{ required: true, message: "Vui lòng nhập tên sách" }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập tên sách",
+                  whitespace: true,
+                },
+                {
+                  max: 150,
+                  message: "Tên sách tối đa 150 kí tự",
+                },
+              ]}
               name="name"
               label={
                 <Typography.Text style={{ color: colorPrimary }}>
@@ -138,7 +183,17 @@ function BookForm(props: FormProps) {
               />
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Vui lòng nhập tên tác giả" }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập tên tác giả",
+                  whitespace: true,
+                },
+                {
+                  max: 150,
+                  message: "Tên sách tối đa 150 kí tự",
+                },
+              ]}
               name="authorName"
               label={
                 <Typography.Text style={{ color: colorPrimary }}>
@@ -146,18 +201,28 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập tên tác giả"} />
+              <Input allowClear placeholder={"Nhập tên tác giả"} />
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Vui lòng nhập mã sách" }]}
-              name="isbn"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập mã sách",
+                  whitespace: true,
+                },
+                {
+                  max: 50,
+                  message: "Tên sách tối đa 50 kí tự",
+                },
+              ]}
+              name="bookID"
               label={
                 <Typography.Text style={{ color: colorPrimary }}>
                   Mã sách
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập mã sách"} />
+              <Input allowClear placeholder={"Nhập mã sách"} />
             </Form.Item>
             <Form.Item
               rules={[
@@ -173,7 +238,43 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập số ngày mượn tối đa"} />
+              <Input
+                allowClear
+                placeholder={"Nhập số ngày mượn tối đa"}
+                type="number"
+              />
+            </Form.Item>
+            <Form.Item
+              name="giver"
+              label={
+                <Typography.Text style={{ color: colorPrimary }}>
+                  Người tặng
+                </Typography.Text>
+              }
+            >
+              <Select
+                loading={loading}
+                showSearch
+                onSearch={(e) => {
+                  setName(e);
+                  setLoading(true);
+                }}
+                filterOption={(input, option: any) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+              >
+                {account?.accounts.map((account: Account) => (
+                  <Select.Option
+                    label={account.fullName}
+                    key={account._id}
+                    value={account._id}
+                  >
+                    {account.fullName} (xxx{account.phoneNumber?.slice(-3)})
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
             <Form.Item
               name="language"
@@ -183,7 +284,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập ngôn ngữ"} />
+              <Input allowClear placeholder={"Nhập ngôn ngữ"} />
             </Form.Item>
             <Form.Item
               name="publisher"
@@ -193,7 +294,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập nhà xuất bản"} />
+              <Input allowClear placeholder={"Nhập nhà xuất bản"} />
             </Form.Item>
             <Form.Item
               name="publishYear"
@@ -203,7 +304,11 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              <Input placeholder={"Nhập năm xuất bản"} />
+              <DatePicker
+                picker="year"
+                style={{ width: "100%" }}
+                placeholder="Chọn năm xuất bản"
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -226,17 +331,17 @@ function BookForm(props: FormProps) {
                       form.setFieldValue("bookcase", undefined);
                     }}
                   >
-                    {app.data?.libaries.map((item: any) => (
-                      <Option value={item._id} key={item._id}>
+                    {app?.data?.libaries.map((item: any) => (
+                      <Select.Option value={item._id} key={item._id}>
                         {item?.name}
-                      </Option>
+                      </Select.Option>
                     ))}
                   </Select>
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
-                  rules={[{ required: true, message: "Vui lòng chọn kệ sách" }]}
+                  // rules={[{ required: true, message: "Vui lòng chọn kệ sách" }]}
                   name="bookcase"
                   label={
                     <Typography.Text style={{ color: colorPrimary }}>
@@ -244,19 +349,38 @@ function BookForm(props: FormProps) {
                     </Typography.Text>
                   }
                 >
-                  <Select>
-                    {app.data?.bookcases.map(
+                  <Select
+                    onChange={(e) => {
+                      const bookcase: Bookcase = JSON.parse(e);
+                      form.setFieldValue("category", bookcase?.category);
+                    }}
+                  >
+                    {app?.data?.bookcases.map(
                       (item: any) =>
-                        item.library._id == libraryActive && (
-                          <Option value={item._id} key={item._id}>
-                            {item.position} ({item.category})
-                          </Option>
+                        item?.library?._id == libraryActive && (
+                          <Select.Option
+                            value={JSON.stringify(item)}
+                            key={item._id}
+                          >
+                            {item?.position}
+                            {/* ({item?.category}) */}
+                          </Select.Option>
                         )
                     )}
                   </Select>
                 </Form.Item>
               </Col>
             </Row>
+            <Form.Item
+              name="category"
+              label={
+                <Typography.Text style={{ color: colorPrimary }}>
+                  Thể loại
+                </Typography.Text>
+              }
+            >
+              <Input allowClear placeholder={"Nhập thể loại"} />
+            </Form.Item>
             <Form.Item
               name="description"
               label={
@@ -293,7 +417,7 @@ function BookForm(props: FormProps) {
                 </Typography.Text>
               }
             >
-              {(images.data && images.data?.length > 0) || imageSelected ? (
+              {(images?.data && images?.data?.length > 0) || imageSelected ? (
                 <div
                   style={{
                     display: "grid",
@@ -323,32 +447,36 @@ function BookForm(props: FormProps) {
                       />
                     </div>
                   )}
-                  {images.data?.slice(0, isCustomImage ? 5 : 6)?.map((item) => (
-                    <div
-                      key={item}
-                      style={{
-                        cursor: "pointer",
-                        border: "1px solid",
-                        borderColor:
-                          item === imageSelected ? colorPrimary : "transparent",
-                        padding: 4,
-                      }}
-                      onClick={() => {
-                        form.setFieldValue("picture", item);
-                        setImage(item);
-                      }}
-                    >
-                      <Image
+                  {images?.data
+                    ?.slice(0, isCustomImage ? 5 : 6)
+                    ?.map((item) => (
+                      <div
+                        key={item}
                         style={{
-                          width: "100%",
-                          aspectRatio: "3/4",
-                          objectFit: "cover",
+                          cursor: "pointer",
+                          border: "1px solid",
+                          borderColor:
+                            item === imageSelected
+                              ? colorPrimary
+                              : "transparent",
+                          padding: 4,
                         }}
-                        preview={false}
-                        src={item}
-                      />
-                    </div>
-                  ))}
+                        onClick={() => {
+                          form.setFieldValue("picture", item);
+                          setImage(item);
+                        }}
+                      >
+                        <Image
+                          style={{
+                            width: "100%",
+                            aspectRatio: "3/4",
+                            objectFit: "cover",
+                          }}
+                          preview={false}
+                          src={item}
+                        />
+                      </div>
+                    ))}
                 </div>
               ) : (
                 <Typography.Text type="secondary">
@@ -361,7 +489,7 @@ function BookForm(props: FormProps) {
         <div className={"flex justify-end"}>
           <div className={"flex gap-9"}>
             <Button onClick={router.back}>Hủy bỏ</Button>
-            <Button type={"primary"} htmlType="submit">
+            <Button type={"primary"} htmlType="submit" loading={formLoading}>
               {FormAction.CREATE === action ? " Thêm" : "Cập nhật"}
             </Button>
           </div>

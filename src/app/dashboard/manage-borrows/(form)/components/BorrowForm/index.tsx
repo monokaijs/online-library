@@ -1,13 +1,17 @@
 "use client";
 
 import { getAccountsAction } from "@/app/dashboard/manage-accounts/action";
+import { getBookAction } from "@/app/dashboard/manage-books/action";
 import {
   createBorrowAction,
   updateBorrowAction,
 } from "@/app/dashboard/manage-borrows/action";
+import { getLibraryAction } from "@/app/dashboard/manage-locations/action";
 import { FormAction } from "@/constants/app.constant";
 import useDebounce from "@/lib/hooks/useDebounce";
 import { Book, BookStatus } from "@/lib/models/book.model";
+import { Location } from "@/lib/models/library.model";
+import { toast } from "@/lib/utils/toast";
 import {
   Button,
   Card,
@@ -21,14 +25,10 @@ import {
   theme,
 } from "antd";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import "./style.css";
-import { useRouter } from "next/navigation";
-import { Borrow } from "@/lib/models/borrow.model";
-import { toast } from "@/lib/utils/toast";
-import { getBookAction } from "@/app/dashboard/manage-books/action";
-import { Option } from "antd/es/mentions";
 
 interface BorrowFormProps {
   action: FormAction;
@@ -37,10 +37,13 @@ interface BorrowFormProps {
 
 function BorrowForm(props: BorrowFormProps) {
   const { action, detail } = props;
+  const searchParams = useSearchParams();
   const {
     token: { colorPrimary },
   } = theme.useToken();
 
+  const [formLoading, setFormLoading] = useState(false);
+  const [dateLimit, setDateLimit] = useState(35);
   const router = useRouter();
   const [form] = Form.useForm();
 
@@ -52,8 +55,9 @@ function BorrowForm(props: BorrowFormProps) {
         returnDate: dayjs(detail.returnDate),
         user: JSON.stringify(detail.user),
         book: JSON.stringify(detail.book),
-        library: detail?.book?.bookcase?.library?.name,
+        library: detail?.library,
       });
+      setDateLimit(detail?.borrowingDateLimit ?? 35);
     }
   }, [detail]);
 
@@ -63,7 +67,7 @@ function BorrowForm(props: BorrowFormProps) {
 
   const [data, getUsersByName] = useFormState(getAccountsAction, {
     accounts: [],
-    limit: 50,
+    limit: 20,
     page: 1,
     totalPages: 0,
     totalDocs: 0,
@@ -77,7 +81,7 @@ function BorrowForm(props: BorrowFormProps) {
   const [bookName, setBookName] = useState("");
   const [bookLoading, setBookLoading] = useState(false);
   const bookDebounce = useDebounce(bookName);
-  const [books, getBooksByName] = useFormState(getBookAction, {
+  const [books, getBooks] = useFormState(getBookAction, {
     data: [],
     limit: 50,
     page: 1,
@@ -85,12 +89,22 @@ function BorrowForm(props: BorrowFormProps) {
     totalDocs: 0,
   });
 
+  const [libraries, getLibaries] = useFormState(getLibraryAction, {
+    success: false,
+    message: "",
+  });
+
   useEffect(() => {
-    getBooksByName({
+    getLibaries();
+  }, []);
+
+  useEffect(() => {
+    getBooks({
       ...data,
       filter: {
         name: bookDebounce,
         status: BookStatus.AVAILABLE,
+        library: searchParams.get("library"),
       },
     });
     setBookLoading(false);
@@ -103,7 +117,7 @@ function BorrowForm(props: BorrowFormProps) {
 
   useEffect(() => {
     toast(createState);
-    if (createState.success) {
+    if (createState?.success) {
       router.back();
     }
   }, [createState]);
@@ -115,12 +129,17 @@ function BorrowForm(props: BorrowFormProps) {
 
   useEffect(() => {
     toast(updateState);
-    if (updateState.success) {
+    if (updateState?.success) {
       router.back();
     }
   }, [updateState]);
 
+  useEffect(() => {
+    setFormLoading(false);
+  }, [createState, updateState]);
+
   const onFinish = (values: any) => {
+    setFormLoading(true);
     values.book = JSON.parse(values.book)._id;
     values.user = JSON.parse(values.user)._id;
     values.borrowDate = new Date(values.borrowDate);
@@ -134,11 +153,31 @@ function BorrowForm(props: BorrowFormProps) {
     }
   };
 
+  useEffect(() => {
+    if (searchParams.get("book")) {
+      const selected: Book | undefined = books?.data?.find(
+        (item: any) => item._id === searchParams.get("book")
+      );
+
+      if (selected) {
+        form.setFieldValue("book", JSON.stringify(selected));
+        form.setFieldValue("library", selected?.library?._id);
+        setDateLimit(selected?.borrowingDateLimit ?? 35);
+      } else {
+        form.setFieldValue("book", undefined);
+      }
+    }
+  }, [books]);
+
   return (
     <Card style={{ maxWidth: 714, margin: "0 auto" }}>
+      <Typography.Title level={4} className="mb-8">
+        {action == FormAction.UPDATE ? "Cập nhật" : "Thêm mới"} phiếu mượn
+      </Typography.Title>
       <Form
         onFinish={onFinish}
         form={form}
+        disabled={formLoading}
         labelCol={{ flex: "200px" }}
         labelAlign="left"
         labelWrap
@@ -187,9 +226,9 @@ function BorrowForm(props: BorrowFormProps) {
             </Select>
           ) : (
             <Select disabled>
-              <Option value={JSON.stringify(detail.user)}>
-                {detail.user.fullName}
-              </Option>
+              <Select.Option value={JSON.stringify(detail.user)}>
+                {detail?.user?.fullName}
+              </Select.Option>
             </Select>
           )}
         </Form.Item>
@@ -199,10 +238,28 @@ function BorrowForm(props: BorrowFormProps) {
               Số điện thoại
             </Typography.Text>
           }
-          rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập số điện thoại",
+              whitespace: true,
+            },
+            {
+              min: 10,
+              message: "Số điện thoại tối thiểu 10 kí tự",
+            },
+            {
+              max: 11,
+              message: "Số điện thoại tối đa 11 kí tự",
+            },
+            {
+              pattern: /^(?:\d*)$/,
+              message: "Số điện thoại không hợp lệ",
+            },
+          ]}
           name={"phoneNumber"}
         >
-          <Input placeholder="Số điện thoại" allowClear />
+          <Input allowClear placeholder="Số điện thoại" />
         </Form.Item>
         <Form.Item
           label={
@@ -210,10 +267,20 @@ function BorrowForm(props: BorrowFormProps) {
               Email
             </Typography.Text>
           }
-          rules={[{ required: true, message: "Vui lòng nhập email" }]}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập email",
+              whitespace: true,
+            },
+            {
+              pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: "Email không hợp lệ",
+            },
+          ]}
           name={"email"}
         >
-          <Input placeholder="Email" allowClear />
+          <Input allowClear placeholder="Email" disabled={true} />
         </Form.Item>
         <Form.Item
           label={
@@ -221,10 +288,48 @@ function BorrowForm(props: BorrowFormProps) {
               Địa chỉ
             </Typography.Text>
           }
-          rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập địa chỉ",
+              whitespace: true,
+            },
+          ]}
           name={"address"}
         >
           <Input.TextArea placeholder={"Địa chỉ người nhận"} />
+        </Form.Item>
+        <Form.Item
+          label={
+            <Typography.Text style={{ color: colorPrimary }}>
+              Thư viện
+            </Typography.Text>
+          }
+          name={"library"}
+          rules={[{ required: true, message: "Vui lòng chọn thư viện" }]}
+        >
+          <Select
+            disabled={action === FormAction.UPDATE}
+            onChange={(e) => {
+              getBooks({
+                ...data,
+                filter: {
+                  name: bookDebounce,
+                  status: BookStatus.AVAILABLE,
+                  library: e,
+                },
+              });
+              form.setFieldValue("book", undefined);
+            }}
+          >
+            {libraries?.data?.map((item: Location) => {
+              return (
+                <Select.Option key={item._id} value={item._id}>
+                  {item?.name}
+                </Select.Option>
+              );
+            })}
+          </Select>
         </Form.Item>
         <Form.Item
           label={
@@ -245,8 +350,8 @@ function BorrowForm(props: BorrowFormProps) {
                 setBookLoading(true);
               }}
               onChange={(e) => {
-                const book: Book = JSON.parse(e);
-                form.setFieldValue("library", book?.bookcase?.library?.name);
+                const book = JSON.parse(e);
+                setDateLimit(book?.borrowingDateLimit ?? 35);
               }}
               loading={bookLoading}
               filterOption={(input, option: any) =>
@@ -255,40 +360,26 @@ function BorrowForm(props: BorrowFormProps) {
                   .includes(input.toLowerCase())
               }
             >
-              {books.data.map((book: Book) => (
+              {books?.data.map((book: Book) => (
                 <Select.Option
-                  label={book.name}
-                  key={book._id}
+                  label={book?.name}
+                  key={book?._id}
                   value={JSON.stringify(book)}
                 >
-                  {book.name}
+                  {book?.name}
                 </Select.Option>
               ))}
             </Select>
           ) : (
             <Select disabled>
-              <Option value={JSON.stringify(detail.book)}>
+              <Select.Option value={JSON.stringify(detail.book)}>
                 {detail?.book?.name}
-              </Option>
+              </Select.Option>
             </Select>
           )}
         </Form.Item>
-
-        <Form.Item
-          label={
-            <Typography.Text style={{ color: colorPrimary }}>
-              Thư viện
-            </Typography.Text>
-          }
-          name={"library"}
-        >
-          <Input
-            placeholder="Thư viện"
-            disabled={action === FormAction.UPDATE}
-          />
-        </Form.Item>
         <Row gutter={18}>
-          <Col xs={24} lg={12}>
+          <Col xs={24} lg={24}>
             <Form.Item
               label={
                 <Typography.Text style={{ color: colorPrimary }}>
@@ -303,10 +394,13 @@ function BorrowForm(props: BorrowFormProps) {
                 disabled={action === FormAction.UPDATE}
                 format="DD/MM/YYYY"
                 style={{ width: "100%" }}
+                disabledDate={(current) => {
+                  return dayjs().diff(current) < 0;
+                }}
               />
             </Form.Item>
           </Col>
-          <Col xs={24} lg={12} className="return-date">
+          <Col xs={24} lg={24}>
             <Form.Item
               label={
                 <Typography.Text style={{ color: colorPrimary }}>
@@ -320,6 +414,12 @@ function BorrowForm(props: BorrowFormProps) {
                 format="DD/MM/YYYY"
                 name="returnDate"
                 style={{ width: "100%" }}
+                disabledDate={(current) => {
+                  return (
+                    dayjs().diff(current) > 0 ||
+                    dayjs(current).diff(dayjs(), "day") > dateLimit
+                  );
+                }}
               />
             </Form.Item>
           </Col>
@@ -337,7 +437,7 @@ function BorrowForm(props: BorrowFormProps) {
         <div className={"flex justify-end"}>
           <div className={"flex gap-9"}>
             <Button onClick={router.back}>Hủy bỏ</Button>
-            <Button type={"primary"} htmlType="submit">
+            <Button type={"primary"} htmlType="submit" loading={formLoading}>
               {FormAction.CREATE === action ? " Thêm" : "Cập nhật"}
             </Button>
           </div>

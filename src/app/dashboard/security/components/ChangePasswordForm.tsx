@@ -17,7 +17,7 @@ export default function ChangePasswordForm() {
   useDidMountEffect(() => {
     setLoading(false);
     toast(state);
-    if (state.success) {
+    if (state?.success) {
       form.resetFields();
     }
   }, [state]);

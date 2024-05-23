@@ -13,10 +13,13 @@ import {
 } from "@/app/dashboard/manage-accounts/action";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "@/lib/utils/toast";
+import UserRole from "@/components/shared/UserRole";
+import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 
 function ManageAccounts() {
   const { token } = theme.useToken();
   const { account } = useContext(SessionContext);
+  const [loading, setLoading] = useState(true);
   const [accountDetail, setAccountDetail] = useState<Account>();
 
   const router = useRouter();
@@ -27,14 +30,14 @@ function ManageAccounts() {
     (paramsToUpdate: any) => {
       const updatedParams = new URLSearchParams(searchParams.toString());
       Object.entries(paramsToUpdate).forEach(([key, value]: any) => {
-        if (value === null || value === undefined) {
+        if (value === null || value === undefined || value === "") {
           updatedParams.delete(key);
         } else {
           updatedParams.set(key, value);
         }
       });
 
-      return updatedParams.toString();
+      router.push(pathname + "?" + updatedParams.toString());
     },
     [searchParams]
   );
@@ -52,14 +55,31 @@ function ManageAccounts() {
     message: "",
   });
 
+  const loadData = () => {
+    getAccounts({
+      ...state,
+      limit: Number(searchParams.get("limit") ?? 20),
+      page: Number(searchParams.get("page") ?? 1),
+      filter: {
+        query: searchParams.get("query") ?? "",
+        role: searchParams.get("role") ?? "",
+      },
+    });
+  };
+
   useEffect(() => {
-    getAccounts(state);
-  }, []);
+    setLoading(true);
+    loadData();
+  }, [searchParams, pathname]);
+
+  useDidMountEffect(() => {
+    setLoading(false);
+  }, [state]);
 
   useEffect(() => {
     toast(deleteState);
-    if (deleteState.success) {
-      getAccounts(state);
+    if (deleteState?.success) {
+      loadData();
       setAccountDetail(undefined);
     }
   }, [deleteState]);
@@ -78,19 +98,31 @@ function ManageAccounts() {
       title: "Họ tên",
       dataIndex: "fullName",
       key: "fullName",
-      align: "center",
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+    },
+    {
+      title: "Mã người dùng",
+      dataIndex: "userId",
+      key: "userId",
+      render: (item: string) => (item?.length ? item : "-"),
+      align: "center",
+    },
+    {
+      title: "Số lượt mượn",
+      dataIndex: "totalBorrow",
+      key: "totalBorrow",
+      render: (item: string) => item ?? "-",
       align: "center",
     },
     {
       title: "SĐT",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
-      render: (item: string) => item ?? "Không rõ",
+      render: (item: string) => (item?.length ? item : "-"),
       align: "center",
     },
     // {
@@ -104,8 +136,7 @@ function ManageAccounts() {
       title: "Vai trò",
       dataIndex: "role",
       key: "role",
-      render: (role: string) =>
-        role === RoleEnum.USER ? "Bạn đọc" : role.toUpperCase(),
+      render: (role: string) => <UserRole role={role} />,
       align: "center",
     },
     {
@@ -121,7 +152,7 @@ function ManageAccounts() {
           >
             <Button
               onClick={() => {
-                setAccountDetail(item);
+                router.push(`/dashboard/manage-accounts/${item?._id}`);
               }}
               type={"text"}
               shape={"circle"}
@@ -165,30 +196,29 @@ function ManageAccounts() {
     <div>
       <ManageAccountsHeader />
       <Table
+        loading={loading}
         rowKey="_id"
         columns={columns}
-        dataSource={state.accounts}
+        dataSource={state?.accounts}
         pagination={{
-          total: state.totalDocs,
-          pageSize: state.limit,
-          current: state.page,
+          total: state?.totalDocs,
+          pageSize: state?.limit,
+          current: state?.page,
           pageSizeOptions: [10, 20, 30, 50, 100],
           showSizeChanger: true,
         }}
         onChange={(e) => {
           if (e.current && e.pageSize) {
-            router.push(
-              `${pathname}?${createQueryString({
-                page: e.current,
-                limit: e.pageSize,
-              })}`
-            );
-            getAccounts({ limit: e.pageSize, page: e.current });
+            createQueryString({
+              page: e.current == 1 ? "" : e.current,
+              limit: e.pageSize == 20 ? "" : e.pageSize,
+            });
           }
         }}
         onRow={(record: any) => ({
           onClick: () => {
-            setAccountDetail(record);
+            // setAccountDetail(record);
+            router.push(`/dashboard/manage-accounts/${record?._id}`);
           },
         })}
       />

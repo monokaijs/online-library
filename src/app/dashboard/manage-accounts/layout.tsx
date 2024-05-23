@@ -1,12 +1,11 @@
-
 import { ReactNode } from "react";
 
 interface ManageAccountsLayoutProps {
-	children: ReactNode;
+  children: ReactNode;
 }
 
-function ManageAccountsLayout( props: ManageAccountsLayoutProps ) {
-	return <div>{props?.children}</div>;
+function ManageAccountsLayout(props: ManageAccountsLayoutProps) {
+  return props?.children;
 }
 
 export default ManageAccountsLayout;

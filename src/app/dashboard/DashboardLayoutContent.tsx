@@ -17,15 +17,19 @@ import {
   LockOutlined,
   LogoutOutlined,
   RetweetOutlined,
+  ReconciliationOutlined,
   SettingOutlined,
   SolutionOutlined,
   TableOutlined,
   UserOutlined,
   BookOutlined,
+  DoubleLeftOutlined,
+  DoubleRightOutlined,
 } from "@ant-design/icons";
 import LogoMain from "@/assets/figures/logo-main.png";
+import LogoMainCollapsed from "@/assets/figures/logo-main-collapsed.png";
 import Link from "next/link";
-import { useContext } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import { SessionContext } from "@/components/shared/SessionContext";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -34,45 +38,62 @@ export default function DashboardLayoutContent(props: any) {
   const router = useRouter();
   const pathname = usePathname();
 
+  const [collapsed, setCollapsed] = useState(false);
+
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
+
+  useLayoutEffect(() => {
+    function updateSize() {
+      if (window.innerWidth < 1300) {
+        setCollapsed(true);
+      } else {
+        setCollapsed(false);
+      }
+    }
+    window.addEventListener("resize", updateSize);
+    updateSize();
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
   return (
     <Layout className={styles.dashboardLayout}>
-      <Layout.Sider width={230} className={styles.sider}>
+      <Layout.Sider
+        width={230}
+        className={styles.sider}
+        collapsed={collapsed}
+        collapsible
+        onCollapse={toggleCollapsed}
+        trigger={
+          collapsed ? (
+            <DoubleRightOutlined style={{ color: "black" }} />
+          ) : (
+            <DoubleLeftOutlined style={{ color: "black" }} />
+          )
+        }
+      >
         <div className={styles.siderContent}>
-          <img src={LogoMain.src} alt={"Logo"} className={styles.logo} />
+          <img
+            onClick={() => {
+              router.push("/dashboard");
+            }}
+            src={collapsed ? LogoMainCollapsed.src : LogoMain.src}
+            alt={"Logo"}
+            className={styles.logo}
+          />
           <Menu
             mode={"inline"}
             className={styles.menu}
+            defaultSelectedKeys={[pathname.split("/")[2] ?? "dashboard"]}
             items={[
               {
                 key: "dashboard",
                 icon: <BarChartOutlined />,
-                label: <Link href={"/"}>Trang chủ</Link>,
+                label: <Link href={"/dashboard"}>Trang chủ</Link>,
               },
               {
-                key: "home",
-                icon: <HomeOutlined />,
-                label: (
-                  <Link href={"/dashboard/manage-libs"}>Quản lý thư viện</Link>
-                ),
-              },
-              {
-                key: "bookcases",
-                icon: <TableOutlined />,
-                label: (
-                  <Link href={"/dashboard/manage-bookcases"}>
-                    Quản lý tủ sách
-                  </Link>
-                ),
-              },
-              {
-                key: "books",
-                icon: <BookOutlined />,
-                label: (
-                  <Link href={"/dashboard/manage-books"}>Quản lý sách</Link>
-                ),
-              },
-              {
-                key: "accounts",
+                key: "manage-accounts",
                 icon: <SolutionOutlined />,
                 label: (
                   <Link href={"/dashboard/manage-accounts"}>
@@ -81,7 +102,14 @@ export default function DashboardLayoutContent(props: any) {
                 ),
               },
               {
-                key: "borrows-returns",
+                key: "manage-books",
+                icon: <BookOutlined />,
+                label: (
+                  <Link href={"/dashboard/manage-books"}>Quản lý sách</Link>
+                ),
+              },
+              {
+                key: "manage-borrows",
                 icon: <RetweetOutlined />,
                 label: (
                   <Link href={"/dashboard/manage-borrows"}>
@@ -90,16 +118,40 @@ export default function DashboardLayoutContent(props: any) {
                 ),
               },
               {
+                key: "manage-fines",
+                icon: <ReconciliationOutlined />,
+                label: <Link href={"#"}>Quản lý tiền phạt</Link>,
+                disabled: true,
+              },
+              {
+                key: "manage-bookcases",
+                icon: <TableOutlined />,
+                label: (
+                  <Link href={"/dashboard/manage-bookcases"}>
+                    Quản lý tủ sách
+                  </Link>
+                ),
+              },
+              {
+                key: "manage-locations",
+                icon: <HomeOutlined />,
+                label: (
+                  <Link href={"/dashboard/manage-locations"}>
+                    Quản lý thư viện
+                  </Link>
+                ),
+              },
+              {
                 key: "settings",
                 icon: <SettingOutlined />,
                 label: `Thiết lập`,
                 children: [
-                  {
-                    key: "account",
-                    icon: <UserOutlined />,
-                    label: <Link href={"/dashboard/account"}>Tài khoản</Link>,
-                    onClick: () => router.push("/dashboard/account"),
-                  },
+                  // {
+                  //   key: "account",
+                  //   icon: <UserOutlined />,
+                  //   label: <Link href={"/dashboard/account"}>Tài khoản</Link>,
+                  //   onClick: () => router.push("/dashboard/account"),
+                  // },
                   {
                     key: "security",
                     icon: <LockOutlined />,
@@ -115,18 +167,23 @@ export default function DashboardLayoutContent(props: any) {
         <Layout className={styles.content}>
           <Layout.Header className={styles.header}>
             <div className={styles.right}>
-              <Badge count={10}>
-                <Button size={"large"} icon={<BellOutlined />} type={"text"} />
+              <Badge count={0}>
+                <Button
+                  disabled={true}
+                  size={"large"}
+                  icon={<BellOutlined />}
+                  type={"text"}
+                />
               </Badge>
               <Dropdown
                 menu={{
                   items: [
-                    {
-                      icon: <UserOutlined />,
-                      key: "user",
-                      label: "Tài khoản",
-                      onClick: () => router.push("/dashboard/account"),
-                    },
+                    // {
+                    //   icon: <UserOutlined />,
+                    //   key: "user",
+                    //   label: "Tài khoản",
+                    //   onClick: () => router.push("/dashboard/account"),
+                    // },
                     {
                       icon: <SettingOutlined />,
                       key: "settings",
@@ -153,13 +210,18 @@ export default function DashboardLayoutContent(props: any) {
                 trigger={["click"]}
               >
                 <div className={styles.user}>
-                  <Avatar size={32} icon={<UserOutlined />} />
+                  <Avatar
+                    size={32}
+                    src={account?.profilePicture}
+                    style={{ border: "1px solid #ccc" }}
+                    icon={<UserOutlined />}
+                  />
                   <div className={styles.name}>{account?.fullName}</div>
                 </div>
               </Dropdown>
             </div>
           </Layout.Header>
-          <div className={styles.info}>
+          {/* <div className={styles.info}>
             <Breadcrumb
               className={styles.breadcrumb}
               items={pathname.split("/").map((key, index) => {
@@ -176,7 +238,7 @@ export default function DashboardLayoutContent(props: any) {
             <Typography.Title className={"mt-2"} level={4}>
               {`f.${pathname}.name`}
             </Typography.Title>
-          </div>
+          </div> */}
           <Layout className={styles.pageContent}>{props.children}</Layout>
         </Layout>
       </Layout.Content>

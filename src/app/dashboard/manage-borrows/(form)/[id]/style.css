@@ -6,3 +6,7 @@
     overflow: hidden;
     color: white;
 }
+
+.borow-info .detail-label{
+    min-width: 150px !important;
+}

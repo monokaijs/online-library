@@ -20,10 +20,22 @@ class BookcaseService {
       const options = {
         page,
         limit,
+        populate: "library"
       };
 
-      const result = await (BookcaseModel as any).paginate(query, options);
+      const filter: any = {}
+      if(query?.query){
+        filter.$or = [
+          { category: { $regex: new RegExp(query.query, "i") } },
+          { position: { $regex: new RegExp(query.query, "i") } },
+        ];
+      }
 
+      if(query?.library){
+        filter.library = query.library
+      }
+
+      const result = await (BookcaseModel as any).paginate(filter, options);
       return {
         data: JSON.parse(JSON.stringify(result.docs)),
         totalPages: result.totalPages,

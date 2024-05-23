@@ -8,7 +8,7 @@ import { message } from "antd";
 export interface GetAccountPayload {
   page?: number;
   limit?: number;
-  filter?: Partial<Account>
+  filter?: any;
 }
 
 export async function deleteAccountAction(_: any, _id: string) {
@@ -59,7 +59,7 @@ export async function createAccountAction(_: any, account: Account) {
     await accountService.postAccount(account);
     return {
       success: true,
-      message: "ACCOUNT_CREATED",
+      message: "Tài khoản đã được tạo, vui lòng kiểm tra email",
     };
   } catch (error: any) {
     return {
@@ -70,6 +70,7 @@ export async function createAccountAction(_: any, account: Account) {
 }
 
 export async function getAccountByIdAction(prev: any, _id: string) {
+  await dbService.connect();
   try {
     return {
       account: await accountService.getAccountById(_id),
@@ -80,6 +81,22 @@ export async function getAccountByIdAction(prev: any, _id: string) {
       success: false,
       message: error.message,
       account: undefined,
+    };
+  }
+}
+
+export async function getAccountDetailAction(_prev: any, _id: string) {
+  await dbService.connect();
+  try {
+    return {
+      data: await accountService.getAccountDetail(_id),
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+      data: undefined,
     };
   }
 }

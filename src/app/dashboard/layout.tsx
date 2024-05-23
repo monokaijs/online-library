@@ -18,6 +18,9 @@ export default async function DashboardLayout({children}: any) {
           Input: {
           },
           DatePicker: {
+          },
+          Layout: {
+            triggerBg: "#F3F3F3"
           }
         }
       }}>

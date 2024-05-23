@@ -9,9 +9,11 @@
       height: 100%;
       flex-direction: column;
       .logo {
-        width: 140px;
         align-self: center;
-        margin-top: 24px;
+        height: 64px;
+        object-fit: cover;
+        cursor: pointer;
+        // margin-top: 24px;
       }
       .menu {
         flex: 1;
@@ -64,7 +66,7 @@
       }
     }
     .pageContent {
-      padding: 28px 24px;
+      padding: 24px 24px;
       width: 100%;
       flex: 1;
       overflow: auto;

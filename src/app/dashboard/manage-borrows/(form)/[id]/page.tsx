@@ -1,39 +1,26 @@
 "use client";
 
 import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
-import {
-  deleteBookAction,
-  getBookByIdAction,
-} from "@/app/dashboard/manage-books/action";
-import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Card,
-  Col,
-  Dropdown,
-  Flex,
-  Image,
-  Modal,
-  Row,
-  Spin,
-  Tag,
-  Typography,
-} from "antd";
+import UserRole from "@/components/shared/UserRole";
+import { Book } from "@/lib/models/book.model";
+import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
+import { toast } from "@/lib/utils/toast";
+import { Button, Card, Flex, Image, Modal, Spin, Typography } from "antd";
+import dayjs from "dayjs";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
-import "./style.css";
-import { toast } from "@/lib/utils/toast";
-import { getBorrowDetailAction, returnBookAction } from "../../action";
-import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
-import { Book } from "@/lib/models/book.model";
-import dayjs from "dayjs";
-import Status from "../../components/BorrowStatus";
+import {
+  getBorrowDetailAction,
+  returnBookAction,
+} from "@/app/dashboard/manage-borrows/action";
+import Status from "@/app/dashboard/manage-borrows/components/BorrowStatus";
+import "@/app/dashboard/manage-borrows/(form)/[id]/style.css";
 
 export default function BorrowDetail() {
   const router = useRouter();
   const { id } = useParams();
-  const [{ data }, getBorrowDetail] = useFormState(getBorrowDetailAction, {
+  const [state, getBorrowDetail] = useFormState(getBorrowDetailAction, {
     data: undefined,
     success: false,
     message: "",
@@ -50,12 +37,12 @@ export default function BorrowDetail() {
 
   useEffect(() => {
     toast(returnState);
-    if (returnState.success) {
+    if (returnState?.success) {
       router.push(`/dashboard/manage-borrows`);
     }
   }, [returnState]);
 
-  if (!data) {
+  if (!state?.data) {
     return (
       <div className="h-full flex items-center justify-center">
         <Spin />
@@ -63,14 +50,14 @@ export default function BorrowDetail() {
     );
   }
 
-  const user: Account = data?.borrowRecord?.user;
-  const borrowRecord: Borrow = data?.borrowRecord;
-  const book: Book = data?.borrowRecord?.book;
-  const analysis = data?.analysis;
+  const user: Account | undefined = state?.data?.borrowRecord?.user;
+  const borrowRecord: Borrow = state?.data?.borrowRecord;
+  const book: Book | undefined = state?.data?.borrowRecord?.book;
+  const analysis = state?.data?.analysis;
 
   return (
     <Card
-      className="h-full ma-auto"
+      className="h-full ma-auto borow-info"
       style={{ maxWidth: 1024 }}
       bodyStyle={{ height: "100%", display: "flex", flexDirection: "column" }}
     >
@@ -89,21 +76,24 @@ export default function BorrowDetail() {
               width: 200,
               aspectRatio: "3/4",
               objectFit: "cover",
-              border: "1px solid #ccc",
+              // boxShadow: "1px solid #ccc",
+              boxShadow:
+                "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
             }}
-            src={
-              "https://www.2020mag.com/CMSImagesContent/2014/9/Guy-Nerd-glasses_w.png"
-            }
+            src="/images/user.jpg"
           />
           <div style={{ flex: 1 }}>
             <Typography.Title className="ma-0 mb-4" level={4}>
-              {user.fullName}
+              Bạn đọc: {user?.fullName}
             </Typography.Title>
-            <Flex gap={32}>
+            <Flex gap={64}>
               <ModalDetailInfo
                 title={false}
                 records={[
-                  { fieldName: "Vai trò", value: user.role },
+                  {
+                    fieldName: "Vai trò",
+                    value: <UserRole role={user?.role} />,
+                  },
                   { fieldName: "SĐT", value: borrowRecord.phoneNumber },
                   { fieldName: "Email", value: borrowRecord.email },
                   { fieldName: "Địa chỉ", value: borrowRecord.address },
@@ -128,35 +118,40 @@ export default function BorrowDetail() {
               width: 200,
               aspectRatio: "3/4",
               objectFit: "cover",
-              border: "1px solid #ccc",
+              // border: "1px solid #ccc",
+              boxShadow:
+                "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
             }}
-            src={data?.borrowRecord?.book?.picture}
+            src={
+              state?.data?.borrowRecord?.book?.picture ??
+              "https://dynamicmediainstitute.org/wp-content/themes/dynamic-media-institute-theme/imagery/default-book.png"
+            }
           />
           <div style={{ flex: 1 }}>
             <Typography.Title className="ma-0 mb-4" level={4}>
-              {book.name}
+              Sách: {book?.name}
             </Typography.Title>
             <ModalDetailInfo
               title={false}
               records={[
-                { fieldName: "Mã sách", value: book.isbn },
+                { fieldName: "Mã sách", value: book?.bookID },
                 {
                   fieldName: "Thời gian",
-                  value: `${dayjs(borrowRecord.borrowDate).format(
+                  value: `${dayjs(borrowRecord?.borrowDate).format(
                     "DD/MM/YYYY"
-                  )} đến ${dayjs(borrowRecord.returnDate).format(
+                  )} đến ${dayjs(borrowRecord?.returnDate).format(
                     "DD/MM/YYYY"
                   )}`,
                 },
                 { fieldName: "Thư viện", value: book?.bookcase?.library?.name },
-                { fieldName: "Ghi chú", value: borrowRecord.note },
+                { fieldName: "Ghi chú", value: borrowRecord?.note },
               ]}
             />
           </div>
         </Flex>
       </div>
 
-      {borrowRecord.status === BorrowStatus.BORROWING && (
+      {borrowRecord?.status === BorrowStatus.BORROWING && (
         <Flex gap={4} justify="flex-end">
           <Button
             onClick={() => {
@@ -169,7 +164,7 @@ export default function BorrowDetail() {
             onClick={() => {
               Modal.confirm({
                 title: "Hành động này không thể hoàn tác!",
-                content: `Hoàn thành lượt mượn ${book.name}`,
+                content: `Hoàn thành lượt mượn ${book?.name}`,
                 okText: "Xác nhận",
                 cancelText: "Hủy",
                 onOk: () => {

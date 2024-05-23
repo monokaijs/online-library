@@ -4,6 +4,7 @@ import paginate from 'mongoose-paginate-v2';
 export enum RoleEnum {
   USER = 'user',
   ADMIN = 'admin',
+  MANAGER = 'manager',
 }
 
 const AccountSchema = new mongoose.Schema<Account>({
@@ -12,6 +13,7 @@ const AccountSchema = new mongoose.Schema<Account>({
     required: true,
     unique: true,
   },
+  userId: String,
   birthday: Date,
   fullName: String,
   phoneNumber: {
@@ -39,6 +41,7 @@ const AccountSchema = new mongoose.Schema<Account>({
   googleId: {
     type: String,
   },
+  isDelete: Boolean
 }, {timestamps: true});
 
 export interface AccountDocument extends Document, Account {

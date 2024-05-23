@@ -2,6 +2,7 @@ import mongoose, { Document, Model } from "mongoose";
 import paginate from "mongoose-paginate-v2";
 import { Bookcase } from "@/lib/models/bookcase.model";
 import { Borrow } from "@/lib/models/borrow.model";
+import { Location } from "@/lib/models/library.model";
 
 export enum BookStatus {
   AVAILABLE = "available",
@@ -11,10 +12,13 @@ export enum BookStatus {
 
 export interface Book {
   _id?: any;
-  bookcase: Bookcase;
+  bookcase?: Bookcase;
+  library: Location,
   authorName: string;
   description: string;
-  isbn: string;
+  giver?: Account;
+  bookID: string;
+  category: string;
   name: string;
   publisher: string;
   publishYear: string;
@@ -22,7 +26,8 @@ export interface Book {
   language: string;
   borrowingDateLimit: number;
   status: BookStatus;
-  borrowRecord?: Borrow
+  borrowRecord?: Borrow;
+  isDelete?: boolean;
 }
 
 const BookSchema = new mongoose.Schema<Book>({
@@ -34,9 +39,18 @@ const BookSchema = new mongoose.Schema<Book>({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Borrow'
   },
+  library: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Location'
+  },
+  bookID: String,
+  category: String,
   authorName: String,
   description: String,
-  isbn: String,
+  giver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Account'
+  },
   name: String,
   publisher: String,
   publishYear: String,
@@ -47,6 +61,7 @@ const BookSchema = new mongoose.Schema<Book>({
     type: String,
     enum: Object.values(BookStatus),
   },
+  isDelete: Boolean
 }, { timestamps: true });
 
 export interface BookDocument extends Document, Book {}

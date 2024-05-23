@@ -14,7 +14,7 @@ class MailingService {
   }
   sendEmail(to: string, subject: string, body: string) {
     const client = this.getClient();
-    return client.messages.create('dev.stable.vn', {
+    return client.messages.create(process.env.MAILGUN_DOMAIN ?? 'dev.stable.vn', {
       to,
       from: 'noreply@dfreebooks.com',
       subject,

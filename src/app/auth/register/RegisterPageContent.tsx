@@ -9,10 +9,10 @@ export default function RegisterPageContent() {
     <div className={styles.wrapper}>
       <div className={styles.meta}>
         <Typography.Title>
-          Create Account
+          Đăng ký tài khoản
         </Typography.Title>
         <Typography.Paragraph>
-          Already got an account? <Link href={'/auth/login'}>Sign in now</Link>.
+          Đã có tài khoản? <Link href={'/auth/login'}>Đăng nhập</Link>.
         </Typography.Paragraph>
       </div>
 

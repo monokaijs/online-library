@@ -47,7 +47,7 @@ export async function googleConnectAction(
   const { tokens } = await client.getToken(code);
   client.setCredentials(tokens);
   authClient.context._options.auth = client;
-  userInfo = (await authClient.userinfo.get()).data;
+  userInfo = (await authClient.userinfo.get())?.data;
 
   const session = await getSession();
   //FOR LOGIN

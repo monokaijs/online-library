@@ -1,0 +1,94 @@
+.background {
+  background-image: url("../../../../../public/images/background-banner-2.svg");
+  height: auto;
+  background-repeat: no-repeat;
+  background-size: 60%;
+  background-color: #fff;
+  position: relative;
+  box-shadow: rgba(33, 35, 38, 0.1) 10px 10px 10px -10px;
+  .groupDot {
+    position: absolute;
+    content: "";
+    top: 50px;
+    right: 41%;
+  }
+}
+
+.container {
+  max-width: 1176px;
+  padding: 50px 12px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  .contentLeft {
+    .box {
+      height: 40px;
+      width: max-content;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-inline: 16px;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.1);
+
+      span {
+        color: #fff;
+      }
+    }
+
+    .title {
+      color: #fff;
+      padding-top: 16px;
+      padding-bottom: 40px;
+    }
+
+    .contactItem {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      .icon {
+        height: 50px;
+        width: 50px;
+        background-color: #6b9ba1;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        svg {
+          width: 20px;
+          height: 20px;
+          color: #fff;
+        }
+      }
+      .info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        span {
+          color: #fff;
+        }
+      }
+    }
+
+  }
+
+  .contentRight {
+    display: flex;
+    flex-direction: column;
+    .logo {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      margin-bottom: -60px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+ .background {
+   background-size: 100%;
+   background-color: #59959c;
+ }
+}

@@ -22,8 +22,8 @@ export default function UpdatePage() {
     }
   }, []);
 
-  if (state.data) {
-    return <BookForm data={state.data as any} action={FormAction.UPDATE} />;
+  if (state?.data) {
+    return <BookForm data={state?.data as any} action={FormAction.UPDATE} />;
   }
 
   return (

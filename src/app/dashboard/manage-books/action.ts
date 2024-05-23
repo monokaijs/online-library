@@ -11,7 +11,7 @@ import * as cheerio from "cheerio";
 export interface GetBookPayload {
   page?: number;
   limit?: number;
-  filter?: Partial<Book>
+  filter?: any
 }
 
 export async function createBookAction(prev: any, payload: Book) {
@@ -33,7 +33,7 @@ export async function createBookAction(prev: any, payload: Book) {
 export async function getLibraryAction() {
   await dbService.connect();
   try {
-    const data = await libraryService.get();
+    const data = await libraryService.getAll();
     return {
       success: true,
       data: JSON.parse(JSON.stringify(data)),
@@ -93,9 +93,26 @@ export async function deleteBookAction(_: any, _id: string) {
 }
 
 export async function getBookByIdAction(prev: any, _id: string) {
+  await dbService.connect();
   try {
     return {
       data: await bookService.getById(_id),
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+      data: undefined,
+    };
+  }
+}
+
+export async function getBookDetailAction(prev: any, _id: string) {
+  await dbService.connect();
+  try {
+    return {
+      data: await bookService.getBookDetail(_id),
       success: true,
     };
   } catch (error: any) {
@@ -111,6 +128,7 @@ export async function updateBookAction(
   prev: any,
   data: Partial<BookDocument>
 ) {
+  await dbService.connect();
   try {
     await bookService.update(data._id, data);
     return { success: true, message: "Đã cập nhật sách" };

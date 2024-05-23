@@ -7,7 +7,7 @@ import { dbService } from "@/lib/services/db.service";
 export interface GetBookPayload {
   page?: number;
   limit?: number;
-  filter?: Partial<Borrow>;
+  filter?: any
 }
 
 export async function createBorrowAction(prev: any, payload: Borrow) {
@@ -50,6 +50,7 @@ export async function deleteBorrowAction(_: any, _id: string) {
 }
 
 export async function getBorrowByIdAction(prev: any, _id: string) {
+  await dbService.connect();
   try {
     return {
       data: await borrowService.getById(_id),
@@ -68,6 +69,7 @@ export async function updateBorrowAction(
   prev: any,
   data: Partial<BorrowDocument>
 ) {
+  await dbService.connect();
   try {
     await borrowService.update(data._id, data);
     return { success: true, message: "Đã cập nhật phiếu mượn" };
@@ -77,6 +79,7 @@ export async function updateBorrowAction(
 }
 
 export async function getBorrowDetailAction(prev: any, _id: string) {
+  await dbService.connect();
   try {
     const data = await borrowService.getDetail(_id);
     return { success: true, data };
@@ -86,6 +89,7 @@ export async function getBorrowDetailAction(prev: any, _id: string) {
 }
 
 export async function returnBookAction(_prev: any, borrowId: string) {
+  await dbService.connect();
   try {
     const data = await borrowService.returnBook(borrowId);
     return { success: true, data };

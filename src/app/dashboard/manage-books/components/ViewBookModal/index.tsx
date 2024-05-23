@@ -1,7 +1,9 @@
 "use client";
 import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
+import { BookStatus } from "@/lib/models/book.model";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Modal } from "antd";
+import { Button, Modal, Tag } from "antd";
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 
 interface ViewBookModalProps {
@@ -13,8 +15,8 @@ interface ViewBookModalProps {
 
 export default function ViewBookModal(props: ViewBookModalProps) {
   const { onCancel, detail, deleteAction } = props;
-
   const router = useRouter();
+  const overdued = dayjs().diff(detail?.returnDate) > 0;
 
   return (
     <Modal
@@ -30,14 +32,38 @@ export default function ViewBookModal(props: ViewBookModalProps) {
           { fieldName: "Nhà xuất bản", value: detail?.publisher },
           { fieldName: "Năm xuất bản", value: detail?.publishYear },
           { fieldName: "Ngôn ngữ", value: detail?.language },
-          { fieldName: "Mã sách", value: detail?.isbn },
+          { fieldName: "Mã sách", value: detail?.bookID },
+          // { fieldName: "ISBN", value: detail?.isbn },
           { fieldName: "Thể loại", value: detail?.bookcase?.category },
           { fieldName: "Kệ sách", value: detail?.bookcase?.position },
           { fieldName: "Thư viện", value: detail?.bookcase?.library?.name },
-          { fieldName: "Trạng thái", value: detail?.status },
+          {
+            fieldName: "Trạng thái",
+            value: (
+              <Tag
+                color={
+                  detail?.status === BookStatus.AVAILABLE
+                    ? "green"
+                    : detail?.status === BookStatus.OVERDUE || overdued
+                    ? "red"
+                    : "yellow"
+                }
+              >
+                {detail?.status === BookStatus.AVAILABLE
+                  ? "Đang trên kệ"
+                  : detail?.status === BookStatus.OVERDUE || overdued
+                  ? "Quá hạn"
+                  : "Đang mượn"}
+              </Tag>
+            ),
+          },
           {
             fieldName: "Hạn mức mượn",
             value: detail?.borrowingDateLimit + " ngày",
+          },
+          {
+            fieldName: "Tạo lúc",
+            value: dayjs(detail?.createdAt).format("HH:mm DD/MM/YYYY"),
           },
         ]}
       />

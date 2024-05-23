@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  swcMinify: true,
+  output: 'standalone',
+  images: {
+    unoptimized: true,
+  },
   experimental: {
     esmExternals: "loose",
     serverComponentsExternalPackages: ["mongoose"],

@@ -21,8 +21,8 @@ export default function UpdatePage() {
     }
   }, []);
 
-  if (state.account) {
-    return <AccountForm account={state.account as any} />;
+  if (state?.account) {
+    return <AccountForm account={state?.account as any} />;
   }
 
   return (

@@ -4,8 +4,10 @@ import {
   AccountModel,
   RoleEnum,
 } from "@/lib/models/account.model";
+import { BorrowModel } from "@/lib/models/borrow.model";
+import { borrowService } from "@/lib/services/borrow.service";
 import securityService from "@/lib/services/security.service";
-import { FilterQuery, PaginateModel } from "mongoose";
+import { FilterQuery } from "mongoose";
 
 export interface AccountQueries {
   page?: number;
@@ -47,7 +49,7 @@ class AccountService {
       const account = await AccountModel.findById(accountId);
       return JSON.parse(JSON.stringify(account));
     } catch (error: any) {
-      throw new Error(`Error getting account: ${error.message}`);
+      throw new Error(error.message);
     }
   }
 
@@ -56,6 +58,13 @@ class AccountService {
     updateData: Partial<AccountDocument>
   ): Promise<AccountDocument | null> {
     try {
+      if (updateData.userId) {
+        const userIdExisting = await AccountModel.countDocuments({
+          userId: updateData.userId,
+        });
+        if (userIdExisting > 0) throw new Error("Mã người dùng đã tồn tại");
+      }
+
       const updatedAccount = await AccountModel.findByIdAndUpdate(
         accountId,
         updateData,
@@ -63,7 +72,7 @@ class AccountService {
       );
       return updatedAccount;
     } catch (error: any) {
-      throw new Error(`Error updating account: ${error.message}`);
+      throw new Error(error.message);
     }
   }
 
@@ -71,11 +80,11 @@ class AccountService {
     try {
       await AccountModel.findByIdAndDelete(accountId);
     } catch (error: any) {
-      throw new Error(`Error deleting account: ${error.message}`);
+      throw new Error(error.message);
     }
   }
 
-  async getAccounts(page: number, limit: number, query?: Partial<Account>) {
+  async getAccounts(page: number, limit: number, query?: any) {
     try {
       const options = {
         page,
@@ -84,27 +93,51 @@ class AccountService {
 
       const filter: FilterQuery<AccountDocument> = {};
 
-      if (query?.fullName) {
-        filter.fullName = { $regex: new RegExp(query.fullName, "i") };
+      if (query?.query) {
+        filter.$or = [
+          { fullName: { $regex: new RegExp(query.query, "i") } },
+          { userId: { $regex: new RegExp(query.query, "i") } },
+          { phoneNumber: { $regex: new RegExp(query.query, "i") } },
+          { email: { $regex: new RegExp(query.query, "i") } },
+        ];
+      }
+
+      if (query?.role && query.role !== "all") {
+        filter.role = query.role;
       }
 
       const result = await (AccountModel as any).paginate(filter, options);
 
+      const accounts = JSON.parse(JSON.stringify(result.docs));
+      for (const account of accounts) {
+        const borrowedBooksCount = await BorrowModel.countDocuments({
+          user: account._id,
+        });
+        account.totalBorrow = borrowedBooksCount;
+      }
+
       return {
-        accounts: JSON.parse(JSON.stringify(result.docs)),
+        accounts: accounts,
         totalPages: result.totalPages,
         totalDocs: result.totalDocs,
         page,
         limit,
       };
     } catch (error: any) {
-      throw new Error(`Error getting accounts: ${error.message}`);
+      throw new Error(error.message);
     }
   }
 
   async postAccount(payload: Account) {
     const existing = await this.getAccountByEmail(payload.email);
-    if (existing) throw new Error("This email is already used");
+    if (existing) throw new Error("Email đã tồn tại");
+
+    if (payload.userId) {
+      const userIdExisting = await AccountModel.countDocuments({
+        userId: payload.userId,
+      });
+      if (userIdExisting > 0) throw new Error("Mã người dùng đã tồn tại");
+    }
 
     const account = await AccountModel.create({
       email: payload.email,
@@ -120,13 +153,25 @@ class AccountService {
       address: payload.address,
       balance: payload.balance,
       profilePicture: payload.profilePicture,
+      userId: payload.userId,
     });
 
     if (account.role !== RoleEnum.ADMIN) {
       // send verification email
-      await securityService.sendVerificationEmail(account);
+      // await securityService.sendVerificationEmail(account);
     }
     return account;
+  }
+
+  async getAccountDetail(_id: string) {
+    const account = await this.getAccountById(_id);
+    const history = await borrowService.getAllByAccount(_id);
+    return JSON.parse(
+      JSON.stringify({
+        account,
+        history,
+      })
+    );
   }
 }
 
