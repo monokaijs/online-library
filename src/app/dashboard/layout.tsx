@@ -1,8 +1,9 @@
 import DashboardLayoutContent from "@/app/dashboard/DashboardLayoutContent";
 import SessionProvider from "@/components/shared/SessionContext";
-import { getSession } from "@/lib/utils/getSession";
-import { ConfigProvider } from "antd";
+import {getSession} from "@/lib/utils/getSession";
+import {ConfigProvider} from "antd";
 import {redirect} from "next/navigation";
+import {Suspense} from "react";
 
 export default async function DashboardLayout({children}: any) {
   const session = await getSession();
@@ -15,18 +16,16 @@ export default async function DashboardLayout({children}: any) {
     <ConfigProvider
       theme={{
         components: {
-          Input: {
-          },
-          DatePicker: {
-          },
+          Input: {},
+          DatePicker: {},
           Layout: {
             triggerBg: "#F3F3F3"
           }
         }
       }}>
-    <DashboardLayoutContent>
-      {children}
-    </DashboardLayoutContent>
-  </ConfigProvider>
+      <DashboardLayoutContent>
+        {children}
+      </DashboardLayoutContent>
+    </ConfigProvider>
   </SessionProvider>
 }
