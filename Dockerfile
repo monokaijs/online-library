@@ -1,5 +1,5 @@
 # Build BASE
-FROM node:18-alpine as BASE
+FROM node:20-alpine as BASE
 
 WORKDIR /app
 COPY package.json yarn.lock ./
@@ -7,7 +7,7 @@ RUN apk add --no-cache git \
     && yarn
 
 # Build Image
-FROM node:16-alpine AS BUILD
+FROM node:20-alpine AS BUILD
 
 WORKDIR /app
 COPY --from=BASE /app/node_modules ./node_modules
@@ -18,7 +18,7 @@ RUN cd .next/standalone
 RUN yarn autoclean
 
 # Build production
-FROM node:16-alpine AS PRODUCTION
+FROM node:20-alpine AS PRODUCTION
 
 WORKDIR /app
 
