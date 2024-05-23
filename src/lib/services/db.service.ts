@@ -16,6 +16,7 @@ if (!cached) {
 }
 
 class DbService {
+  connected: boolean = false;
   async connect() {
     // Silently close connection
     if (!appEnv.base.mongoUri) return;
@@ -44,7 +45,7 @@ class DbService {
     }
 
     await DbService.generateDefaultAccount();
-
+    this.connected = true;
     return cached.conn;
   }
 
