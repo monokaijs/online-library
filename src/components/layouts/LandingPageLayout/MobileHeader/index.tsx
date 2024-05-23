@@ -9,7 +9,7 @@ import {useRouter} from "next/navigation";
 
 export const navigationConfigsLandingPage = [
   {key: "home", title: "Trang chủ", path: "home"},
-  {key: "introduction", title: "Về D Free Books", path: "introduction"},
+  {key: "introduction", title: "Về D Free Book", path: "introduction"},
   {key: "book", title: "Sách", path: "book"},
   {key: "activities", title: "Hoạt động", path: "activities"},
   {key: "contact", title: "Liên hệ", path: "contact"}
