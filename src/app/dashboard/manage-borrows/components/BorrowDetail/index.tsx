@@ -14,16 +14,18 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import Status from "../BorrowStatus";
+import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 
 interface ViewBorrowModalProps {
   isOpen: boolean;
   onCancel: () => void;
   detail?: any;
   deleteAction: any;
+  loadData: any;
 }
 
 export default function BorrowDetail(props: ViewBorrowModalProps) {
-  const { onCancel, detail } = props;
+  const { onCancel, detail, loadData } = props;
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -53,7 +55,8 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
   useEffect(() => {
     toast(returnState);
     if (returnState?.success) {
-      router.push(`/dashboard/manage-borrows`);
+      loadData();
+      onCancel();
     }
   }, [returnState]);
 
@@ -61,6 +64,18 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
   const borrowRecord: Borrow | undefined = state?.data?.borrowRecord;
   const book: Book | undefined = state?.data?.borrowRecord?.book;
   const analysis: any = state?.data?.analysis;
+  const borrowing = borrowRecord?.status === BorrowStatus.BORROWING;
+  const overdued = getDaysDiff(borrowRecord?.returnDate);
+  let amount = 0;
+  if (overdued < 15) {
+    amount = 1000;
+  } else if (overdued < 50) {
+    amount = 15000;
+  } else if (overdued < 100) {
+    amount = 20000;
+  } else {
+    amount = 25000;
+  }
 
   return (
     <Modal
@@ -156,8 +171,9 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
                     "rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px",
                 }}
                 src={
-                  state?.data?.borrowRecord?.book?.picture ??
-                  "https://dynamicmediainstitute.org/wp-content/themes/dynamic-media-institute-theme/imagery/default-book.png"
+                  !!state?.data?.borrowRecord?.book?.picture
+                    ? state?.data?.borrowRecord?.book?.picture
+                    : "/images/default-book.png"
                 }
               />
               <div style={{ flex: 1 }}>
@@ -181,6 +197,22 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
                       value: book?.bookcase?.library?.name,
                     },
                     { fieldName: "Ghi chú", value: borrowRecord?.note },
+                    {
+                      fieldName: "Tình trạng",
+                      value:
+                        overdued < 0 && borrowing
+                          ? `Quá hẹn ${Math.abs(overdued)} ngày / Tiền phạt: ${(
+                              Math.abs(overdued) * amount
+                            )
+                              ?.toLocaleString("it-IT", {
+                                style: "currency",
+                                currency: "VND",
+                              })
+                              ?.replace("VND", "đ")}`
+                          : borrowing
+                          ? "Đang mượn"
+                          : "Đã trả",
+                    },
                   ]}
                 />
               </div>

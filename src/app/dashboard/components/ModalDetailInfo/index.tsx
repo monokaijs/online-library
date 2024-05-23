@@ -40,7 +40,7 @@ export default function ModalDetailInfo(props: ModalDetailInfoProps) {
                     {record?.fieldName} :
                   </Typography.Text>
                 </div>
-                <div>{record?.value}</div>
+                <div>{record?.value ?? "-"}</div>
               </div>
             );
           })}

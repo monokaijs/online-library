@@ -309,9 +309,7 @@ function BorrowForm(props: BorrowFormProps) {
           rules={[{ required: true, message: "Vui lòng chọn thư viện" }]}
         >
           <Select
-            disabled={
-              action === FormAction.UPDATE || !!searchParams.get("book")
-            }
+            disabled={action === FormAction.UPDATE}
             onChange={(e) => {
               getBooks({
                 ...data,
@@ -323,7 +321,6 @@ function BorrowForm(props: BorrowFormProps) {
               });
               form.setFieldValue("book", undefined);
             }}
-            placeholder="Chọn thư viện"
           >
             {libraries?.data?.map((item: Location) => {
               return (
@@ -343,36 +340,43 @@ function BorrowForm(props: BorrowFormProps) {
           name={"book"}
           rules={[{ required: true, message: "Vui lòng chọn sách muốn mượn" }]}
         >
-          <Select
-            disabled={
-              action === FormAction.UPDATE || !!searchParams.get("book")
-            }
-            showSearch
-            className={"w-full"}
-            placeholder={"Chọn sách mượn"}
-            onSearch={(e) => {
-              setBookName(e);
-              setBookLoading(true);
-            }}
-            onChange={(e) => {
-              const book = JSON.parse(e);
-              setDateLimit(book?.borrowingDateLimit ?? 35);
-            }}
-            loading={bookLoading}
-            filterOption={(input, option: any) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-          >
-            {books?.data.map((book: Book) => (
-              <Select.Option
-                label={book?.name}
-                key={book?._id}
-                value={JSON.stringify(book)}
-              >
-                {book?.name}
+          {action === FormAction.CREATE ? (
+            <Select
+              showSearch
+              className={"w-full"}
+              placeholder={"Chọn sách mượn"}
+              onSearch={(e) => {
+                setBookName(e);
+                setBookLoading(true);
+              }}
+              onChange={(e) => {
+                const book = JSON.parse(e);
+                setDateLimit(book?.borrowingDateLimit ?? 35);
+              }}
+              loading={bookLoading}
+              filterOption={(input, option: any) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            >
+              {books?.data.map((book: Book) => (
+                <Select.Option
+                  label={book?.name}
+                  key={book?._id}
+                  value={JSON.stringify(book)}
+                >
+                  {book?.name}
+                </Select.Option>
+              ))}
+            </Select>
+          ) : (
+            <Select disabled>
+              <Select.Option value={JSON.stringify(detail.book)}>
+                {detail?.book?.name}
               </Select.Option>
-            ))}
-          </Select>
+            </Select>
+          )}
         </Form.Item>
         <Row gutter={18}>
           <Col xs={24} lg={24}>

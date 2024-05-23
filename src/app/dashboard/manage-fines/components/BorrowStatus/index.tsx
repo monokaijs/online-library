@@ -10,7 +10,7 @@ export default function Status({ data }: { data: Borrow }) {
   return (
     <Tag
       color={
-        borrowing ? (overdued ? "red" : "green") : returned ? "green" : "red"
+        borrowing ? (overdued ? "red" : "orange") : returned ? "green" : "red"
       }
     >
       {borrowing ? "Đang mượn" : "Đã trả"}

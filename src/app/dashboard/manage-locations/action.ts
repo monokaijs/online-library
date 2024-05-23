@@ -12,10 +12,10 @@ export async function createLocationAction(prev: any, payload: Location) {
       success: true,
       message: "Thêm thư viện thành công",
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
       success: false,
-      message: "Có lỗi khi thêm thư viện",
+      message: error.message,
     };
   }
 }
