@@ -10,7 +10,8 @@ export default function Banner() {
   return (
     <div id="home">
       <div className={styles.background}>
-        <div className={`${styles.container} flex lg:flex-col flex-row`}>
+        <img src="/images/group-dot.svg" alt={"dot"} className={`${styles.groupDot} xl-hidden`}/>
+        <div className={`${styles.container}`}>
           <div className={styles.contentLeft}>
             <div className={styles.box}>
               <BookOpenCover/>
@@ -25,7 +26,7 @@ export default function Banner() {
             </p>
             <Link href="/auth/register" className={styles.registerButton}>Đăng ký</Link>
           </div>
-          <div className={styles.contentRight}>
+          <div className={`${styles.contentRight} xl-hidden`}>
             <img
               src="/images/bibliophile-bro.svg"
               alt=""

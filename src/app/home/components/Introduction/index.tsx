@@ -1,10 +1,8 @@
 "use client";
 
-import { UserOutlined} from "@ant-design/icons";
 import styles from "./styles.module.scss";
 import {Typography} from "antd";
-import {Book} from "@/components/icons/Book";
-import {Quotes} from "@/components/icons/Quotes";
+import {Book, Quotes, User} from "@/components/icons";
 import MessageBrought from "@/app/home/components/Introduction/MessageBrought";
 
 const introList = [
@@ -24,7 +22,7 @@ const introList = [
     tag: "Nhà sáng lập thư viện",
     title: "Nhà sáng lập D Free Book",
     description: ["D Free Book được thành lập năm 2017 bởi <strong>Hoàng Quý Bình</strong> - cựu sinh viên Đại học Bách khoa Hà Nội. Từ tủ sách cá nhân với 300 đầu sách của mình, Bình thu thập thêm nhiều đầu sách các loại cho các bạn cùng xóm trọ và quanh khu vực trường đến đọc. Và rồi, quyết định táo bạo nhất của anh là thành lập một thư viện cộng đồng với cơ sở đầu tiên đặt tại một khu tập thể trên phố Lê Thanh Nghị. Tri thức bắt đầu được lan tỏa như thế.\n"],
-    icon: <UserOutlined/>,
+    icon: <User/>,
     image: "/images/intro-2.svg"
   },
   {
@@ -48,9 +46,9 @@ export default function Introduction() {
           <div
             style={{flexDirection: ((index + 1) % 2 !== 0) ? "row" : "row-reverse"}}
             key={item.id}
-            className={`${styles.introItem}  md-flex-col`}>
+            className={`${styles.introItem} items-center md-flex-col`}>
             <div className={styles.image}>
-              <img  src={item.image} alt="intro"/>
+              <img src={item.image} alt="intro"/>
             </div>
             <div className={styles.info}>
               <div className={styles.tag}>

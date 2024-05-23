@@ -30,7 +30,11 @@
 
     &:hover {
       svg {
-        color: #4A6F73;
+        path {
+          fill: #4A6F73 !important;
+        }
+
+        color: #4A6F73 !important;
         transition: all 0.3s linear;
       }
     }
@@ -46,6 +50,7 @@
     color: #717171;
     cursor: pointer;
     padding: 4px 0;
+
     &:hover {
       color: #4A6F73;
       transition: all 0.3s linear;
@@ -56,6 +61,8 @@
     border: none;
     font-size: 14px;
     font-weight: 400;
+    width: 100%;
+
     &::placeholder {
       color: #717171;
     }

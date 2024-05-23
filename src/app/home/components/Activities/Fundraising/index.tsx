@@ -15,14 +15,15 @@ export default function Fundraising() {
             </div>
           </Col>
           <Col xs={24} lg={12}>
-            <div className={styles.info}>
+            <div className={`${styles.info} lg-items-center`}>
               <div className={styles.box}>
                 <HandHoldingDollar/>
                 <Typography.Text>Chia sẻ cộng đồng</Typography.Text>
               </div>
               <Typography.Title level={1}>Gây quỹ cùng thư viện</Typography.Title>
-              <Typography.Text>Bạn đọc và các cá nhân, tổ chức có thể đồng hành cùng D Free Book trong hành trình lan
-                toả văn hoá đọc tại:</Typography.Text>
+              <Typography.Text className="lg-text-center">
+                Bạn đọc và các cá nhân, tổ chức có thể đồng hành cùng D Free Book trong hành trình lan toả văn hoá đọc tại:
+              </Typography.Text>
               <div className={styles.bank}>
                 <img className={styles.image} src="/images/mb-bank.svg" alt="img"/>
                 <div className="flex flex-col gap-1">

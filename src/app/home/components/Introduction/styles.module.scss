@@ -8,6 +8,7 @@
   gap: 50px;
   position: relative;
   z-index: 20 !important;
+
   .introItem {
     display: flex;
     gap: 48px;
@@ -20,12 +21,14 @@
     width: 358px;
     border-radius: 8px;
     cursor: pointer;
+
     img {
       height: 100%;
       width: 100%;
       object-fit: cover;
       transition: transform .5s;
     }
+
     &:hover {
       img {
         transform: scale(1.2);
@@ -96,4 +99,18 @@
   bottom: 0;
   right: 0;
   z-index: 2;
+}
+
+
+@media only screen and (max-width: 576px) {
+  .container {
+    .introItem {
+      gap: 12px;
+
+      .info {
+        align-items: center;
+          text-align: center;
+      }
+    }
+  }
 }
