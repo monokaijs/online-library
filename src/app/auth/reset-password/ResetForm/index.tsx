@@ -1,12 +1,12 @@
-import { loginAction } from "@/app/auth/login/actions";
-import { googleConnectAction } from "@/app/dashboard/security/actions";
-import { GoogleOutlined } from "@ant-design/icons";
-import { useGoogleLogin } from "@react-oauth/google";
-import { Button, Divider, Form, Input, message } from "antd";
-import { useEffect, useState } from "react";
-import { useFormState } from "react-dom";
+import {loginAction} from "@/app/auth/login/actions";
+import {googleConnectAction} from "@/app/dashboard/security/actions";
+import {GoogleOutlined} from "@ant-design/icons";
+import {useGoogleLogin} from "@react-oauth/google";
+import {Button, Divider, Form, Input, message} from "antd";
+import {useEffect, useState} from "react";
+import {useFormState} from "react-dom";
 import styles from "./ResetForm.module.scss";
-import { toast } from "@/lib/utils/toast";
+import {toast} from "@/lib/utils/toast";
 
 interface FormProps {
   onSuccess?: () => any;
@@ -39,7 +39,11 @@ export default function ResetForm(props: FormProps) {
 
   const login = useGoogleLogin({
     flow: "auth-code",
-    onSuccess: ({ code }) => gConnectAction({ code: code, type: "google" }),
+    onSuccess: ({code}) => gConnectAction({
+      code: code,
+      type: "google",
+      redirect_uri: "postmessage",
+    }),
     onNonOAuthError: () => {
       setLoading(false);
     },
@@ -59,7 +63,7 @@ export default function ResetForm(props: FormProps) {
       // }}
     >
       <Form.Item label={"Email"} className={styles.item} name={"email"}>
-        <Input allowClear placeholder={"someone@example.com"} />
+        <Input allowClear placeholder={"someone@example.com"}/>
       </Form.Item>
       <Button
         type={"primary"}
@@ -77,7 +81,7 @@ export default function ResetForm(props: FormProps) {
           setLoading(true);
           login();
         }}
-        icon={<GoogleOutlined />}
+        icon={<GoogleOutlined/>}
         block
       >
         Sign in with Google

@@ -13,11 +13,7 @@ import { Button } from "antd";
 import { useContext, useState } from "react";
 import { useFormState } from "react-dom";
 
-export default function GoogleConnectButton({
-  redirectUri,
-}: {
-  redirectUri: string;
-}) {
+export default function GoogleConnectButton() {
   const { account } = useContext(SessionContext);
   const [loading, setLoading] = useState(false);
   const [state, gConnectAction] = useFormState(googleConnectAction, {
@@ -52,7 +48,7 @@ export default function GoogleConnectButton({
     onError: () => {
       setLoading(false);
     },
-    redirect_uri: redirectUri,
+    redirect_uri: "postmessage",
   });
 
   const handleGoogleAction = () => {

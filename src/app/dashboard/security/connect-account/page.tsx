@@ -10,7 +10,7 @@ export default function ConnectAccount() {
     <div className={"mt-4"}>
       <Card>
         <GoogleOAuthProvider clientId={appEnv.security.google.clientId}>
-          <GoogleConnectButton redirectUri={redirectUri} />
+          <GoogleConnectButton/>
         </GoogleOAuthProvider>
       </Card>
     </div>

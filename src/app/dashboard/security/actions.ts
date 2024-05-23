@@ -15,6 +15,7 @@ export interface Response {
 export interface ConnectPayload {
   type: string;
   code: string;
+  redirect_uri?: string;
 }
 
 export interface ChangePassPayload {
@@ -41,7 +42,7 @@ export async function googleConnectAction(
   const client = new google.auth.OAuth2(
     appEnv.security.google.clientId,
     appEnv.security.google.clientSecret,
-    appEnv.security.google.redirectURI
+    payload.redirect_uri || appEnv.security.google.redirectURI
   );
 
   const { tokens } = await client.getToken(code);
