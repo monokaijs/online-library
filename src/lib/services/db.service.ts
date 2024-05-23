@@ -7,7 +7,6 @@ import {
   DEFAULT_ACCOUNT_EMAIL,
   DEFAULT_ACCOUNT_PASSWORD,
   DEFAULT_ACCOUNT_USERNAME,
-  MONGO_URI
 } from "@/lib/configs/env";
 
 let cached = global.mongoose;
@@ -18,10 +17,6 @@ if (!cached) {
 
 class DbService {
   async connect() {
-    if (!MONGO_URI) {
-      throw new ApiError('Database not properly configured', 508);
-    }
-
     if (cached.conn) {
       return cached.conn;
     }
