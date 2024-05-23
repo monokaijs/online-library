@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { AccountModel, RoleEnum } from '@/lib/models/account.model';
 import { hashSync } from 'bcryptjs';
-import {ApiError} from "@/lib/common/errors/api.error";
 import {
   appEnv,
   DEFAULT_ACCOUNT_EMAIL,
