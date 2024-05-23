@@ -10,7 +10,7 @@ export function getEnv<T>(key: string, required = false, errorMessage?: string, 
 
 export const appEnv = {
   base: {
-    mongoUri: getEnv<string>('MONGO_URI', true, 'Database is not configured'),
+    mongoUri: getEnv<string>('MONGO_URI', false, 'Database is not configured'),
   },
   security: {
     google: {
