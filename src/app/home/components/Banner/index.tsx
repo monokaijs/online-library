@@ -10,6 +10,7 @@ export default function Banner() {
   return (
     <div id="home">
       <div className={styles.background}>
+        <img src="/images/group-dot.svg" alt={"dot"} className={`${styles.groupDot} xl-hidden`}/>
         <div className={`${styles.container}`}>
           <div className={styles.contentLeft}>
             <div className={styles.box}>

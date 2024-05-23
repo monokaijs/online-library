@@ -2,24 +2,24 @@
 
 import styles from "./styles.module.scss";
 import {Col, Row, Typography} from "antd";
-import {BookOutlined, EyeOutlined, HeartOutlined} from "@ant-design/icons";
+import {BookOpenReader, Eye, Bookmark} from "@/components/icons";
 
 const data = [
   {
     id: 1,
-    icon: <EyeOutlined/>,
+    icon: <Eye/>,
     title: "Tầm nhìn",
     description: "Trở thành một điểm đến quen thuộc với bạn đọc yêu sách tại Hà Nội và một nơi trung chuyển sách đến những nơi đang cần."
   },
   {
     id: 1,
-    icon: <HeartOutlined/>,
+    icon: <BookOpenReader/>,
     title: "Sứ mệnh",
     description: "Chữa lành cộng đồng bằng sự tử tế, lan tỏa văn hóa đọc."
   },
   {
     id: 1,
-    icon: <BookOutlined/>,
+    icon: <Bookmark/>,
     title: "Giá trị cốt lõi",
     description: "D Free Book có xuất phát điểm là một thư viện cộng đồng cho mượn sách miễn phí và đặt cọc niềm tin. Chúng mình là những người trẻ có một niềm tin mãnh liệt vào sự tử tế, tri thức cũng như những điều tốt đẹp trong cuộc sống."
   }
@@ -34,7 +34,7 @@ export default function MessageBrought() {
         <Row gutter={[24, 24]}>
           {data.map(item => (
             <Col xs={24} lg={8} key={item.id}>
-              <div  className={styles.messageItem}>
+              <div className={styles.messageItem}>
                 <div className={styles.icon}>
                   {item.icon}
                 </div>

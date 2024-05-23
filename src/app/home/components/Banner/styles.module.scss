@@ -4,6 +4,13 @@
   background-repeat: no-repeat;
   background-size: 71%;
   background-color: #f6f8f8;
+  position: relative;
+  .groupDot {
+    position: absolute;
+    content: "";
+    top: 50px;
+    right: 41%;
+  }
 }
 
 .container {
