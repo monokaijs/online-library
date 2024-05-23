@@ -48,9 +48,9 @@ export default function Introduction() {
           <div
             style={{flexDirection: ((index + 1) % 2 !== 0) ? "row" : "row-reverse"}}
             key={item.id}
-            className={`${styles.introItem}  md-flex-col`}>
+            className={`${styles.introItem} items-center md-flex-col`}>
             <div className={styles.image}>
-              <img  src={item.image} alt="intro"/>
+              <img src={item.image} alt="intro"/>
             </div>
             <div className={styles.info}>
               <div className={styles.tag}>

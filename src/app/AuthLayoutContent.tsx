@@ -13,7 +13,6 @@ export default function AuthLayoutContent({children}: AuthLayoutContentProps) {
     <Col xs={0} sm={0} md={12} lg={16} className={styles.promo} style={{
       backgroundImage: `url(${AuthBg.src})`
     }}>
-      Promo
     </Col>
     <Col xs={24} sm={24} md={12} lg={8}>
       {children}

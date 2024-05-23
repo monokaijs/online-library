@@ -31,9 +31,9 @@ export const supports = [
 export default function LandingPageFooter() {
   return (
     <div className={styles.wrapper}>
-      <Row className={styles.footer} gutter={[16,16]}>
-        <Col xs={24} lg={10}>
-          <div className="lg-mx-3">
+      <Row className={styles.footer} gutter={[32,32]}>
+        <Col xs={24} md={12} lg={10}>
+          <div>
             <img src={LogoMain.src} alt={"Logo"} className={styles.logo}/>
             <Typography.Text className="visible mt-3 mb-10">
               D Free Book là một thư viện cộng đồng cho mượn
@@ -48,8 +48,8 @@ export default function LandingPageFooter() {
             </div>
           </div>
         </Col>
-        <Col xs={24} lg={4}>
-          <div className="lg-mx-3">
+        <Col xs={24} md={12} lg={4}>
+          <div>
             <Typography.Title className="mb-6" level={4}>Trang</Typography.Title>
             <div className="flex flex-col gap-3">
               {
@@ -70,8 +70,8 @@ export default function LandingPageFooter() {
             </div>
           </div>
         </Col>
-        <Col xs={24} lg={4}>
-          <div className="lg-mx-3">
+        <Col xs={24} md={12} lg={4}>
+          <div>
             <Typography.Title className="mb-6" level={4}>Hỗ trợ</Typography.Title>
             <div className="flex flex-col gap-3">
               {
@@ -92,8 +92,8 @@ export default function LandingPageFooter() {
             </div>
           </div>
         </Col>
-        <Col xs={24} lg={6}>
-         <div className="lg-mx-3">
+        <Col xs={24} md={12} lg={6}>
+         <div>
            <Typography.Title className="mb-6" level={4}>Giữ liên lạc</Typography.Title>
            <Input
              size="large"

@@ -30,13 +30,13 @@
     &:hover {
       cursor: pointer;
       transition: all 0.3s linear;
-      box-shadow: rgba(74, 111, 115, 0.5) 0 4px 10px 0;
+      box-shadow: rgba(74, 111, 115, 0.5) 0 4px 8px 0;
     }
   }
 
   .communicationWrapper {
     max-width: 1176px;
-    margin: 64px auto 24px;
+    margin: 0 auto 24px;
     padding-inline: 12px;
     overflow: hidden;
 
@@ -51,7 +51,7 @@
       &:hover {
         .content {
           transform: scale(1.05);
-          box-shadow: rgba(74, 111, 115, 0.5) 0 4px 10px 0;
+          box-shadow: rgba(74, 111, 115, 0.5) 0 4px 8px 0;
         }
       }
 
@@ -82,7 +82,7 @@
         margin-top: -98px;
         height: 196px;
         transition: transform .5s;
-
+        margin-bottom: 24px;
         img {
           object-fit: cover;
           height: 33px;
