@@ -17,6 +17,9 @@ if (!cached) {
 
 class DbService {
   async connect() {
+    // Silently close connection
+    if (!appEnv.base.mongoUri) return;
+
     if (cached.conn) {
       return cached.conn;
     }
