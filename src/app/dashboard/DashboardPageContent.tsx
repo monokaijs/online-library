@@ -104,8 +104,6 @@ export default function DashboardPageContent() {
     loadData();
   }, []);
 
-  console.log(borrowings);
-
   return (
     <div className="h-full flex flex-col overflow-hidden gap-12">
       {account?.role !== RoleEnum.USER && (
