@@ -1,20 +1,19 @@
 "use client";
-import ManageAccountsHeader from "@/app/dashboard/manage-accounts/components/ManageAccountsHeader";
-import ViewAccountModal from "@/app/dashboard/manage-accounts/components/ViewAccountModal";
-import { SessionContext } from "@/components/shared/SessionContext";
-import { RoleEnum } from "@/lib/models/account.model";
-import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { Button, Modal, Table, message, theme } from "antd";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { useFormState } from "react-dom";
 import {
   deleteAccountAction,
   getAccountsAction,
 } from "@/app/dashboard/manage-accounts/action";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { toast } from "@/lib/utils/toast";
+import ManageAccountsHeader from "@/app/dashboard/manage-accounts/components/ManageAccountsHeader";
+import ViewAccountModal from "@/app/dashboard/manage-accounts/components/ViewAccountModal";
+import { SessionContext } from "@/components/shared/SessionContext";
 import UserRole from "@/components/shared/UserRole";
 import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
+import { toast } from "@/lib/utils/toast";
+import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { Button, Modal, Table, theme } from "antd";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { useFormState } from "react-dom";
 
 function ManageAccounts() {
   const { token } = theme.useToken();
