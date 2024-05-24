@@ -115,6 +115,7 @@ function ManageBook() {
       page: Number(searchParams.get("page") ?? 1),
       filter: {
         query: searchParams.get("query") ?? "",
+        type: searchParams.get("type") ?? "",
         library: searchParams.get("library") ?? "",
         month: searchParams.get("month"),
         year: searchParams.get("year"),
@@ -151,11 +152,22 @@ function ManageBook() {
       align: "center",
     },
     {
+      title: "Tên bạn đọc",
+      dataIndex: "user",
+      key: "user",
+      render: (item: Account) => item?.fullName,
+    },
+    {
       title: "Tên sách",
       dataIndex: "book",
       key: "name",
-      align: "center",
       render: (item: Book) => item?.name,
+    },
+    {
+      title: "Thư viện",
+      dataIndex: "library",
+      key: "library",
+      render: (library: Location) => library?.name,
     },
     // {
     //   title: "Thư viện",
@@ -164,13 +176,6 @@ function ManageBook() {
     //   align: "center",
     //   render: (item: Location) => item?.name,
     // },
-    {
-      title: "Tên bạn đọc",
-      dataIndex: "user",
-      key: "user",
-      align: "center",
-      render: (item: Account) => item?.fullName,
-    },
     {
       title: "Số điện thoại",
       dataIndex: "phoneNumber",
@@ -187,29 +192,33 @@ function ManageBook() {
     //   align: "center",
     //   render: (item: string) => dayjs(item).format("DD/MM/YYYY"),
     // },
+    // {
+    //   title: "Ngày hẹn",
+    //   dataIndex: "returnDate",
+    //   key: "returnDate",
+    //   align: "center",
+    //   render: (item: string) => dayjs(item).format("DD/MM/YYYY"),
+    // },
+    // {
+    //   title: "Ngày trả thực tế",
+    //   dataIndex: "realReturnDate",
+    //   key: "realReturnDate",
+    //   align: "center",
+    //   render: (item: string) =>
+    //     !!item ? dayjs(item).format("DD/MM/YYYY") : "-",
+    // },
     {
-      title: "Ngày hẹn",
-      dataIndex: "returnDate",
-      key: "returnDate",
-      align: "center",
-      render: (item: string) => dayjs(item).format("DD/MM/YYYY"),
-    },
-    {
-      title: "Ngày trả thực tế",
-      dataIndex: "realReturnDate",
-      key: "realReturnDate",
-      align: "center",
-      render: (item: string) => !!item ? dayjs(item).format("DD/MM/YYYY") : "-",
-    },
-    {
-      title: "Số ngày quá",
+      title: "Quá hẹn",
       key: "returnDate",
       align: "center",
       render: (item: Borrow) => {
         if (item.status === BorrowStatus.BORROWING) {
-          return Math.abs(getDaysDiff(item?.returnDate));
+          return Math.abs(getDaysDiff(item?.returnDate)) + " ngày";
         } else {
-          return Math.abs(getDaysDiff(item.returnDate, item.realReturnDate));
+          return (
+            Math.abs(getDaysDiff(item.returnDate, item.realReturnDate)) +
+            " ngày"
+          );
         }
       },
     },
@@ -218,7 +227,9 @@ function ManageBook() {
       key: "returnDate",
       align: "center",
       render: (item: Borrow) => {
-        const days = Math.abs(getDaysDiff(item.returnDate, item.realReturnDate));
+        const days = Math.abs(
+          getDaysDiff(item.returnDate, item.realReturnDate)
+        );
         let amount = 0;
         if (days < 15) {
           amount = 1000;
@@ -372,18 +383,20 @@ function ManageBook() {
               </Select.Option>
             ))}
           </Select>
-          <Input
-            className={"bg-input-group-after"}
-            placeholder={"Nhập tên sách, bạn đọc..."}
-            addonAfter={<SearchOutlined />}
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-            }}
-          />
-        </div>
 
-        <div className={"flex justify-between gap-8"}>
+          <Select
+            style={{ minWidth: 150 }}
+            defaultValue={searchParams.get("status") ?? "all"}
+            onChange={(e) => {
+              createQueryString({
+                type: e == "all" ? "" : e,
+              });
+            }}
+          >
+            <Select.Option value="all">Tất cả</Select.Option>
+            <Select.Option value="overdue">Đã thu</Select.Option>
+            <Select.Option value="borrowing">Chưa thu</Select.Option>
+          </Select>
           <DatePicker
             format={"MM/YYYY"}
             picker="month"
@@ -400,6 +413,17 @@ function ManageBook() {
                   year: undefined,
                 });
               }
+            }}
+          />
+        </div>
+        <div className={"flex justify-between gap-8"}>
+          <Input
+            className={"bg-input-group-after"}
+            placeholder={"Nhập tên sách, bạn đọc..."}
+            addonAfter={<SearchOutlined />}
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
             }}
           />
         </div>

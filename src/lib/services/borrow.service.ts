@@ -99,6 +99,10 @@ class BorrowService {
             BorrowStatus.PENDING,
           ],
         };
+
+        if (query.type) {
+          filter.status = query.type;
+        }
       }
 
       if (query?.query) {
@@ -328,7 +332,6 @@ class BorrowService {
     }
   }
 
-  
   async declineBorrow(borrowId: string) {
     try {
       const borrow: any = await this.getById(borrowId);
