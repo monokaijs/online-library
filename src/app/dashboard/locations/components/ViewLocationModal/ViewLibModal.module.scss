@@ -1,0 +1,36 @@
+.modal {
+  width: 1000px;
+}
+
+.info {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .label {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #00000073;
+
+  }
+
+  .title {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0em;
+  }
+
+  .rangeTime {
+    margin-top: 10px;
+    gap: 12px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 2px;
+    padding: 0 12px;
+    border: 1px solid #F0F0F0;
+  }
+
+}

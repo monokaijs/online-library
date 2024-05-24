@@ -3,24 +3,21 @@ import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 import { Book, BookStatus } from "@/lib/models/book.model";
 import { Bookcase } from "@/lib/models/bookcase.model";
 import { Location } from "@/lib/models/library.model";
-import { toast } from "@/lib/utils/toast";
+import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 import {
   BookOutlined,
-  DeleteOutlined,
-  EditOutlined,
   EllipsisOutlined,
-  EyeOutlined,
+  EyeOutlined
 } from "@ant-design/icons";
-import { Button, Dropdown, Modal, Table, Tag } from "antd";
+import { Button, Dropdown, Table, Tag } from "antd";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
-import { deleteBookAction, getBookAction } from "./action";
+import { getBookAction } from "../manage-books/action";
 import ManageBookHeader from "./components/ManageBookHeader";
 import ViewBookModal from "./components/ViewBookModal";
-import { getDaysDiff } from "@/lib/utils/getDaysDiff";
-import BookStatusTag from "./components/BookStatusTag";
+import BookStatusTag from "../manage-books/components/BookStatusTag";
 
 function ManageBook() {
   const [loading, setLoading] = useState(true);
@@ -53,11 +50,6 @@ function ManageBook() {
     totalDocs: 0,
   });
 
-  const [deleteState, deleteAction] = useFormState(deleteBookAction, {
-    success: false,
-    message: "",
-  });
-
   const loadData = () => {
     getData({
       ...state,
@@ -79,14 +71,6 @@ function ManageBook() {
   useDidMountEffect(() => {
     setLoading(false);
   }, [state]);
-
-  useEffect(() => {
-    toast(deleteState);
-    if (deleteState?.success) {
-      loadData();
-      setDetail(undefined);
-    }
-  }, [deleteState]);
 
   const columns: any = [
     {
@@ -184,24 +168,10 @@ function ManageBook() {
                     key: "view",
                     label: "Xem chi tiết",
                     onClick: () => {
-                      router.push(`/dashboard/manage-books/${item?._id}`);
+                      router.push(`/dashboard/books/${item?._id}`);
                     },
                   },
                   {
-                    type: "divider",
-                  },
-                  {
-                    icon: <EditOutlined />,
-                    key: "edit",
-                    label: "Cập nhật thông tin",
-                    onClick: () => {
-                      router.push(
-                        `/dashboard/manage-books/update/${item?._id}`
-                      );
-                    },
-                  },
-                  {
-                    key: "d",
                     type: "divider",
                   },
                   {
@@ -210,31 +180,10 @@ function ManageBook() {
                     label: "Tạo phiếu mượn",
                     onClick: () => {
                       router.push(
-                        `/dashboard/manage-borrows/create?book=${item?._id}`
+                        `/dashboard/borrows/create?book=${item?._id}`
                       );
                     },
                     disabled: item?.status !== BookStatus.AVAILABLE,
-                  },
-                  {
-                    key: "d",
-                    type: "divider",
-                  },
-                  {
-                    icon: <DeleteOutlined />,
-                    key: "delete",
-                    label: "Xóa sách",
-                    onClick: () => {
-                      Modal.confirm({
-                        title: "Hành động này không thể hoàn tác!",
-                        content: `Xác nhận xóa sách`,
-                        okText: "Xóa",
-                        cancelText: "Hủy",
-                        onOk: () => {
-                          deleteAction(item._id);
-                        },
-                      });
-                    },
-                    disabled: item.status !== BookStatus.AVAILABLE,
                   },
                 ],
               }}
@@ -286,9 +235,6 @@ function ManageBook() {
           setDetail(undefined);
         }}
         detail={detail}
-        deleteAction={(arg: any) => {
-          deleteAction(arg);
-        }}
       />
     </div>
   );

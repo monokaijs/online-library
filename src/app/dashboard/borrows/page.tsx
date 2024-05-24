@@ -6,13 +6,10 @@ import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
 import { Location } from "@/lib/models/library.model";
 import { toast } from "@/lib/utils/toast";
 import {
-  CheckCircleOutlined,
-  DeleteOutlined,
-  EditOutlined,
+  CloseCircleOutlined,
   EllipsisOutlined,
   EyeOutlined,
   SearchOutlined,
-  CloseCircleOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -22,23 +19,17 @@ import {
   Modal,
   Select,
   Table,
-  Tooltip,
   theme,
 } from "antd";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
+import Status from "../manage-borrows/components/BorrowStatus";
 import { getLibraryAction } from "../manage-locations/action";
-import {
-  acceptBorrowAction,
-  cancelBorrowAction,
-  deleteBorrowAction,
-  getBorrowAction,
-  returnBookAction,
-} from "./action";
+import { deleteBorrowAction, getBorrowAction } from "./action";
 import BorrowDetail from "./components/BorrowDetail";
-import Status from "./components/BorrowStatus";
+import { cancelBorrowAction } from "../manage-borrows/action";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -88,35 +79,14 @@ function ManageBook() {
     message: "",
   });
 
-  const [returnState, returnBook] = useFormState(returnBookAction, {
-    success: false,
-    message: "",
-  });
-
-  useEffect(() => {
-    toast(returnState);
-    loadData();
-  }, [returnState]);
-
-  const [accept, acceptBorrow] = useFormState(acceptBorrowAction, {
-    success: false,
-    message: "",
-  });
-
-  useEffect(() => {
-    toast(accept);
-    loadData();
-  }, [accept]);
-
   const [cancel, cancelBorrow] = useFormState(cancelBorrowAction, {
     success: false,
     message: "",
   });
 
   useEffect(() => {
-    toast(cancel);
     loadData();
-  }, [cancel]);
+  }, [cancel])
 
   useEffect(() => {
     getLibraries();
@@ -220,47 +190,13 @@ function ManageBook() {
       render: (item: any) => {
         const items: any = [
           {
-            icon: <CheckCircleOutlined />,
-            key: "done",
-            label: "Hoàn tất",
-            onClick: () => {
-              Modal.confirm({
-                title: "Hành động này không thể hoàn tác!",
-                content: `Hoàn thành lượt mượn`,
-                okText: "Xác nhận",
-                cancelText: "Hủy",
-                onOk: () => {
-                  returnBook(item._id);
-                },
-              });
-            },
-            disabled: item.status !== BorrowStatus.BORROWING,
-          },
-          {
-            icon: <CheckCircleOutlined />,
-            key: "accept",
-            label: "Phê duyệt",
-            onClick: () => {
-              Modal.confirm({
-                title: "Hành động này không thể hoàn tác!",
-                content: `Phê duyệt lượt mượn này`,
-                okText: "Xác nhận",
-                cancelText: "Hủy",
-                onOk: () => {
-                  acceptBorrow(item._id);
-                },
-              });
-            },
-            disabled: item.status !== BorrowStatus.PENDING,
-          },
-          {
             icon: <CloseCircleOutlined />,
             key: "cancel",
-            label: "Từ chối",
+            label: "Hủy bỏ",
             onClick: () => {
               Modal.confirm({
                 title: "Hành động này không thể hoàn tác!",
-                content: `Từ chối lượt mượn này`,
+                content: `Hủy bỏ lượt mượn này`,
                 okText: "Xác nhận",
                 cancelText: "Hủy",
                 onOk: () => {
@@ -276,48 +212,7 @@ function ManageBook() {
             label: "Xem chi tiết",
             onClick: () => {
               setDetail(item);
-              // router.push(`/dashboard/manage-borrows/${item?._id}`);
             },
-          },
-          {
-            icon: <EditOutlined />,
-            key: "edit",
-            label: "Cập nhật thông tin",
-            onClick: () => {
-              router.push(`/dashboard/manage-borrows/update/${item?._id}`);
-            },
-            disabled:
-              item.status !== BorrowStatus.BORROWING &&
-              item.status !== BorrowStatus.PENDING,
-          },
-          {
-            icon: <DeleteOutlined />,
-            key: "delete",
-            label: (
-              <div>
-                {item.status === BorrowStatus.BORROWING ? (
-                  <Tooltip title="Vui lòng hoàn thành lượt mượn">
-                    Xóa phiếu mượn
-                  </Tooltip>
-                ) : (
-                  "Xóa phiếu mượn"
-                )}
-              </div>
-            ),
-            onClick: () => {
-              Modal.confirm({
-                title: "Hành động này không thể hoàn tác!",
-                content: `Xác nhận xóa phiếu mượn`,
-                okText: "Xóa",
-                cancelText: "Hủy",
-                onOk: () => {
-                  deleteAction(item._id);
-                },
-              });
-            },
-            disabled:
-              item.status === BorrowStatus.BORROWING ||
-              item.status === BorrowStatus.PENDING,
           },
         ];
 
@@ -391,7 +286,6 @@ function ManageBook() {
             <Select.Option value="borrowing">Đang mượn</Select.Option>
             <Select.Option value="returned">Đã trả</Select.Option>
             <Select.Option value="overdue">Quá hạn</Select.Option>
-            <Select.Option value="pending">Đang chờ</Select.Option>
           </Select>
           <Input
             className={"bg-input-group-after"}
@@ -423,14 +317,6 @@ function ManageBook() {
               }
             }}
           />
-          <Button
-            type={"primary"}
-            onClick={() => {
-              router.push(`/dashboard/manage-borrows/create`);
-            }}
-          >
-            Thêm phiếu mượn
-          </Button>
         </div>
       </div>
       <Table

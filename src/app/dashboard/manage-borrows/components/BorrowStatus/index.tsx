@@ -3,17 +3,37 @@ import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 import { Tag } from "antd";
 
 export default function Status({ data }: { data: Borrow }) {
-  const overdued = getDaysDiff(data.returnDate) < 0;
-  const returned = data?.status === BorrowStatus.RETURNED;
-  const borrowing = data?.status === BorrowStatus.BORROWING;
+  const overdued =
+    data.status === BorrowStatus.BORROWING
+      ? getDaysDiff(data.returnDate) < 0
+      : false;
+
+  const status: any = {
+    borrowing: {
+      color: "orange",
+      label: "Đang mượn",
+    },
+    returned: {
+      color: "green",
+      label: "Đã trả",
+    },
+    pending: {
+      color: "blue",
+      label: "Chờ duyệt",
+    },
+    cancel: {
+      color: "red",
+      label: "Đã hủy",
+    },
+    overdue: {
+      color: "red",
+      label: "Đã trả",
+    },
+  };
 
   return (
-    <Tag
-      color={
-        borrowing ? (overdued ? "red" : "green") : returned ? "green" : "red"
-      }
-    >
-      {borrowing ? "Đang mượn" : "Đã trả"}
+    <Tag color={overdued ? "red" : status[data?.status]?.color}>
+      {status[data?.status]?.label}
     </Tag>
   );
 }
