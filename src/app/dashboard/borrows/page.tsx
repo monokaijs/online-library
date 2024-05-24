@@ -32,6 +32,7 @@ import { deleteBorrowAction, getBorrowAction } from "./action";
 import BorrowDetail from "./components/BorrowDetail";
 import { cancelBorrowAction } from "../manage-borrows/action";
 import vi_VN from "antd/lib/locale/vi_VN";
+import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -140,7 +141,6 @@ function ManageBook() {
       title: "Tên sách",
       dataIndex: "book",
       key: "name",
-      align: "center",
       render: (item: Book) => item?.name,
     },
     {
@@ -151,21 +151,56 @@ function ManageBook() {
       render: (item: Location) => item?.name,
     },
     {
-      title: "Tên bạn đọc",
-      dataIndex: "user",
-      key: "user",
+      title: "Quá hẹn",
+      key: "returnDate",
       align: "center",
-      render: (item: Account) => item?.fullName,
+      render: (item: Borrow) => {
+        const diff = getDaysDiff(item?.returnDate);
+        return diff < 0 && item.status == BorrowStatus.BORROWING
+          ? `Quá ${Math.abs(diff)} ngày`
+          : "-";
+      },
     },
     {
-      title: "Số điện thoại",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
+      title: "Tiền phạt",
+      key: "returnDate",
       align: "center",
-      // render: ({ library }: { library: Library }) => {
-      //   return <div>{library.name}</div>;
-      // },
+      render: (item: Borrow) => {
+        const days = getDaysDiff(item.returnDate, item.realReturnDate);
+        let amount = 0;
+        if (days < 15) {
+          amount = 1000;
+        } else if (days < 50) {
+          amount = 15000;
+        } else if (days < 100) {
+          amount = 20000;
+        } else {
+          amount = 25000;
+        }
+
+        return days < 0 && item.status == BorrowStatus.BORROWING
+          ? (Math.abs(days) * amount)
+              ?.toLocaleString("it-IT", {
+                style: "currency",
+                currency: "VND",
+              })
+              ?.replace("VND", "đ")
+          : "-";
+      },
     },
+    // {
+    //   title: "Tên bạn đọc",
+    //   dataIndex: "user",
+    //   key: "user",
+    //   align: "center",
+    //   render: (item: Account) => item?.fullName,
+    // },
+    // {
+    //   title: "Số điện thoại",
+    //   dataIndex: "phoneNumber",
+    //   key: "phoneNumber",
+    //   align: "center",
+    // },
     {
       title: "Ngày mượn",
       dataIndex: "borrowDate",
@@ -301,24 +336,24 @@ function ManageBook() {
         </div>
 
         <div className={"flex justify-between gap-8"}>
-            <DatePicker
-              format={"MM/YYYY"}
-              picker="month"
-              placeholder="Chọn tháng"
-              onChange={(e) => {
-                if (e) {
-                  createQueryString({
-                    month: (e?.month() ?? 0) + 1,
-                    year: e?.year(),
-                  });
-                } else {
-                  createQueryString({
-                    month: undefined,
-                    year: undefined,
-                  });
-                }
-              }}
-            />
+          <DatePicker
+            format={"MM/YYYY"}
+            picker="month"
+            placeholder="Chọn tháng"
+            onChange={(e) => {
+              if (e) {
+                createQueryString({
+                  month: (e?.month() ?? 0) + 1,
+                  year: e?.year(),
+                });
+              } else {
+                createQueryString({
+                  month: undefined,
+                  year: undefined,
+                });
+              }
+            }}
+          />
         </div>
       </div>
       <Table
