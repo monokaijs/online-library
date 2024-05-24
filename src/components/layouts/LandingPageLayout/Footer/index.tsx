@@ -6,6 +6,7 @@ import {Col, Input, Row, Typography} from "antd";
 import {InstagramOutlined, SendOutlined, TwitterOutlined, YoutubeFilled} from "@ant-design/icons";
 import {Link as LinkS} from "react-scroll/modules";
 import {Facebook} from "@/components/icons/Facebook";
+import Link from "next/link";
 
 const socials = [
   {key: "instagram", name: "Instagram", url: "https://www.instagram.com/dfree.book", icon: <InstagramOutlined/>},
@@ -25,8 +26,8 @@ export const pages = [
 export const supports = [
   {key: "support-policy", title: "Chính sách hỗ trợ", path: "#"},
   {key: "return-policy", title: "Chính sách đổi trả", path: "#"},
-  {key: "Security", title: "Bảo mật", path: "#"},
-  {key: "information", title: "Thông tin", path: "#"},
+  {key: "privacy", title: "Chính sách bảo mật", path: "/privacy"},
+  {key: "terms", title: "Điều khoản dịch vụ", path: "/terms"},
 ]
 
 export default function Footer() {
@@ -79,17 +80,12 @@ export default function Footer() {
             <div className="flex flex-col gap-3">
               {
                 supports.map(item => (
-                  <LinkS
+                  <Link
                     className={styles.textHover}
-                    key={item.key}
-                    to={item.path}
-                    spy
-                    smooth
-                    offset={0}
-                    duration={500}
+                    href={item.path}
                   >
                     {item.title}
-                  </LinkS>
+                  </Link>
                 ))
               }
             </div>
