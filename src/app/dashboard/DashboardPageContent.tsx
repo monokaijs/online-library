@@ -1,14 +1,20 @@
 "use client";
 import { getDashboard } from "@/app/dashboard/action";
 import StatisticCard from "@/app/dashboard/components/StatisticCard";
+import { SessionContext } from "@/components/shared/SessionContext";
 import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
+import { RoleEnum } from "@/lib/models/account.model";
 import { Card, DatePicker, Select, Typography } from "antd";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
+import { getBorrowAction } from "./borrows/action";
+import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
+import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 
 export default function DashboardPageContent() {
+  const { account } = useContext(SessionContext);
   const placeholder: any = {
     date: "ngày",
     month: "tháng",
@@ -76,75 +82,150 @@ export default function DashboardPageContent() {
     });
   }, [searchParams, pathname]);
 
+  const [borrowings, getBorrowing] = useFormState(getBorrowAction, {
+    data: [],
+    limit: Number(searchParams.get("limit") ?? 20),
+    page: Number(searchParams.get("page") ?? 1),
+    totalPages: 0,
+    totalDocs: 0,
+  });
+
+  const loadData = () => {
+    getBorrowing({
+      limit: 9999,
+      page: 1,
+      filter: {
+        status: BorrowStatus.BORROWING,
+      },
+    });
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   return (
     <div className="h-full flex flex-col overflow-hidden gap-12">
-      <div>
-        <div className="flex items-center gap-8 mb-6">
-          <Select
-            style={{ minWidth: 120 }}
-            onChange={(e) => {
-              setPicker(e);
+      {account?.role !== RoleEnum.USER && (
+        <div>
+          <div className="flex items-center gap-8 mb-6">
+            <Select
+              style={{ minWidth: 120 }}
+              onChange={(e) => {
+                setPicker(e);
+              }}
+              defaultValue={picker}
+            >
+              <Select.Option value="date">Theo ngày</Select.Option>
+              <Select.Option value="month">Theo tháng</Select.Option>
+              <Select.Option value="year">Theo năm</Select.Option>
+            </Select>
+            <DatePicker
+              picker={picker}
+              value={currentDate}
+              placeholder={`Chọn ${placeholder[picker] ?? "thời gian"}`}
+              format={formater[picker] ?? "MM/YYYY"}
+              onChange={(e) => {
+                setCurrentDate(e);
+              }}
+              disabledDate={(current) => {
+                return dayjs().diff(current) < 0;
+              }}
+            />
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+              gap: 20,
             }}
-            defaultValue={picker}
           >
-            <Select.Option value="date">Theo ngày</Select.Option>
-            <Select.Option value="month">Theo tháng</Select.Option>
-            <Select.Option value="year">Theo năm</Select.Option>
-          </Select>
-          <DatePicker
-            picker={picker}
-            value={currentDate}
-            placeholder={`Chọn ${placeholder[picker] ?? "thời gian"}`}
-            format={formater[picker] ?? "MM/YYYY"}
-            onChange={(e) => {
-              setCurrentDate(e);
-            }}
-            disabledDate={(current) => {
-              return dayjs().diff(current) < 0;
-            }}
-          />
+            <StatisticCard
+              data={data?.accounts}
+              title={"Tổng số người dùng"}
+              hint={"Tổng số người dùng mới"}
+              diffUnit={"bạn đọc"}
+            />
+            <StatisticCard
+              data={data?.books}
+              title={"Tổng số sách"}
+              hint={"Tổng số sách mới"}
+              diffUnit={"quyển"}
+            />
+            <StatisticCard
+              data={data?.borrows}
+              title={"Tổng số lượt mượn"}
+              hint={"Tổng số lượt mượn mới"}
+              diffUnit={"lượt"}
+            />
+            <StatisticCard
+              data={data?.overdue}
+              title={"Số sách mượn quá hạn"}
+              hint={"Tổng số mượn quá"}
+              diffUnit={"lượt"}
+              positive={false}
+            />
+            <StatisticCard
+              data={data?.fines}
+              title={"Tổng phí phạt"}
+              hint={"Tổng phí phạt"}
+              currency={true}
+              diffUnit={""}
+            />
+          </div>
         </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-            gap: 20,
-          }}
-        >
-          <StatisticCard
-            data={data?.accounts}
-            title={"Tổng số người dùng"}
-            hint={"Tổng số người dùng mới"}
-            diffUnit={"bạn đọc"}
-          />
-          <StatisticCard
-            data={data?.books}
-            title={"Tổng số sách"}
-            hint={"Tổng số sách mới"}
-            diffUnit={"quyển"}
-          />
-          <StatisticCard
-            data={data?.borrows}
-            title={"Tổng số lượt mượn"}
-            hint={"Tổng số lượt mượn mới"}
-            diffUnit={"lượt"}
-          />
-          <StatisticCard
-            data={data?.overdue}
-            title={"Số sách mượn quá hạn"}
-            hint={"Tổng số mượn quá"}
-            diffUnit={"lượt"}
-            positive={false}
-          />
-          <StatisticCard
-            data={data?.fines}
-            title={"Tổng phí phạt"}
-            hint={"Tổng phí phạt"}
-            currency={true}
-            diffUnit={""}
-          />
+      )}
+      {account?.role === RoleEnum.USER && borrowings?.data.length > 0 && (
+        <div>
+          <Card>
+            <Typography.Title level={4}>Sách đang mượn</Typography.Title>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+                gap: 20,
+              }}
+            >
+              {borrowings?.data?.map((item: Borrow) => {
+                const diff = getDaysDiff(item.returnDate);
+                return (
+                  <div
+                    style={{
+                      border: "1px solid #DFDFDF",
+                      borderRadius: 8,
+                      padding: 16,
+                      display: "flex",
+                      gap: 16,
+                    }}
+                    key={item._id}
+                  >
+                    <img
+                      style={{ height: 100, width: 80, objectFit: "cover" }}
+                      src={
+                        !!item.book?.picture
+                          ? item.book?.picture
+                          : "/images/default-book.png"
+                      }
+                      alt={item.book?.name}
+                    />
+                    <div className="flex flex-col justify-between">
+                      <div>
+                        <Typography.Text strong>
+                          {item.book?.name}
+                        </Typography.Text>
+                        <div>{item.book?.authorName}</div>
+                      </div>
+                      <div style={{ color: diff < 0 ? "red" : "black" }}>
+                        {diff < 0 ? "Quá hạn" : "Còn"} {Math.abs(diff)} ngày
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
         </div>
-      </div>
+      )}
       <div
         style={{
           flex: 1,
@@ -281,7 +362,7 @@ export default function DashboardPageContent() {
                       textAlign: "center",
                     }}
                   >
-                    {giver?.phoneNumber}
+                    xxxx{giver?.phoneNumber?.slice(-4)}
                   </div>
                   <div
                     style={{
@@ -449,7 +530,7 @@ export default function DashboardPageContent() {
                       textAlign: "center",
                     }}
                   >
-                    {user?.phoneNumber}
+                    xxxx{user?.phoneNumber?.slice(-4)}
                   </div>
                   <div
                     style={{

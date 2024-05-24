@@ -13,8 +13,8 @@ import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
-import Status from "../BorrowStatus";
 import { getDaysDiff } from "@/lib/utils/getDaysDiff";
+import Status from "@/app/dashboard/manage-borrows/components/BorrowStatus";
 
 interface ViewBorrowModalProps {
   isOpen: boolean;
@@ -200,9 +200,7 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
                     {
                       fieldName: "Tình trạng",
                       value:
-                        borrowRecord?.status === BorrowStatus.PENDING
-                          ? "Đang chờ duyệt"
-                          : overdued < 0 && borrowing
+                        overdued < 0 && borrowing
                           ? `Quá hẹn ${Math.abs(overdued)} ngày / Tiền phạt: ${(
                               Math.abs(overdued) * amount
                             )
@@ -220,35 +218,6 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
               </div>
             </Flex>
           </div>
-
-          {borrowRecord?.status === BorrowStatus.BORROWING && (
-            <Flex gap={4} justify="flex-end">
-              <Button
-                onClick={() => {
-                  router.push(
-                    `/dashboard/manage-borrows/update/${detail?._id}`
-                  );
-                }}
-              >
-                Sửa thông tin
-              </Button>
-              <Button
-                onClick={() => {
-                  Modal.confirm({
-                    title: "Hành động này không thể hoàn tác!",
-                    content: `Hoàn thành lượt mượn ${book?.name}`,
-                    okText: "Xác nhận",
-                    cancelText: "Hủy",
-                    onOk: () => {
-                      returnBook(borrowRecord._id);
-                    },
-                  });
-                }}
-              >
-                Trả sách
-              </Button>
-            </Flex>
-          )}
         </div>
       )}
     </Modal>

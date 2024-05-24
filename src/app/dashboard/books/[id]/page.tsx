@@ -37,7 +37,7 @@ import Link from "next/link";
 import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 import { SessionContext } from "@/components/shared/SessionContext";
 import { RoleEnum } from "@/lib/models/account.model";
-import BookStatusTag from "../../components/BookStatusTag";
+import BookStatusTag from "../../manage-books/components/BookStatusTag";
 
 export default function BookDetail() {
   const { account } = useContext(SessionContext);

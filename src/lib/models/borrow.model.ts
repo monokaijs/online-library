@@ -6,7 +6,9 @@ import { Location } from "@/lib/models/library.model";
 export enum BorrowStatus {
   OVERDUE = "overdue",
   BORROWING = "borrowing",
-  RETURNED = "returned" 
+  RETURNED = "returned",
+  PENDING = "pending",
+  CANCEL = "cancel",
 }
 
 export interface Borrow {

@@ -1,42 +1,35 @@
 "use client";
-import styles from "./layout.module.scss";
-import {
-  Avatar,
-  Badge,
-  Breadcrumb,
-  Button,
-  Dropdown,
-  Layout,
-  Menu,
-  Typography,
-} from "antd";
+import LogoMainCollapsed from "@/assets/figures/logo-main-collapsed.png";
+import LogoMain from "@/assets/figures/logo-main.png";
+import { SessionContext } from "@/components/shared/SessionContext";
+import { RoleEnum } from "@/lib/models/account.model";
 import {
   BarChartOutlined,
   BellOutlined,
+  BookOutlined,
+  DoubleLeftOutlined,
+  DoubleRightOutlined,
   HomeOutlined,
   LockOutlined,
   LogoutOutlined,
-  RetweetOutlined,
   ReconciliationOutlined,
+  RetweetOutlined,
   SettingOutlined,
   SolutionOutlined,
   TableOutlined,
   UserOutlined,
-  BookOutlined,
-  DoubleLeftOutlined,
-  DoubleRightOutlined,
 } from "@ant-design/icons";
-import LogoMain from "@/assets/figures/logo-main.png";
-import LogoMainCollapsed from "@/assets/figures/logo-main-collapsed.png";
+import { Avatar, Badge, Button, Dropdown, Layout, Menu } from "antd";
 import Link from "next/link";
-import { useContext, useLayoutEffect, useState } from "react";
-import { SessionContext } from "@/components/shared/SessionContext";
 import { usePathname, useRouter } from "next/navigation";
+import { useContext, useLayoutEffect, useState } from "react";
+import styles from "./layout.module.scss";
 
 export default function DashboardLayoutContent(props: any) {
   const { account } = useContext(SessionContext);
   const router = useRouter();
   const pathname = usePathname();
+  const isUserRole = account?.role === RoleEnum.USER;
 
   const [collapsed, setCollapsed] = useState(false);
 
@@ -57,6 +50,87 @@ export default function DashboardLayoutContent(props: any) {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
+  const menus = [
+    {
+      key: "dashboard",
+      icon: <BarChartOutlined />,
+      label: <Link href={"/dashboard"}>Trang chủ</Link>,
+    },
+    {
+      key: "manage-accounts",
+      icon: <SolutionOutlined />,
+      label: (
+        <Link href={"/dashboard/manage-accounts"}>Quản lý người dùng</Link>
+      ),
+      disabled: isUserRole,
+    },
+    {
+      key: "books",
+      icon: <BookOutlined />,
+      label: <Link href={"/dashboard/books"}>Sách hiện có</Link>,
+      disabled: !isUserRole,
+    },
+    {
+      key: "manage-books",
+      icon: <BookOutlined />,
+      label: <Link href={"/dashboard/manage-books"}>Quản lý sách</Link>,
+      disabled: isUserRole,
+    },
+    {
+      key: "borrows",
+      icon: <RetweetOutlined />,
+      label: <Link href={"/dashboard/borrows"}>Lịch sử mượn</Link>,
+      disabled: !isUserRole,
+    },
+    {
+      key: "manage-borrows",
+      icon: <RetweetOutlined />,
+      label: <Link href={"/dashboard/manage-borrows"}>Mượn - trả sách</Link>,
+      disabled: isUserRole,
+    },
+    {
+      key: "manage-fines",
+      icon: <ReconciliationOutlined />,
+      label: <Link href={"/dashboard/manage-fines"}>Quản lý tiền phạt</Link>,
+      disabled: isUserRole,
+    },
+    {
+      key: "manage-bookcases",
+      icon: <TableOutlined />,
+      label: <Link href={"/dashboard/manage-bookcases"}>Quản lý tủ sách</Link>,
+      disabled: isUserRole,
+    },
+    {
+      key: "locations",
+      icon: <HomeOutlined />,
+      label: <Link href={"/dashboard/locations"}>Hệ thống thư viện</Link>,
+    },
+    {
+      key: "manage-locations",
+      icon: <HomeOutlined />,
+      label: <Link href={"/dashboard/manage-locations"}>Quản lý thư viện</Link>,
+      disabled: isUserRole,
+    },
+    {
+      key: "settings",
+      icon: <SettingOutlined />,
+      label: `Thiết lập`,
+      children: [
+        // {
+        //   key: "account",
+        //   icon: <UserOutlined />,
+        //   label: <Link href={"/dashboard/account"}>Tài khoản</Link>,
+        //   onClick: () => router.push("/dashboard/account"),
+        // },
+        {
+          key: "security",
+          icon: <LockOutlined />,
+          label: <Link href={"/dashboard/security"}>Bảo mật</Link>,
+        },
+      ],
+    },
+  ];
+
   return (
     <Layout className={styles.dashboardLayout}>
       <Layout.Sider
@@ -73,93 +147,23 @@ export default function DashboardLayoutContent(props: any) {
           )
         }
       >
-        <div className={styles.siderContent}>
-          <img
-            onClick={() => {
-              router.push("/dashboard");
-            }}
-            src={collapsed ? LogoMainCollapsed.src : LogoMain.src}
-            alt={"Logo"}
-            className={styles.logo}
-          />
-          <Menu
-            mode={"inline"}
-            className={styles.menu}
-            defaultSelectedKeys={[pathname.split("/")[2] ?? "dashboard"]}
-            items={[
-              {
-                key: "dashboard",
-                icon: <BarChartOutlined />,
-                label: <Link href={"/dashboard"}>Trang chủ</Link>,
-              },
-              {
-                key: "manage-accounts",
-                icon: <SolutionOutlined />,
-                label: (
-                  <Link href={"/dashboard/manage-accounts"}>
-                    Quản lý người dùng
-                  </Link>
-                ),
-              },
-              {
-                key: "manage-books",
-                icon: <BookOutlined />,
-                label: (
-                  <Link href={"/dashboard/manage-books"}>Quản lý sách</Link>
-                ),
-              },
-              {
-                key: "manage-borrows",
-                icon: <RetweetOutlined />,
-                label: (
-                  <Link href={"/dashboard/manage-borrows"}>
-                    Mượn - trả sách
-                  </Link>
-                ),
-              },
-              {
-                key: "manage-fines",
-                icon: <ReconciliationOutlined />,
-                label: <Link href={"/dashboard/manage-fines"}>Quản lý tiền phạt</Link>,
-              },
-              {
-                key: "manage-bookcases",
-                icon: <TableOutlined />,
-                label: (
-                  <Link href={"/dashboard/manage-bookcases"}>
-                    Quản lý tủ sách
-                  </Link>
-                ),
-              },
-              {
-                key: "manage-locations",
-                icon: <HomeOutlined />,
-                label: (
-                  <Link href={"/dashboard/manage-locations"}>
-                    Quản lý thư viện
-                  </Link>
-                ),
-              },
-              {
-                key: "settings",
-                icon: <SettingOutlined />,
-                label: `Thiết lập`,
-                children: [
-                  // {
-                  //   key: "account",
-                  //   icon: <UserOutlined />,
-                  //   label: <Link href={"/dashboard/account"}>Tài khoản</Link>,
-                  //   onClick: () => router.push("/dashboard/account"),
-                  // },
-                  {
-                    key: "security",
-                    icon: <LockOutlined />,
-                    label: <Link href={"/dashboard/security"}>Bảo mật</Link>,
-                  },
-                ],
-              },
-            ]}
-          />
+        <div className="app-sidebar">
+          <div className={styles.siderContent}>
+            <img
+              onClick={() => {
+                router.push("/dashboard");
+              }}
+              src={collapsed ? LogoMainCollapsed.src : LogoMain.src}
+              alt={"Logo"}
+              className={styles.logo}
+            />
+            <Menu
+              mode={"inline"}
+              className={styles.menu}
+              defaultSelectedKeys={[pathname.split("/")[2] ?? "dashboard"]}
+              items={menus.filter((item) => !item.disabled)}
+            />
+          </div>
         </div>
       </Layout.Sider>
       <Layout.Content className={styles.contentWrapper}>

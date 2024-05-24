@@ -10,7 +10,7 @@ export default function TermsPage() {
       <div className={styles.container}>
         <Typography.Title className="mb-2" level={2}>TERMS OF USE</Typography.Title>
         <Typography.Paragraph style={{fontStyle: "italic"}}>Last updated May 23, 2024</Typography.Paragraph>
-        <div>
+        <div className="mt-10">
           <Typography.Paragraph>
             AGREEMENT TO OUR LEGAL TERMS
           </Typography.Paragraph>

@@ -1,24 +1,20 @@
 "use client";
 import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
-import { BookStatus } from "@/lib/models/book.model";
-import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Modal, Tag } from "antd";
-import dayjs from "dayjs";
+import { Button, Modal } from "antd";
 import { useRouter } from "next/navigation";
-import BookStatusTag from "../BookStatusTag";
 
-interface ViewBookModalProps {
+interface ViewBorrowModalProps {
   isOpen: boolean;
   onCancel: () => void;
   detail?: any;
   deleteAction: any;
 }
 
-export default function ViewBookModal(props: ViewBookModalProps) {
+export default function ViewBorrowModal(props: ViewBorrowModalProps) {
   const { onCancel, detail, deleteAction } = props;
+
   const router = useRouter();
-  const overdued = getDaysDiff(detail?.borrowRecord?.returnDate) < 0;
 
   return (
     <Modal
@@ -34,22 +30,14 @@ export default function ViewBookModal(props: ViewBookModalProps) {
           { fieldName: "Nhà xuất bản", value: detail?.publisher },
           { fieldName: "Năm xuất bản", value: detail?.publishYear },
           { fieldName: "Ngôn ngữ", value: detail?.language },
-          { fieldName: "Mã sách", value: detail?.bookID },
-          // { fieldName: "ISBN", value: detail?.isbn },
+          { fieldName: "Mã sách", value: detail?.isbn },
           { fieldName: "Thể loại", value: detail?.bookcase?.category },
           { fieldName: "Kệ sách", value: detail?.bookcase?.position },
           { fieldName: "Thư viện", value: detail?.bookcase?.library?.name },
-          {
-            fieldName: "Trạng thái",
-            value: <BookStatusTag record={detail} />,
-          },
+          { fieldName: "Trạng thái", value: detail?.status },
           {
             fieldName: "Hạn mức mượn",
             value: detail?.borrowingDateLimit + " ngày",
-          },
-          {
-            fieldName: "Tạo lúc",
-            value: dayjs(detail?.createdAt).format("HH:mm DD/MM/YYYY"),
           },
         ]}
       />
@@ -70,7 +58,7 @@ export default function ViewBookModal(props: ViewBookModalProps) {
           onClick={() => {
             Modal.confirm({
               title: "Hành động này không thể hoàn tác!",
-              content: `Xác nhận xóa sách`,
+              content: `Xác nhận xóa phiếu mượn`,
               okText: "Xóa",
               cancelText: "Hủy",
               onOk: () => {

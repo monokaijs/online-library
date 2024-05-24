@@ -20,11 +20,9 @@ class BorrowService {
       throw Error("Sách hiện không khả dụng");
     }
 
-    payload.status = BorrowStatus.BORROWING;
-
     const borrowRecord = await BorrowModel.create(payload);
     await bookService.update(book._id, {
-      status: BookStatus.BORROWING,
+      status: payload.status,
       borrowRecord: borrowRecord,
     });
     return JSON.parse(JSON.stringify(borrowRecord));
@@ -71,16 +69,12 @@ class BorrowService {
         isDelete: false,
       };
 
-      if (query?.status == "borrowing") {
-        filter.status = "borrowing";
+      if (query?.user) {
+        filter.user = query?.user;
       }
 
-      if (query?.status == "returned") {
-        filter.status = "returned";
-      }
-
-      if (query?.status == "overdue") {
-        filter.status = "overdue";
+      if (query?.status) {
+        filter.status = query?.status;
       }
 
       if (query.library) {
@@ -95,10 +89,20 @@ class BorrowService {
       }
 
       const today = new Date();
-      today.setHours(0, 1, 1, 1)
-      if (query?.overdue){
+      today.setHours(0, 1, 1, 1);
+      if (query?.overdue) {
         filter.returnDate = { $lte: today };
-        filter.status = { $ne: BorrowStatus.RETURNED }
+        filter.status = {
+          $nin: [
+            BorrowStatus.RETURNED,
+            BorrowStatus.CANCEL,
+            BorrowStatus.PENDING,
+          ],
+        };
+
+        if (query.type) {
+          filter.status = query.type;
+        }
       }
 
       if (query?.query) {
@@ -307,6 +311,44 @@ class BorrowService {
       },
     ]);
     return JSON.parse(JSON.stringify(history));
+  }
+
+  async acceptBorrow(borrowId: string) {
+    try {
+      const borrow: any = await this.getById(borrowId);
+      const result = this.update(borrowId, {
+        status: BorrowStatus.BORROWING,
+        realReturnDate: new Date(),
+      });
+
+      const book = await bookService.getById(borrow?.book);
+      await bookService.update(book?._id, {
+        status: BookStatus.BORROWING,
+      });
+
+      return JSON.parse(JSON.stringify(result));
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
+  async declineBorrow(borrowId: string) {
+    try {
+      const borrow: any = await this.getById(borrowId);
+      const result = this.update(borrowId, {
+        status: BorrowStatus.CANCEL,
+        realReturnDate: new Date(),
+      });
+
+      const book = await bookService.getById(borrow?.book);
+      await bookService.update(book?._id, {
+        status: BookStatus.AVAILABLE,
+      });
+
+      return JSON.parse(JSON.stringify(result));
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 }
 
