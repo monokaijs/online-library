@@ -13,6 +13,7 @@ import {
 } from "@ant-design/icons";
 import {
   Button,
+  ConfigProvider,
   DatePicker,
   Dropdown,
   Input,
@@ -30,6 +31,7 @@ import { getLibraryAction } from "../manage-locations/action";
 import { deleteBorrowAction, getBorrowAction } from "./action";
 import BorrowDetail from "./components/BorrowDetail";
 import { cancelBorrowAction } from "../manage-borrows/action";
+import vi_VN from "antd/lib/locale/vi_VN";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -86,7 +88,7 @@ function ManageBook() {
 
   useEffect(() => {
     loadData();
-  }, [cancel])
+  }, [cancel]);
 
   useEffect(() => {
     getLibraries();
@@ -299,24 +301,24 @@ function ManageBook() {
         </div>
 
         <div className={"flex justify-between gap-8"}>
-          <DatePicker
-            format={"MM/YYYY"}
-            picker="month"
-            placeholder="Chọn tháng"
-            onChange={(e) => {
-              if (e) {
-                createQueryString({
-                  month: (e?.month() ?? 0) + 1,
-                  year: e?.year(),
-                });
-              } else {
-                createQueryString({
-                  month: undefined,
-                  year: undefined,
-                });
-              }
-            }}
-          />
+            <DatePicker
+              format={"MM/YYYY"}
+              picker="month"
+              placeholder="Chọn tháng"
+              onChange={(e) => {
+                if (e) {
+                  createQueryString({
+                    month: (e?.month() ?? 0) + 1,
+                    year: e?.year(),
+                  });
+                } else {
+                  createQueryString({
+                    month: undefined,
+                    year: undefined,
+                  });
+                }
+              }}
+            />
         </div>
       </div>
       <Table

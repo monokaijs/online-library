@@ -200,7 +200,9 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
                     {
                       fieldName: "Tình trạng",
                       value:
-                        overdued < 0 && borrowing
+                        borrowRecord?.status === BorrowStatus.PENDING
+                          ? "Đang chờ duyệt"
+                          : overdued < 0 && borrowing
                           ? `Quá hẹn ${Math.abs(overdued)} ngày / Tiền phạt: ${(
                               Math.abs(overdued) * amount
                             )
