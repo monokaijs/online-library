@@ -19,14 +19,7 @@ import {
   TableOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import {
-  Avatar,
-  Badge,
-  Button,
-  Dropdown,
-  Layout,
-  Menu
-} from "antd";
+import { Avatar, Badge, Button, Dropdown, Layout, Menu } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useContext, useLayoutEffect, useState } from "react";
@@ -72,26 +65,28 @@ export default function DashboardLayoutContent(props: any) {
       disabled: isUserRole,
     },
     {
+      key: "books",
+      icon: <BookOutlined />,
+      label: <Link href={"/dashboard/books"}>Sách hiện có</Link>,
+      disabled: !isUserRole,
+    },
+    {
       key: "manage-books",
       icon: <BookOutlined />,
-      label: (
-        <Link
-          href={isUserRole ? "/dashboard/books" : "/dashboard/manage-books"}
-        >
-          {isUserRole ? "Sách hiện có" : "Quản lý sách"}
-        </Link>
-      ),
+      label: <Link href={"/dashboard/manage-books"}>Quản lý sách</Link>,
+      disabled: isUserRole,
+    },
+    {
+      key: "borrows",
+      icon: <RetweetOutlined />,
+      label: <Link href={"/dashboard/borrows"}>Lịch sử mượn</Link>,
+      disabled: !isUserRole,
     },
     {
       key: "manage-borrows",
       icon: <RetweetOutlined />,
-      label: (
-        <Link
-          href={isUserRole ? "/dashboard/borrows" : "/dashboard/manage-borrows"}
-        >
-          Mượn - trả sách
-        </Link>
-      ),
+      label: <Link href={"/dashboard/manage-borrows"}>Mượn - trả sách</Link>,
+      disabled: isUserRole,
     },
     {
       key: "manage-fines",
@@ -106,17 +101,15 @@ export default function DashboardLayoutContent(props: any) {
       disabled: isUserRole,
     },
     {
+      key: "locations",
+      icon: <HomeOutlined />,
+      label: <Link href={"/dashboard/locations"}>Hệ thống thư viện</Link>,
+    },
+    {
       key: "manage-locations",
       icon: <HomeOutlined />,
-      label: (
-        <Link
-          href={
-            isUserRole ? "/dashboard/locations" : "/dashboard/manage-locations"
-          }
-        >
-          {isUserRole ? "Hệ thống thư viện" : "Quản lý thư viện"}
-        </Link>
-      ),
+      label: <Link href={"/dashboard/manage-locations"}>Quản lý thư viện</Link>,
+      disabled: isUserRole,
     },
     {
       key: "settings",
