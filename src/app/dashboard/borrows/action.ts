@@ -3,17 +3,18 @@
 import { Borrow, BorrowDocument, BorrowStatus } from "@/lib/models/borrow.model";
 import { borrowService } from "@/lib/services/borrow.service";
 import { dbService } from "@/lib/services/db.service";
+import { getSession } from "@/lib/utils/getSession";
 
 export interface GetBookPayload {
   page?: number;
   limit?: number;
-  filter?: any
+  filter?: any;
 }
 
 export async function createBorrowAction(prev: any, payload: Borrow) {
   await dbService.connect();
   try {
-    payload.status = BorrowStatus.BORROWING;
+    payload.status = BorrowStatus.PENDING;
     await borrowService.create(payload);
     return {
       success: true,
@@ -29,28 +30,9 @@ export async function createBorrowAction(prev: any, payload: Borrow) {
 
 export async function getBorrowAction(_: any, payload: GetBookPayload) {
   await dbService.connect();
+  const session = await getSession();
   const { page = 1, limit = 20, filter } = payload;
-  return await borrowService.get(page, limit, filter);
-}
-
-export async function acceptBorrowAction(_prev: any, borrowId: string) {
-  await dbService.connect();
-  try {
-    const data = await borrowService.acceptBorrow(borrowId);
-    return { success: true, data, message: "Đã phê duyệt phiếu mượn" };
-  } catch (error: any) {
-    return { success: false, message: error.message };
-  }
-}
-
-export async function cancelBorrowAction(_prev: any, borrowId: string) {
-  await dbService.connect();
-  try {
-    const data = await borrowService.declineBorrow(borrowId);
-    return { success: true, data, message: "Đã từ chối phiếu mượn" };
-  } catch (error: any) {
-    return { success: false, message: error.message };
-  }
+  return await borrowService.get(page, limit, { ...filter, user: session.account?._id });
 }
 
 export async function deleteBorrowAction(_: any, _id: string) {
@@ -104,16 +86,6 @@ export async function getBorrowDetailAction(prev: any, _id: string) {
   try {
     const data = await borrowService.getDetail(_id);
     return { success: true, data };
-  } catch (error: any) {
-    return { success: false, message: error.message };
-  }
-}
-
-export async function returnBookAction(_prev: any, borrowId: string) {
-  await dbService.connect();
-  try {
-    const data = await borrowService.returnBook(borrowId);
-    return { success: true, data, message: "Phiếu mượn đã hoàn tất" };
   } catch (error: any) {
     return { success: false, message: error.message };
   }

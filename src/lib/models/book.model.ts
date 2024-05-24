@@ -8,6 +8,7 @@ export enum BookStatus {
   AVAILABLE = "available",
   OVERDUE = "overdue",
   BORROWING = "borrowing",
+  PENDING = "pending",
 }
 
 export interface Book {

@@ -1,18 +1,18 @@
 "use client";
 import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
+import BookStatusTag from "@/app/dashboard/manage-books/components/BookStatusTag";
 import { BookStatus } from "@/lib/models/book.model";
 import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Modal, Tag } from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import BookStatusTag from "../BookStatusTag";
 
 interface ViewBookModalProps {
   isOpen: boolean;
   onCancel: () => void;
   detail?: any;
-  deleteAction: any;
+  deleteAction?: any;
 }
 
 export default function ViewBookModal(props: ViewBookModalProps) {
@@ -41,7 +41,7 @@ export default function ViewBookModal(props: ViewBookModalProps) {
           { fieldName: "Thư viện", value: detail?.bookcase?.library?.name },
           {
             fieldName: "Trạng thái",
-            value: <BookStatusTag record={detail} />,
+            value:  <BookStatusTag record={detail}  />,
           },
           {
             fieldName: "Hạn mức mượn",
@@ -54,34 +54,36 @@ export default function ViewBookModal(props: ViewBookModalProps) {
         ]}
       />
 
-      <div className={"flex gap-9 mt-4 justify-end"}>
-        <Button
-          icon={<EditOutlined />}
-          onClick={() => {
-            router.push(`/dashboard/manage-books/update/${detail?._id}`);
-            onCancel();
-          }}
-        >
-          Sửa thông tin
-        </Button>
-        <Button
-          danger
-          icon={<DeleteOutlined />}
-          onClick={() => {
-            Modal.confirm({
-              title: "Hành động này không thể hoàn tác!",
-              content: `Xác nhận xóa sách`,
-              okText: "Xóa",
-              cancelText: "Hủy",
-              onOk: () => {
-                deleteAction(detail?._id);
-              },
-            });
-          }}
-        >
-          Xóa sách
-        </Button>
-      </div>
+      {deleteAction && (
+        <div className={"flex gap-9 mt-4 justify-end"}>
+          <Button
+            icon={<EditOutlined />}
+            onClick={() => {
+              router.push(`/dashboard/manage-books/update/${detail?._id}`);
+              onCancel();
+            }}
+          >
+            Sửa thông tin
+          </Button>
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => {
+              Modal.confirm({
+                title: "Hành động này không thể hoàn tác!",
+                content: `Xác nhận xóa sách`,
+                okText: "Xóa",
+                cancelText: "Hủy",
+                onOk: () => {
+                  deleteAction(detail?._id);
+                },
+              });
+            }}
+          >
+            Xóa sách
+          </Button>
+        </div>
+      )}
     </Modal>
   );
 }

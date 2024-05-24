@@ -1,16 +1,18 @@
 "use client";
 import useDebounce from "@/lib/hooks/useDebounce";
+import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 import { Book } from "@/lib/models/book.model";
 import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
 import { Location } from "@/lib/models/library.model";
 import { toast } from "@/lib/utils/toast";
 import {
+  CheckCircleOutlined,
   DeleteOutlined,
   EditOutlined,
-  CheckCircleOutlined,
-  SearchOutlined,
   EllipsisOutlined,
   EyeOutlined,
+  SearchOutlined,
+  CloseCircleOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -18,31 +20,25 @@ import {
   Dropdown,
   Input,
   Modal,
-  Popover,
   Select,
   Table,
   Tooltip,
   theme,
 } from "antd";
 import dayjs from "dayjs";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { getLibraryAction } from "../manage-locations/action";
 import {
+  acceptBorrowAction,
+  cancelBorrowAction,
   deleteBorrowAction,
   getBorrowAction,
   returnBookAction,
 } from "./action";
-import Status from "./components/BorrowStatus";
-import ViewBorrowModal from "./components/ViewBorrowModal";
-import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 import BorrowDetail from "./components/BorrowDetail";
+import Status from "./components/BorrowStatus";
 
 function ManageBook() {
   const { token } = theme.useToken();
@@ -101,6 +97,26 @@ function ManageBook() {
     toast(returnState);
     loadData();
   }, [returnState]);
+
+  const [accept, acceptBorrow] = useFormState(acceptBorrowAction, {
+    success: false,
+    message: "",
+  });
+
+  useEffect(() => {
+    toast(accept);
+    loadData();
+  }, [accept]);
+
+  const [cancel, cancelBorrow] = useFormState(cancelBorrowAction, {
+    success: false,
+    message: "",
+  });
+
+  useEffect(() => {
+    toast(cancel);
+    loadData();
+  }, [cancel]);
 
   useEffect(() => {
     getLibraries();
@@ -202,6 +218,121 @@ function ManageBook() {
       title: "Thao tác",
       key: "action",
       render: (item: any) => {
+        const items: any = [
+          {
+            icon: <CheckCircleOutlined />,
+            key: "done",
+            label: "Hoàn tất",
+            onClick: () => {
+              Modal.confirm({
+                title: "Hành động này không thể hoàn tác!",
+                content: `Hoàn thành lượt mượn`,
+                okText: "Xác nhận",
+                cancelText: "Hủy",
+                onOk: () => {
+                  returnBook(item._id);
+                },
+              });
+            },
+            disabled: item.status !== BorrowStatus.BORROWING,
+          },
+          {
+            icon: <CheckCircleOutlined />,
+            key: "accept",
+            label: "Phê duyệt",
+            onClick: () => {
+              Modal.confirm({
+                title: "Hành động này không thể hoàn tác!",
+                content: `Phê duyệt lượt mượn này`,
+                okText: "Xác nhận",
+                cancelText: "Hủy",
+                onOk: () => {
+                  acceptBorrow(item._id);
+                },
+              });
+            },
+            disabled: item.status !== BorrowStatus.PENDING,
+          },
+          {
+            icon: <CloseCircleOutlined />,
+            key: "cancel",
+            label: "Từ chối",
+            onClick: () => {
+              Modal.confirm({
+                title: "Hành động này không thể hoàn tác!",
+                content: `Từ chối lượt mượn này`,
+                okText: "Xác nhận",
+                cancelText: "Hủy",
+                onOk: () => {
+                  cancelBorrow(item._id);
+                },
+              });
+            },
+            disabled: item.status !== BorrowStatus.PENDING,
+          },
+          {
+            icon: <EyeOutlined />,
+            key: "view",
+            label: "Xem chi tiết",
+            onClick: () => {
+              setDetail(item);
+              // router.push(`/dashboard/manage-borrows/${item?._id}`);
+            },
+          },
+          {
+            icon: <EditOutlined />,
+            key: "edit",
+            label: "Cập nhật thông tin",
+            onClick: () => {
+              router.push(`/dashboard/manage-borrows/update/${item?._id}`);
+            },
+            disabled:
+              item.status !== BorrowStatus.BORROWING &&
+              item.status !== BorrowStatus.PENDING,
+          },
+          {
+            icon: <DeleteOutlined />,
+            key: "delete",
+            label: (
+              <div>
+                {item.status === BorrowStatus.BORROWING ? (
+                  <Tooltip title="Vui lòng hoàn thành lượt mượn">
+                    Xóa phiếu mượn
+                  </Tooltip>
+                ) : (
+                  "Xóa phiếu mượn"
+                )}
+              </div>
+            ),
+            onClick: () => {
+              Modal.confirm({
+                title: "Hành động này không thể hoàn tác!",
+                content: `Xác nhận xóa phiếu mượn`,
+                okText: "Xóa",
+                cancelText: "Hủy",
+                onOk: () => {
+                  deleteAction(item._id);
+                },
+              });
+            },
+            disabled:
+              item.status === BorrowStatus.BORROWING ||
+              item.status === BorrowStatus.PENDING,
+          },
+        ];
+
+        function insertBetween(array: any, element: any) {
+          return array.reduce((acc: any, current: any, index: any) => {
+            if (index < array.length - 1) {
+              return acc.concat(current, element);
+            } else {
+              return acc.concat(current);
+            }
+          }, []);
+        }
+
+        const dropdownItems = items.filter((item: any) => !item.disabled);
+
         return (
           <div
             onClick={(e) => {
@@ -210,82 +341,9 @@ function ManageBook() {
           >
             <Dropdown
               menu={{
-                items: [
-                  {
-                    icon: <CheckCircleOutlined />,
-                    key: "done",
-                    label: "Hoàn tất",
-                    onClick: () => {
-                      Modal.confirm({
-                        title: "Hành động này không thể hoàn tác!",
-                        content: `Hoàn thành lượt mượn`,
-                        okText: "Xác nhận",
-                        cancelText: "Hủy",
-                        onOk: () => {
-                          returnBook(item._id);
-                        },
-                      });
-                    },
-                    disabled: item.status !== BorrowStatus.BORROWING,
-                  },
-                  {
-                    type: "divider",
-                  },
-                  {
-                    icon: <EyeOutlined />,
-                    key: "view",
-                    label: "Xem chi tiết",
-                    onClick: () => {
-                      setDetail(item);
-                      // router.push(`/dashboard/manage-borrows/${item?._id}`);
-                    },
-                  },
-                  {
-                    type: "divider",
-                  },
-                  {
-                    icon: <EditOutlined />,
-                    key: "edit",
-                    label: "Cập nhật thông tin",
-                    onClick: () => {
-                      router.push(
-                        `/dashboard/manage-borrows/update/${item?._id}`
-                      );
-                    },
-                    disabled: item.status !== BorrowStatus.BORROWING,
-                  },
-                  {
-                    key: "d",
-                    type: "divider",
-                  },
-                  {
-                    icon: <DeleteOutlined />,
-                    key: "delete",
-                    label: (
-                      <div>
-                        {item.status === BorrowStatus.BORROWING ? (
-                          <Tooltip title="Vui lòng hoàn thành lượt mượn">
-                            Xóa phiếu mượn
-                          </Tooltip>
-                        ) : (
-                          "Xóa phiếu mượn"
-                        )}
-                      </div>
-                    ),
-                    onClick: () => {
-                      Modal.confirm({
-                        title: "Hành động này không thể hoàn tác!",
-                        content: `Xác nhận xóa phiếu mượn`,
-                        okText: "Xóa",
-                        cancelText: "Hủy",
-                        onOk: () => {
-                          deleteAction(item._id);
-                        },
-                      });
-                    },
-                    disabled: item.status === BorrowStatus.BORROWING,
-                  },
-                ],
+                items: insertBetween(dropdownItems, {
+                  type: "divider",
+                }),
               }}
               trigger={["click"]}
             >
@@ -333,6 +391,7 @@ function ManageBook() {
             <Select.Option value="borrowing">Đang mượn</Select.Option>
             <Select.Option value="returned">Đã trả</Select.Option>
             <Select.Option value="overdue">Quá hạn</Select.Option>
+            <Select.Option value="pending">Đang chờ</Select.Option>
           </Select>
           <Input
             className={"bg-input-group-after"}
