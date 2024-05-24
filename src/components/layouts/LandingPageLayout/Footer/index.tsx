@@ -27,7 +27,7 @@ export const supports = [
   {key: "support-policy", title: "Chính sách hỗ trợ", path: "#"},
   {key: "return-policy", title: "Chính sách đổi trả", path: "#"},
   {key: "privacy", title: "Chính sách bảo mật", path: "/privacy"},
-  {key: "terms", title: "Điều khoản dịch vụ", path: "term-of-services"},
+  {key: "terms", title: "Điều khoản dịch vụ", path: "/terms"},
 ]
 
 export default function Footer() {
