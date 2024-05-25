@@ -4,6 +4,9 @@ import {Button} from "antd";
 import LogoMain from "@/assets/figures/logo-main.png";
 import {Link as LinkS} from "react-scroll";
 import {useRouter} from "next/navigation";
+import {useContext} from "react";
+import {SessionContext} from "@/components/shared/SessionContext";
+import {RoleEnum} from "@/lib/models/account.model";
 
 export const navigationConfigsLandingPage = [
   {key: "home", title: "Trang chủ", path: "home"},
@@ -15,6 +18,8 @@ export const navigationConfigsLandingPage = [
 
 export default function Header() {
   const router = useRouter();
+  const {account, signedIn} = useContext(SessionContext);
+  const isUserRole = account?.role === RoleEnum.USER;
 
   return (
     <div className={styles.wrapper}>
@@ -35,15 +40,32 @@ export default function Header() {
             </LinkS>
           ))}
         </div>
-        <div className="flex items-center gap-8 xl-mr-3">
-          <Button
-            onClick={() => router.push("/auth/login")}
-            className={styles.loginButton}
-            size="large" type="text">Đăng nhập</Button>
-          <Button
-            onClick={() => router.push("/auth/register")}
-            className={styles.registerButton} size="large"
-            type="primary">Đăng ký</Button>
+        <div className="flex items-center gap-4 xl-mr-3">
+          {signedIn ? (
+            <Button
+              className={styles.registerButton}
+              onClick={() => router.push("/dashboard")}
+              size="large" type="primary"
+            >
+              {isUserRole ? "Tài khoản" : "Quản lý"}
+            </Button>
+          ) : <>
+            <Button
+              onClick={() => router.push("/auth/login")}
+              className={styles.loginButton}
+              size="large" type="text"
+            >
+              Đăng nhập
+            </Button>
+            <Button
+              onClick={() => router.push("/auth/register")}
+              className={styles.registerButton}
+              size="large"
+              type="primary"
+            >
+              Đăng ký
+            </Button>
+          </>}
         </div>
       </div>
     </div>

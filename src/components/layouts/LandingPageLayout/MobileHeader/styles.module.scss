@@ -49,17 +49,6 @@
 
     .active {
       color: #4A6F73 !important;
-      &:before {
-        position: absolute;
-        content: "";
-        height: 3px;
-        width: 20px;
-        background-color: #4A6F73;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        margin: 0 auto;
-      }
     }
 
     .closeButton {
@@ -86,6 +75,7 @@
   .loginButton {
     font-size: 14px !important;
     color: #4A6F73;
+    margin-bottom: 4px;
 
     &:hover {
       color: #4A6F73 !important;
