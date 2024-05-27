@@ -155,8 +155,8 @@ function ManageBook() {
       key: "returnDate",
       align: "center",
       render: (item: Borrow) => {
-        const diff = getDaysDiff(item?.returnDate);
-        return diff < 0 && item.status == BorrowStatus.BORROWING
+        const diff = getDaysDiff(item?.returnDate, item?.realReturnDate);
+        return diff < 0
           ? `Quá ${Math.abs(diff)} ngày`
           : "-";
       },
@@ -178,7 +178,7 @@ function ManageBook() {
           amount = 25000;
         }
 
-        return days < 0 && item.status == BorrowStatus.BORROWING
+        return days < 0
           ? (Math.abs(days) * amount)
               ?.toLocaleString("it-IT", {
                 style: "currency",

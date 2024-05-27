@@ -208,10 +208,14 @@ class BorrowService {
         "user",
         {
           path: "book",
-          populate: {
-            path: "bookcase",
-            populate: "library",
-          },
+          populate: [
+            {
+              path: "bookcase",
+              populate: "library",
+            },
+            "borrowRecord",
+            "library",
+          ],
         },
       ]);
       return JSON.parse(JSON.stringify(data));
@@ -318,7 +322,6 @@ class BorrowService {
       const borrow: any = await this.getById(borrowId);
       const result = this.update(borrowId, {
         status: BorrowStatus.BORROWING,
-        realReturnDate: new Date(),
       });
 
       const book = await bookService.getById(borrow?.book);

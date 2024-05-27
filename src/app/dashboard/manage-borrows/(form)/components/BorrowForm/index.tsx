@@ -103,7 +103,7 @@ function BorrowForm(props: BorrowFormProps) {
       ...data,
       filter: {
         name: bookDebounce,
-        status: BookStatus.AVAILABLE,
+        status: action === FormAction.CREATE ? BookStatus.AVAILABLE : undefined,
         library: searchParams.get("library"),
       },
     });
@@ -363,15 +363,17 @@ function BorrowForm(props: BorrowFormProps) {
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
           >
-            {books?.data.map((book: Book) => (
-              <Select.Option
-                label={book?.name}
-                key={book?._id}
-                value={JSON.stringify(book)}
-              >
-                {book?.name}
-              </Select.Option>
-            ))}
+            {books?.data.map((book: Book) => {
+              return (
+                <Select.Option
+                  label={book?.name}
+                  key={book?._id}
+                  value={JSON.stringify(book)}
+                >
+                  {book?.name}
+                </Select.Option>
+              );
+            })}
           </Select>
         </Form.Item>
         <Row gutter={18}>

@@ -79,7 +79,7 @@ export default function DashboardLayoutContent(props: any) {
     {
       key: "borrows",
       icon: <RetweetOutlined />,
-      label: <Link href={"/dashboard/borrows"}>Lịch sử mượn</Link>,
+      label: <Link href={"/dashboard/borrows"}>Thông tin cá nhân</Link>,
       disabled: !isUserRole,
     },
     {
