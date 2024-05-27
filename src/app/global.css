@@ -65,3 +65,19 @@ body {
 .animate-loop-scroll-right {
   animation: loop-scroll-right 80s linear infinite
 }
+
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 0;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(80, 79, 79, 0.2);
+  border-radius: 10px;
+}
