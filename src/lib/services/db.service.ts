@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { AccountModel, RoleEnum } from '@/lib/models/account.model';
 import { hashSync } from 'bcryptjs';
-import {ApiError} from "@/lib/common/errors/api.error";
 import {
   appEnv,
   DEFAULT_ACCOUNT_EMAIL,
@@ -16,7 +15,11 @@ if (!cached) {
 }
 
 class DbService {
+  connected: boolean = false;
   async connect() {
+    // Silently close connection
+    if (!appEnv.base.mongoUri) return;
+
     if (cached.conn) {
       return cached.conn;
     }
@@ -41,7 +44,7 @@ class DbService {
     }
 
     await DbService.generateDefaultAccount();
-
+    this.connected = true;
     return cached.conn;
   }
 
@@ -54,7 +57,7 @@ class DbService {
           email: DEFAULT_ACCOUNT_EMAIL,
           password: hashSync(DEFAULT_ACCOUNT_PASSWORD, 10),
           roles: RoleEnum.ADMIN,
-          isActivated: true,
+          status: 'verified',
         });
       } catch (e) {
         console.error(e);

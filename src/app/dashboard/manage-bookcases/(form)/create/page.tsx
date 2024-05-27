@@ -1,6 +1,9 @@
 import { FormAction } from "@/constants/app.constant";
 import BookcaseForm from "../components/BookcaseForm";
+import {Suspense} from "react";
 
 export default async function CreateBookCasePage() {
-  return <BookcaseForm action={FormAction.CREATE} />;
+  return <Suspense>
+    <BookcaseForm action={FormAction.CREATE} />
+  </Suspense>;
 }

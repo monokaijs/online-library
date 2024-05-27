@@ -6,6 +6,7 @@ import {Col, Input, Row, Typography} from "antd";
 import {InstagramOutlined, SendOutlined, TwitterOutlined, YoutubeFilled} from "@ant-design/icons";
 import {Link as LinkS} from "react-scroll/modules";
 import {Facebook} from "@/components/icons/Facebook";
+import Link from "next/link";
 
 const socials = [
   {key: "instagram", name: "Instagram", url: "https://www.instagram.com/dfree.book", icon: <InstagramOutlined/>},
@@ -16,8 +17,8 @@ const socials = [
 
 export const pages = [
   {key: "home", title: "Trang chủ", path: "home"},
-  {key: "introduction", title: "Về D Free Books", path: "introduction"},
-  {key: "book", title: "Sách", path: "book"},
+  {key: "introduction", title: "Về D Free Book", path: "introduction"},
+  {key: "book", title: "Sách", path: "books"},
   {key: "activities", title: "Hoạt động", path: "activities"},
   {key: "contact", title: "Liên hệ", path: "contact"}
 ]
@@ -25,11 +26,11 @@ export const pages = [
 export const supports = [
   {key: "support-policy", title: "Chính sách hỗ trợ", path: "#"},
   {key: "return-policy", title: "Chính sách đổi trả", path: "#"},
-  {key: "Security", title: "Bảo mật", path: "#"},
-  {key: "information", title: "Thông tin", path: "#"},
+  {key: "privacy", title: "Chính sách bảo mật", path: "/legal/privacy"},
+  {key: "terms", title: "Điều khoản dịch vụ", path: "/legal/terms"},
 ]
 
-export default function LandingPageFooter() {
+export default function Footer() {
   return (
     <div className={styles.wrapper}>
       <Row className={styles.footer} gutter={[32, 32]}>
@@ -79,17 +80,12 @@ export default function LandingPageFooter() {
             <div className="flex flex-col gap-3">
               {
                 supports.map(item => (
-                  <LinkS
+                  <Link
                     className={styles.textHover}
-                    key={item.key}
-                    to={item.path}
-                    spy
-                    smooth
-                    offset={0}
-                    duration={500}
+                    href={item.path}
                   >
                     {item.title}
-                  </LinkS>
+                  </Link>
                 ))
               }
             </div>

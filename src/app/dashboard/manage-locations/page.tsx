@@ -15,7 +15,6 @@ import dayjs from "dayjs";
 function ManageLocations() {
   const { token } = theme.useToken();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [detail, setDetail] = useState<Location>();
 
   const [state, getLibrary] = useFormState(getLibraryAction, {

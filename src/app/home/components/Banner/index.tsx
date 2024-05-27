@@ -4,8 +4,11 @@ import styles from "./styles.module.scss";
 import {Typography} from "antd";
 import {BookOpenCover} from "@/components/icons/BookOpenCover";
 import Link from "next/link";
+import {useContext} from "react";
+import {SessionContext} from "@/components/shared/SessionContext";
 
 export default function Banner() {
+  const { signedIn} = useContext(SessionContext);
 
   return (
     <div id="home">
@@ -24,7 +27,7 @@ export default function Banner() {
               viện. Khám phá hàng ngàn đầu sách thuộc nhiều thể loại khác nhau và tận hưởng niềm đam mê đọc sách bất cứ
               lúc nào, bất cứ nơi đâu.
             </p>
-            <Link href="/auth/register" className={styles.registerButton}>Đăng ký</Link>
+            <Link href={signedIn ? "/dashboard" : "/auth/register"} className={styles.registerButton}>Đăng ký</Link>
           </div>
           <div className={`${styles.contentRight} xl-hidden`}>
             <img

@@ -3,11 +3,11 @@ import { googleConnectAction } from "@/app/dashboard/security/actions";
 import { GoogleOutlined } from "@ant-design/icons";
 import { useGoogleLogin } from "@react-oauth/google";
 import { Button, Divider, Form, Input, message } from "antd";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import styles from "./LoginForm.module.scss";
 import { toast } from "@/lib/utils/toast";
+import {useSearchParams} from "next/navigation";
 
 interface LoginFormProps {
   onSuccess?: () => any;
@@ -19,6 +19,7 @@ export default function LoginForm(props: LoginFormProps) {
   const [state, formAction] = useFormState(loginAction, {
     success: false,
   });
+
   useEffect(() => {
     if (state?.message)
       message[state?.success ? "success" : "error"](state?.message);
@@ -40,7 +41,7 @@ export default function LoginForm(props: LoginFormProps) {
 
   const login = useGoogleLogin({
     flow: "auth-code",
-    onSuccess: ({ code }) => gConnectAction({ code: code, type: "google" }),
+    onSuccess: ({ code }) => gConnectAction({ code: code, type: "google", redirect_uri:"postmessage" }),
     onNonOAuthError: () => {
       setLoading(false);
     },
