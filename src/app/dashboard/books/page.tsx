@@ -3,21 +3,16 @@ import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
 import { Book, BookStatus } from "@/lib/models/book.model";
 import { Bookcase } from "@/lib/models/bookcase.model";
 import { Location } from "@/lib/models/library.model";
-import { getDaysDiff } from "@/lib/utils/getDaysDiff";
-import {
-  BookOutlined,
-  EllipsisOutlined,
-  EyeOutlined
-} from "@ant-design/icons";
-import { Button, Dropdown, Table, Tag } from "antd";
+import { BookOutlined, EllipsisOutlined, EyeOutlined } from "@ant-design/icons";
+import { Button, Dropdown, Table } from "antd";
 import dayjs from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { getBookAction } from "../manage-books/action";
+import BookStatusTag from "../manage-books/components/BookStatusTag";
 import ManageBookHeader from "./components/ManageBookHeader";
 import ViewBookModal from "./components/ViewBookModal";
-import BookStatusTag from "../manage-books/components/BookStatusTag";
 
 function ManageBook() {
   const [loading, setLoading] = useState(true);

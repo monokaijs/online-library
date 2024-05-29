@@ -5,6 +5,7 @@ import {
   BorrowDocument,
   BorrowModel,
   BorrowStatus,
+  PaymentStatus,
 } from "@/lib/models/borrow.model";
 import dayjs from "dayjs";
 import { FilterQuery } from "mongoose";
@@ -99,10 +100,14 @@ class BorrowService {
             BorrowStatus.PENDING,
           ],
         };
+      }
 
-        if (query.type) {
-          filter.status = query.type;
-        }
+      if (query.paymentStatus === PaymentStatus.PAID) {
+        filter.paymentStatus = PaymentStatus.PAID;
+      }
+
+      if (query.paymentStatus === PaymentStatus.UNPAID) {
+        filter.paymentStatus = undefined;
       }
 
       if (query?.query) {
@@ -254,16 +259,22 @@ class BorrowService {
 
   async getAllByAccount(_id: string) {
     try {
-      return BorrowModel.find({ user: _id, isDelete: false }).populate([
-        "user",
-        {
-          path: "book",
-          populate: {
-            path: "bookcase",
-            populate: "library",
+      const history = await BorrowModel.find({ user: _id, isDelete: false })
+        .populate([
+          "user",
+          {
+            path: "book",
+            populate: [
+              {
+                path: "bookcase",
+                populate: "library",
+              },
+              "library",
+            ],
           },
-        },
-      ]);
+        ])
+        .sort({ createdAt: -1 });
+      return JSON.parse(JSON.stringify(history));
     } catch (error: any) {
       throw new Error(error.message);
     }
@@ -286,9 +297,9 @@ class BorrowService {
   async returnBook(borrowId: string) {
     try {
       const borrow: any = await this.getById(borrowId);
-      const overdued = getDaysDiff(borrow?.returnDate) < 0;
+      const isLate = getDaysDiff(borrow).isLate;
       const result = this.update(borrowId, {
-        status: overdued ? BorrowStatus.OVERDUE : BorrowStatus.RETURNED,
+        status: isLate ? BorrowStatus.OVERDUE : BorrowStatus.RETURNED,
         realReturnDate: new Date(),
       });
 
@@ -303,17 +314,40 @@ class BorrowService {
     }
   }
 
+  async payFine(borrowId: string) {
+    try {
+      // const borrow: any = await this.getById(borrowId);
+      // const book = await bookService.getById(borrow?.book);
+      // if (book?.status === BookStatus.BORROWING) {
+      //   throw Error("Vui lòng hoàn thành lượt mượn trước");
+      // }
+
+      const result = await borrowService.update(borrowId, {
+        paymentStatus: PaymentStatus.PAID,
+      });
+
+      return JSON.parse(JSON.stringify(result));
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
   async getAllByBookId(bookId: string) {
-    const history = await BorrowModel.find({ book: bookId }).populate([
-      "user",
-      {
-        path: "book",
-        populate: {
-          path: "bookcase",
-          populate: "library",
+    const history = await BorrowModel.find({ book: bookId })
+      .populate([
+        "user",
+        {
+          path: "book",
+          populate: [
+            {
+              path: "bookcase",
+              populate: "library",
+            },
+            "library",
+          ],
         },
-      },
-    ]);
+      ])
+      .sort({ createdAt: -1 });
     return JSON.parse(JSON.stringify(history));
   }
 

@@ -1,16 +1,20 @@
 "use client";
 import useDebounce from "@/lib/hooks/useDebounce";
+import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
+import { useDisclosure } from "@/lib/hooks/useDisclosure";
 import { Book } from "@/lib/models/book.model";
-import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
+import { Borrow, BorrowStatus, PaymentStatus } from "@/lib/models/borrow.model";
 import { Location } from "@/lib/models/library.model";
+import { fineCaculate } from "@/lib/utils/fineCaculate";
+import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 import { toast } from "@/lib/utils/toast";
 import {
+  CheckCircleOutlined,
   DeleteOutlined,
   EditOutlined,
-  CheckCircleOutlined,
-  SearchOutlined,
   EllipsisOutlined,
   EyeOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -18,35 +22,22 @@ import {
   Dropdown,
   Input,
   Modal,
-  Popover,
   Select,
   Table,
   Tag,
   Tooltip,
+  Typography,
   theme,
 } from "antd";
-import dayjs from "dayjs";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { getLibraryAction } from "../manage-locations/action";
-import {
-  deleteBorrowAction,
-  getBorrowAction,
-  returnBookAction,
-} from "./action";
-import Status from "./components/BorrowStatus";
-import ViewBorrowModal from "./components/ViewBorrowModal";
-import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
-import BorrowDetail from "../manage-borrows/components/BorrowDetail";
-import { getDaysDiff } from "@/lib/utils/getDaysDiff";
+import { deleteBorrowAction, getBorrowAction, payFineAction } from "./action";
+import BorrowDetail from "./components/BorrowDetail";
+import EditBorrow from "./components/EditBorrrow";
 
-function ManageBook() {
+function ManageFines() {
   const { token } = theme.useToken();
   const router = useRouter();
   const pathname = usePathname();
@@ -55,6 +46,11 @@ function ManageBook() {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState(searchParams.get("query") ?? "");
   const queryDebounce = useDebounce(query);
+  const editModal = useDisclosure();
+  const viewDetailModal = useDisclosure();
+  const {
+    token: { colorPrimary },
+  } = theme.useToken();
 
   useEffect(() => {
     createQueryString({ query: query, page: undefined });
@@ -94,15 +90,15 @@ function ManageBook() {
     message: "",
   });
 
-  const [returnState, returnBook] = useFormState(returnBookAction, {
+  const [payState, payFine] = useFormState(payFineAction, {
     success: false,
     message: "",
   });
 
   useEffect(() => {
-    toast(returnState);
+    toast(payState);
     loadData();
-  }, [returnState]);
+  }, [payState]);
 
   useEffect(() => {
     getLibraries();
@@ -115,7 +111,7 @@ function ManageBook() {
       page: Number(searchParams.get("page") ?? 1),
       filter: {
         query: searchParams.get("query") ?? "",
-        type: searchParams.get("type") ?? "",
+        paymentStatus: searchParams.get("paymentStatus") ?? "",
         library: searchParams.get("library") ?? "",
         month: searchParams.get("month"),
         year: searchParams.get("year"),
@@ -169,96 +165,46 @@ function ManageBook() {
       key: "library",
       render: (library: Location) => library?.name,
     },
-    // {
-    //   title: "Thư viện",
-    //   dataIndex: "library",
-    //   key: "library",
-    //   align: "center",
-    //   render: (item: Location) => item?.name,
-    // },
     {
       title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       align: "center",
-      // render: ({ library }: { library: Library }) => {
-      //   return <div>{library.name}</div>;
-      // },
     },
-    // {
-    //   title: "Ngày mượn",
-    //   dataIndex: "borrowDate",
-    //   key: "borrowDate",
-    //   align: "center",
-    //   render: (item: string) => dayjs(item).format("DD/MM/YYYY"),
-    // },
-    // {
-    //   title: "Ngày hẹn",
-    //   dataIndex: "returnDate",
-    //   key: "returnDate",
-    //   align: "center",
-    //   render: (item: string) => dayjs(item).format("DD/MM/YYYY"),
-    // },
-    // {
-    //   title: "Ngày trả thực tế",
-    //   dataIndex: "realReturnDate",
-    //   key: "realReturnDate",
-    //   align: "center",
-    //   render: (item: string) =>
-    //     !!item ? dayjs(item).format("DD/MM/YYYY") : "-",
-    // },
     {
       title: "Quá hẹn",
       key: "returnDate",
       align: "center",
-      render: (item: Borrow) => {
-        if (item.status === BorrowStatus.BORROWING) {
-          return Math.abs(getDaysDiff(item?.returnDate)) + " ngày";
-        } else {
-          return (
-            Math.abs(getDaysDiff(item.returnDate, item.realReturnDate)) +
-            " ngày"
-          );
-        }
-      },
+      render: (item: Borrow) => getDaysDiff(item).label,
     },
     {
       title: "Tiền phạt",
       key: "returnDate",
       align: "center",
-      render: (item: Borrow) => {
-        const days = Math.abs(
-          getDaysDiff(item.returnDate, item.realReturnDate)
-        );
-        let amount = 0;
-        if (days < 15) {
-          amount = 1000;
-        } else if (days < 50) {
-          amount = 15000;
-        } else if (days < 100) {
-          amount = 20000;
-        } else {
-          amount = 25000;
-        }
-
-        return (days * amount)
-          ?.toLocaleString("it-IT", {
-            style: "currency",
-            currency: "VND",
-          })
-          ?.replace("VND", "đ");
-      },
+      render: (item: Borrow) =>
+        item.hashFineAmount != undefined ? (
+          <Typography.Text style={{ color: colorPrimary }}>
+            {item.hashFineAmount
+              ?.toLocaleString("it-IT", {
+                style: "currency",
+                currency: "VND",
+              })
+              ?.replace("VND", "đ")}
+          </Typography.Text>
+        ) : (
+          fineCaculate(item).label
+        ),
     },
     {
       title: "Trạng thái",
-      key: "status",
-      dataIndex: "status",
+      key: "paymentStatus",
+      dataIndex: "paymentStatus",
       align: "center",
       render: (item: string) =>
-        item === BorrowStatus.BORROWING ? (
-          <Tag color="orange">Chưa thu</Tag>
+        item === PaymentStatus.PAID ? (
+          <Tag color="green">Đã nộp</Tag>
         ) : (
-          <Tag color="green">Đã thu</Tag>
+          <Tag color="orange">Chưa nộp</Tag>
         ),
     },
     {
@@ -277,19 +223,31 @@ function ManageBook() {
                   {
                     icon: <CheckCircleOutlined />,
                     key: "done",
-                    label: "Hoàn tất",
+                    label: (
+                      <div>
+                        {item.status === BorrowStatus.BORROWING ? (
+                          <Tooltip title="Vui lòng hoàn thành lượt mượn">
+                            Đã thu tiền
+                          </Tooltip>
+                        ) : (
+                          "Đã thu tiền"
+                        )}
+                      </div>
+                    ),
                     onClick: () => {
                       Modal.confirm({
                         title: "Hành động này không thể hoàn tác!",
-                        content: `Hoàn thành lượt mượn`,
+                        content: `Hoàn thành phiếu phạt`,
                         okText: "Xác nhận",
                         cancelText: "Hủy",
                         onOk: () => {
-                          returnBook(item._id);
+                          payFine(item._id);
                         },
                       });
                     },
-                    disabled: item.status !== BorrowStatus.BORROWING,
+                    disabled:
+                      item.status === BorrowStatus.BORROWING ||
+                      item.paymentStatus === PaymentStatus.PAID,
                   },
                   {
                     type: "divider",
@@ -300,7 +258,8 @@ function ManageBook() {
                     label: "Xem chi tiết",
                     onClick: () => {
                       setDetail(item);
-                      // router.push(`/dashboard/manage-borrows/${item?._id}`);
+
+                      viewDetailModal.onOpen();
                     },
                   },
                   {
@@ -309,13 +268,12 @@ function ManageBook() {
                   {
                     icon: <EditOutlined />,
                     key: "edit",
-                    label: "Cập nhật thông tin",
+                    label: "Sửa phiếu phạt",
                     onClick: () => {
-                      router.push(
-                        `/dashboard/manage-borrows/update/${item?._id}`
-                      );
+                      setDetail(item);
+                      editModal.onOpen();
                     },
-                    disabled: item.status !== BorrowStatus.BORROWING,
+                    disabled: item.paymentStatus === PaymentStatus.PAID,
                   },
                   {
                     key: "d",
@@ -328,10 +286,10 @@ function ManageBook() {
                       <div>
                         {item.status === BorrowStatus.BORROWING ? (
                           <Tooltip title="Vui lòng hoàn thành lượt mượn">
-                            Xóa phiếu mượn
+                            Xóa phiếu phạt
                           </Tooltip>
                         ) : (
-                          "Xóa phiếu mượn"
+                          "Xóa phiếu phạt"
                         )}
                       </div>
                     ),
@@ -389,13 +347,13 @@ function ManageBook() {
             defaultValue={searchParams.get("status") ?? "all"}
             onChange={(e) => {
               createQueryString({
-                type: e == "all" ? "" : e,
+                paymentStatus: e == "all" ? "" : e,
               });
             }}
           >
             <Select.Option value="all">Tất cả</Select.Option>
-            <Select.Option value="overdue">Đã thu</Select.Option>
-            <Select.Option value="borrowing">Chưa thu</Select.Option>
+            <Select.Option value="paid">Đã nộp</Select.Option>
+            <Select.Option value="unpaid">Chưa nộp</Select.Option>
           </Select>
           <DatePicker
             format={"MM/YYYY"}
@@ -452,23 +410,15 @@ function ManageBook() {
           onClick: () => {
             // router.push(`/dashboard/manage-borrows/${record?._id}`);
             setDetail(record);
+            viewDetailModal.onOpen();
           },
         })}
       />
-      {/* <ViewBorrowModal
-        isOpen={!!detail}
-        onCancel={() => {
-          setDetail(undefined);
-        }}
-        detail={detail}
-        deleteAction={(arg: any) => {
-          deleteAction(arg);
-        }}
-      /> */}
       <BorrowDetail
-        isOpen={!!detail}
+        isOpen={viewDetailModal.isOpen}
         onCancel={() => {
           setDetail(undefined);
+          viewDetailModal.onClose();
         }}
         detail={detail}
         deleteAction={(arg: any) => {
@@ -476,8 +426,17 @@ function ManageBook() {
         }}
         loadData={loadData}
       />
+      <EditBorrow
+        isOpen={editModal.isOpen}
+        onCancel={() => {
+          setDetail(undefined);
+          editModal.onClose();
+        }}
+        detail={detail}
+        loadData={loadData}
+      />
     </div>
   );
 }
 
-export default ManageBook;
+export default ManageFines;

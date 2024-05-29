@@ -6,7 +6,7 @@ import React from "react";
 export default function BookStatusTag({ record }: { record: Book }) {
   const overdued =
     record.status === BookStatus.BORROWING
-      ? getDaysDiff(record.borrowRecord?.returnDate) < 0
+      ? getDaysDiff(record?.borrowRecord).isLate
       : false;
 
   const status: any = {

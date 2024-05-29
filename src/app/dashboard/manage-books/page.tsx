@@ -19,7 +19,6 @@ import { useFormState } from "react-dom";
 import { deleteBookAction, getBookAction } from "./action";
 import ManageBookHeader from "./components/ManageBookHeader";
 import ViewBookModal from "./components/ViewBookModal";
-import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 import BookStatusTag from "./components/BookStatusTag";
 
 function ManageBook() {

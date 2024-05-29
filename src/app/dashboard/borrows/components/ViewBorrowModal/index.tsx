@@ -33,7 +33,7 @@ export default function ViewBorrowModal(props: ViewBorrowModalProps) {
           { fieldName: "Mã sách", value: detail?.isbn },
           { fieldName: "Thể loại", value: detail?.bookcase?.category },
           { fieldName: "Kệ sách", value: detail?.bookcase?.position },
-          { fieldName: "Thư viện", value: detail?.bookcase?.library?.name },
+          { fieldName: "Thư viện", value: detail?.library?.name },
           { fieldName: "Trạng thái", value: detail?.status },
           {
             fieldName: "Hạn mức mượn",

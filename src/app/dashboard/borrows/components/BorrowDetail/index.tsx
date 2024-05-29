@@ -1,26 +1,25 @@
 import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
-import "@/app/dashboard/manage-borrows/(form)/[id]/style.css";
 import {
   getBorrowDetailAction,
   returnBookAction,
 } from "@/app/dashboard/manage-borrows/action";
+import Status from "@/app/dashboard/manage-borrows/components/BorrowStatus";
 import UserRole from "@/components/shared/UserRole";
 import { Book } from "@/lib/models/book.model";
 import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
+import { fineCaculate } from "@/lib/utils/fineCaculate";
 import { toast } from "@/lib/utils/toast";
-import { Button, Card, Flex, Image, Modal, Spin, Typography } from "antd";
+import { Flex, Image, Modal, Spin, Typography } from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
-import { getDaysDiff } from "@/lib/utils/getDaysDiff";
-import Status from "@/app/dashboard/manage-borrows/components/BorrowStatus";
 
 interface ViewBorrowModalProps {
   isOpen: boolean;
   onCancel: () => void;
   detail?: any;
-  deleteAction: any;
+  deleteAction?: any;
   loadData: any;
 }
 
@@ -65,17 +64,7 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
   const book: Book | undefined = state?.data?.borrowRecord?.book;
   const analysis: any = state?.data?.analysis;
   const borrowing = borrowRecord?.status === BorrowStatus.BORROWING;
-  const overdued = getDaysDiff(borrowRecord?.returnDate);
-  let amount = 0;
-  if (overdued < 15) {
-    amount = 1000;
-  } else if (overdued < 50) {
-    amount = 15000;
-  } else if (overdued < 100) {
-    amount = 20000;
-  } else {
-    amount = 25000;
-  }
+  const { amount, label, isLate, diff } = fineCaculate(borrowRecord);
 
   return (
     <Modal
@@ -108,8 +97,6 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
               <Typography.Title level={4} className="ma-0">
                 Thông tin lượt mượn
               </Typography.Title>
-
-              {borrowRecord && <Status data={borrowRecord} />}
             </Flex>
             <Flex gap={20} className="mt-6">
               <Image
@@ -194,21 +181,14 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
                     },
                     {
                       fieldName: "Thư viện",
-                      value: book?.bookcase?.library?.name,
+                      value: book?.library?.name,
                     },
                     { fieldName: "Ghi chú", value: borrowRecord?.note },
                     {
                       fieldName: "Tình trạng",
                       value:
-                        overdued < 0 && borrowing
-                          ? `Quá hẹn ${Math.abs(overdued)} ngày / Tiền phạt: ${(
-                              Math.abs(overdued) * amount
-                            )
-                              ?.toLocaleString("it-IT", {
-                                style: "currency",
-                                currency: "VND",
-                              })
-                              ?.replace("VND", "đ")}`
+                        isLate && borrowing
+                          ? `Quá hẹn ${diff} ngày / Tiền phạt: ${amount}`
                           : borrowing
                           ? "Đang mượn"
                           : "Đã trả",

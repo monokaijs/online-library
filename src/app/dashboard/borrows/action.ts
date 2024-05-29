@@ -1,6 +1,11 @@
 "use server";
 
-import { Borrow, BorrowDocument, BorrowStatus } from "@/lib/models/borrow.model";
+import {
+  Borrow,
+  BorrowDocument,
+  BorrowStatus,
+} from "@/lib/models/borrow.model";
+import accountService from "@/lib/services/account.service";
 import { borrowService } from "@/lib/services/borrow.service";
 import { dbService } from "@/lib/services/db.service";
 import { getSession } from "@/lib/utils/getSession";
@@ -32,7 +37,27 @@ export async function getBorrowAction(_: any, payload: GetBookPayload) {
   await dbService.connect();
   const session = await getSession();
   const { page = 1, limit = 20, filter } = payload;
-  return await borrowService.get(page, limit, { ...filter, user: session.account?._id });
+  return await borrowService.get(page, limit, {
+    ...filter,
+    user: session.account?._id,
+  });
+}
+
+export async function getProfileAction(_prev: any) {
+  await dbService.connect();
+  const session = await getSession();
+  try {
+    return {
+      data: await accountService.getAccountDetail(session.account?._id),
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+      data: undefined,
+    };
+  }
 }
 
 export async function deleteBorrowAction(_: any, _id: string) {

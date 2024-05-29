@@ -4,7 +4,7 @@ import { AccountModel } from "@/lib/models/account.model";
 import { BookModel } from "@/lib/models/book.model";
 import { Borrow, BorrowModel, BorrowStatus } from "@/lib/models/borrow.model";
 import { dbService } from "@/lib/services/db.service";
-import { getDaysDiff } from "@/lib/utils/getDaysDiff";
+import { fineCaculate } from "@/lib/utils/fineCaculate";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
@@ -122,9 +122,8 @@ export async function getDashboard(prev: any, payload: Props) {
     const books = await BookModel.aggregate(aggregationPipeline);
     const borrows = await BorrowModel.aggregate(aggregationPipeline);
 
-    
     const today = new Date();
-    today.setHours(0, 1, 1, 1)
+    today.setHours(0, 1, 1, 1);
     const overdue = await BorrowModel.aggregate([
       {
         $match: {
@@ -295,25 +294,9 @@ export async function getDashboard(prev: any, payload: Props) {
       if (fine.items) {
         const total = fine.items?.reduce(
           (sum: any, borrow: Partial<Borrow>) => {
-            const returnDate = dayjs(borrow.returnDate);
-            if (returnDate.isValid()) {
-              const days = Math.abs(Math.ceil(getDaysDiff(returnDate)));
-
-              let amount = 0;
-              if (days < 15) {
-                amount = 1000;
-              } else if (days < 50) {
-                amount = 15000;
-              } else if (days < 100) {
-                amount = 20000;
-              } else {
-                amount = 25000;
-              }
-
-              return sum + days * amount;
-            } else {
-              return sum;
-            }
+            return sum + borrow.hashFineAmount != undefined
+              ? borrow.hashFineAmount
+              : fineCaculate(borrow).amount;
           },
           0
         );

@@ -11,6 +11,11 @@ export enum BorrowStatus {
   CANCEL = "cancel",
 }
 
+export enum PaymentStatus {
+  PAID = "paid",
+  UNPAID = "unpaid"
+}
+
 export interface Borrow {
   _id?: any;
   user?: Account;
@@ -26,6 +31,9 @@ export interface Borrow {
   address: string;
   status: BorrowStatus;
   isDelete?: boolean;
+  paymentStatus: PaymentStatus;
+  hashFineAmount: number;
+  description: string;
 }
 
 const BorrowSchema = new mongoose.Schema<Borrow>(
@@ -54,6 +62,12 @@ const BorrowSchema = new mongoose.Schema<Borrow>(
       type: String,
       enum: Object.values(BorrowStatus),
     },
+    paymentStatus: {
+      type: String,
+      enum: Object.values(PaymentStatus),
+    },
+    hashFineAmount: Number,
+    description: String,
     isDelete: {
       type: Boolean,
       default: false,

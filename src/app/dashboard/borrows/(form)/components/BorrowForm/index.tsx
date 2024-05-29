@@ -31,12 +31,12 @@ import { createBorrowAction, updateBorrowAction } from "../../../action";
 interface BorrowFormProps {
   action: FormAction;
   detail?: any;
+  account?: any;
 }
 
 function BorrowForm(props: BorrowFormProps) {
-  const { action, detail } = props;
+  const { action, detail, account } = props;
   const searchParams = useSearchParams();
-  const { account } = useContext(SessionContext);
 
   const {
     token: { colorPrimary },
@@ -128,7 +128,7 @@ function BorrowForm(props: BorrowFormProps) {
   useEffect(() => {
     toast(createState);
     if (createState?.success) {
-      router.back();
+      window.location.href = "/dashboard/borrows"
     }
   }, [createState]);
 
@@ -140,7 +140,7 @@ function BorrowForm(props: BorrowFormProps) {
   useEffect(() => {
     toast(updateState);
     if (updateState?.success) {
-      router.back();
+      window.location.href = "/dashboard/borrows"
     }
   }, [updateState]);
 

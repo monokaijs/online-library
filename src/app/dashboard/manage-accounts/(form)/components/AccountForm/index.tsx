@@ -4,6 +4,7 @@ import {
   updateAccountAction,
 } from "@/app/dashboard/manage-accounts/action";
 import { useDidMountEffect } from "@/lib/hooks/useDidMountEffect";
+import { RoleEnum } from "@/lib/models/account.model";
 import {
   Button,
   Card,
@@ -19,7 +20,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
-function AccountForm({ account }: { account?: Account }) {
+function AccountForm({
+  account,
+  onComplete,
+}: {
+  account?: Account;
+  onComplete?: () => void;
+}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
@@ -41,6 +48,10 @@ function AccountForm({ account }: { account?: Account }) {
   useEffect(() => {
     if (updateStatus.message) {
       message[updateStatus.success ? "success" : "error"](updateStatus.message);
+    }
+    if (updateStatus?.success && onComplete) {
+      onComplete();
+      return;
     }
     if (updateStatus.success) {
       router.back();
@@ -100,7 +111,7 @@ function AccountForm({ account }: { account?: Account }) {
           name="fullName"
           label={"Họ và tên"}
         >
-          <Input allowClear placeholder={"Nguyễn Văn A"} />
+          <Input allowClear placeholder={"Nguyễn Văn A"} disabled />
         </Form.Item>
         <Form.Item
           rules={[
@@ -148,27 +159,31 @@ function AccountForm({ account }: { account?: Account }) {
         >
           <Input allowClear placeholder={"Số điện thoại"} />
         </Form.Item>
-        <Form.Item name="userId" label={"Mã người dùng"}>
-          <Input allowClear placeholder={"Mã người dùng"} />
-        </Form.Item>
-        <Form.Item name="role" label={"Vai trò"} initialValue={"user"}>
-          <Radio.Group
-            options={[
-              {
-                label: "Bạn đọc",
-                value: "user",
-              },
-              {
-                label: "Thủ thư",
-                value: "manager",
-              },
-              {
-                label: "Quản trị viên",
-                value: "admin",
-              },
-            ]}
-          />
-        </Form.Item>
+        {account?.role !== RoleEnum.USER && (
+          <>
+            <Form.Item name="userId" label={"Mã người dùng"}>
+              <Input allowClear placeholder={"Mã người dùng"} />
+            </Form.Item>
+            <Form.Item name="role" label={"Vai trò"} initialValue={"user"}>
+              <Radio.Group
+                options={[
+                  {
+                    label: "Bạn đọc",
+                    value: "user",
+                  },
+                  {
+                    label: "Thủ thư",
+                    value: "manager",
+                  },
+                  {
+                    label: "Quản trị viên",
+                    value: "admin",
+                  },
+                ]}
+              />
+            </Form.Item>
+          </>
+        )}
         <Form.Item name="identityNumber" label={"Số CCCD/CMND"}>
           <Input allowClear placeholder={"Số CCCD/CMND"} />
         </Form.Item>

@@ -40,7 +40,7 @@ import {
 import BorrowDetail from "./components/BorrowDetail";
 import Status from "./components/BorrowStatus";
 
-function ManageBook() {
+function ManageBorrow() {
   const { token } = theme.useToken();
   const router = useRouter();
   const pathname = usePathname();
@@ -168,7 +168,6 @@ function ManageBook() {
       title: "Tên sách",
       dataIndex: "book",
       key: "name",
-      align: "center",
       render: (item: Book) => item?.name,
     },
     {
@@ -487,4 +486,4 @@ function ManageBook() {
   );
 }
 
-export default ManageBook;
+export default ManageBorrow;

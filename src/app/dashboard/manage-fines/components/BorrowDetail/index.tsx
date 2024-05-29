@@ -5,7 +5,7 @@ import {
 } from "@/app/dashboard/manage-borrows/action";
 import UserRole from "@/components/shared/UserRole";
 import { Book } from "@/lib/models/book.model";
-import { Borrow, BorrowStatus } from "@/lib/models/borrow.model";
+import { Borrow, BorrowStatus, PaymentStatus } from "@/lib/models/borrow.model";
 import { fineCaculate } from "@/lib/utils/fineCaculate";
 import { toast } from "@/lib/utils/toast";
 import { Button, Flex, Image, Modal, Spin, Typography } from "antd";
@@ -13,7 +13,9 @@ import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
-import Status from "../BorrowStatus";
+import { payFineAction } from "../../action";
+import EditBorrow from "../EditBorrrow";
+import { useDisclosure } from "@/lib/hooks/useDisclosure";
 
 interface ViewBorrowModalProps {
   isOpen: boolean;
@@ -24,10 +26,11 @@ interface ViewBorrowModalProps {
 }
 
 export default function BorrowDetail(props: ViewBorrowModalProps) {
-  const { onCancel, detail, loadData } = props;
+  const { onCancel, detail, loadData, isOpen } = props;
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const editModal = useDisclosure();
 
   const [state, getBorrowDetail] = useFormState(getBorrowDetailAction, {
     data: undefined,
@@ -46,18 +49,18 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
     setLoading(false);
   }, [state]);
 
-  const [returnState, returnBook] = useFormState(returnBookAction, {
+  const [payState, payFine] = useFormState(payFineAction, {
     success: false,
     message: "",
   });
 
   useEffect(() => {
-    toast(returnState);
-    if (returnState?.success) {
+    toast(payState);
+    if (payState?.success) {
       loadData();
       onCancel();
     }
-  }, [returnState]);
+  }, [payState]);
 
   const user: Account | undefined = state?.data?.borrowRecord?.user;
   const borrowRecord: Borrow | undefined = state?.data?.borrowRecord;
@@ -67,13 +70,7 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
   const { amount, diff, isLate } = fineCaculate(borrowRecord);
 
   return (
-    <Modal
-      open={!!detail}
-      onCancel={onCancel}
-      footer={null}
-      width={980}
-      centered
-    >
+    <Modal open={isOpen} onCancel={onCancel} footer={null} width={980} centered>
       {loading ? (
         <div
           className="flex items-center justify-center"
@@ -97,8 +94,6 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
               <Typography.Title level={4} className="ma-0">
                 Thông tin lượt mượn
               </Typography.Title>
-
-              {borrowRecord && <Status data={borrowRecord} />}
             </Flex>
             <Flex gap={20} className="mt-6">
               <Image
@@ -203,34 +198,45 @@ export default function BorrowDetail(props: ViewBorrowModalProps) {
             </Flex>
           </div>
 
-          {borrowRecord?.status === BorrowStatus.BORROWING && (
-            <Flex gap={4} justify="flex-end">
-              <Button
-                onClick={() => {
-                  router.push(
-                    `/dashboard/manage-borrows/update/${detail?._id}`
-                  );
-                }}
-              >
-                Sửa thông tin
-              </Button>
-              <Button
-                onClick={() => {
-                  Modal.confirm({
-                    title: "Hành động này không thể hoàn tác!",
-                    content: `Hoàn thành lượt mượn ${book?.name}`,
-                    okText: "Xác nhận",
-                    cancelText: "Hủy",
-                    onOk: () => {
-                      returnBook(borrowRecord._id);
-                    },
-                  });
-                }}
-              >
-                Trả sách
-              </Button>
-            </Flex>
-          )}
+          <EditBorrow
+            isOpen={editModal.isOpen}
+            onCancel={() => {
+              editModal.onClose();
+            }}
+            detail={detail}
+            loadData={loadData}
+          />
+
+          <Flex gap={4} justify="flex-end">
+            <Button
+              onClick={editModal.onOpen}
+              disabled={
+                borrowRecord?.status === BorrowStatus.BORROWING ||
+                borrowRecord?.paymentStatus === PaymentStatus.PAID
+              }
+            >
+              Sửa thông tin
+            </Button>
+            <Button
+              disabled={
+                borrowRecord?.status === BorrowStatus.BORROWING ||
+                borrowRecord?.paymentStatus === PaymentStatus.PAID
+              }
+              onClick={() => {
+                Modal.confirm({
+                  title: "Hành động này không thể hoàn tác!",
+                  content: `Hoàn thành phiếu phạt`,
+                  okText: "Xác nhận",
+                  cancelText: "Hủy",
+                  onOk: () => {
+                    payFine(borrowRecord?._id);
+                  },
+                });
+              }}
+            >
+              Đã thu tiền
+            </Button>
+          </Flex>
         </div>
       )}
     </Modal>

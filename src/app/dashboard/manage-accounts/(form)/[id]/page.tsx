@@ -12,17 +12,19 @@ import {
 import { Button, Card, Dropdown, Flex, Modal, Typography, theme } from "antd";
 import dayjs from "dayjs";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { deleteAccountAction, getAccountDetailAction } from "../../action";
 import { toast } from "@/lib/utils/toast";
 import { SessionContext } from "@/components/shared/SessionContext";
+import BorrowDetail from "@/app/dashboard/manage-borrows/components/BorrowDetail";
 
 function AccountDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const { token } = theme.useToken();
   const ctx = useContext(SessionContext);
+  const [detail, setDetail] = useState<Borrow>();
 
   const [{ data }, getAccountDetail] = useFormState(getAccountDetailAction, {
     success: false,
@@ -56,7 +58,8 @@ function AccountDetailPage() {
     history?.filter((item) => item?.status !== BorrowStatus.BORROWING).length ??
     0;
   const totalOverdued =
-    history?.filter((item) => item?.status === BorrowStatus.OVERDUE).length ?? 0;
+    history?.filter((item) => item?.status === BorrowStatus.OVERDUE).length ??
+    0;
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
@@ -130,9 +133,7 @@ function AccountDetailPage() {
                 <Typography.Text strong>{account?.userId}</Typography.Text>
               )}
 
-              <Typography.Text type="secondary">
-                Ngày tham gia
-              </Typography.Text>
+              <Typography.Text type="secondary">Ngày tham gia</Typography.Text>
               <Typography.Text>
                 {dayjs(account?.joinDate).format("DD/MM/YYYY")}
               </Typography.Text>
@@ -366,7 +367,7 @@ function AccountDetailPage() {
                       borderRight: "1px solid #F0F0F0",
                     }}
                   >
-                    {item.book?.bookcase?.library?.name}
+                    {item.book?.library?.name}
                   </Typography.Text>
                   <Typography.Text
                     className="text-center py-3"
@@ -385,7 +386,7 @@ function AccountDetailPage() {
                   >
                     <Button
                       onClick={() => {
-                        router.push(`/dashboard/manage-borrows/${item?._id}`);
+                        setDetail(item);
                       }}
                       type={"text"}
                       shape={"circle"}
@@ -397,6 +398,20 @@ function AccountDetailPage() {
                 </div>
               );
             })}
+
+            <BorrowDetail
+              isOpen={!!detail}
+              onCancel={() => {
+                setDetail(undefined);
+              }}
+              detail={detail}
+              deleteAction={(arg: any) => {
+                deleteAction(arg);
+              }}
+              loadData={() => {
+                getAccountDetail(id as string);
+              }}
+            />
 
             {history?.length == 0 && (
               <div className="flex justify-center align-center py-12">

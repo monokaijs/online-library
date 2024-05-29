@@ -18,15 +18,21 @@ import {
   SolutionOutlined,
   TableOutlined,
   UserOutlined,
+  MessageOutlined,
 } from "@ant-design/icons";
 import { Avatar, Badge, Button, Dropdown, Layout, Menu } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useContext, useLayoutEffect, useState } from "react";
 import styles from "./layout.module.scss";
+import Forbidden from "./forbidden/page";
 
 export default function DashboardLayoutContent(props: any) {
   const { account } = useContext(SessionContext);
+  if (!account) {
+    return <Forbidden />;
+  }
+
   const router = useRouter();
   const pathname = usePathname();
   const isUserRole = account?.role === RoleEnum.USER;
@@ -104,12 +110,18 @@ export default function DashboardLayoutContent(props: any) {
       key: "locations",
       icon: <HomeOutlined />,
       label: <Link href={"/dashboard/locations"}>Hệ thống thư viện</Link>,
+      disabled: !isUserRole,
     },
     {
       key: "manage-locations",
       icon: <HomeOutlined />,
       label: <Link href={"/dashboard/manage-locations"}>Quản lý thư viện</Link>,
       disabled: isUserRole,
+    },
+    {
+      key: "manage-locations",
+      icon: <MessageOutlined />,
+      label: <Link href={"/dashboard/forums"}>Diễn đàn</Link>,
     },
     {
       key: "settings",

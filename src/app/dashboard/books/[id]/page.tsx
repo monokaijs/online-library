@@ -3,11 +3,11 @@
 import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
 import {
   deleteBookAction,
-  getBookByIdAction,
-  getBookDetailAction,
+  getBookDetailAction
 } from "@/app/dashboard/manage-books/action";
 import Status from "@/app/dashboard/manage-borrows/components/BorrowStatus";
-import { BookStatus } from "@/lib/models/book.model";
+import { SessionContext } from "@/components/shared/SessionContext";
+import { RoleEnum } from "@/lib/models/account.model";
 import { Borrow } from "@/lib/models/borrow.model";
 import { toast } from "@/lib/utils/toast";
 import {
@@ -25,19 +25,15 @@ import {
   Modal,
   Row,
   Spin,
-  Tag,
-  Typography,
+  Typography
 } from "antd";
 import dayjs from "dayjs";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { useFormState } from "react-dom";
-import "./style.css";
-import Link from "next/link";
-import { getDaysDiff } from "@/lib/utils/getDaysDiff";
-import { SessionContext } from "@/components/shared/SessionContext";
-import { RoleEnum } from "@/lib/models/account.model";
 import BookStatusTag from "../../manage-books/components/BookStatusTag";
+import "./style.css";
 
 export default function BookDetail() {
   const { account } = useContext(SessionContext);
@@ -73,8 +69,6 @@ export default function BookDetail() {
     );
   }
 
-  const overdued = getDaysDiff(data?.borrowRecord?.returnDate) < 0;
-
   const info = [
     { fieldName: "Nhà xuất bản", value: data?.book?.publisher },
     { fieldName: "Năm xuất bản", value: data?.book?.publishYear },
@@ -84,7 +78,7 @@ export default function BookDetail() {
     { fieldName: "Kệ sách", value: data?.book?.bookcase?.position },
     {
       fieldName: "Thư viện",
-      value: data?.book?.bookcase?.library?.name,
+      value: data?.book?.library?.name,
     },
     {
       fieldName: "Trạng thái",
@@ -301,7 +295,7 @@ export default function BookDetail() {
                       borderRight: "1px solid #F0F0F0",
                     }}
                   >
-                    {item.book?.bookcase?.library?.name}
+                    {item.book?.library?.name}
                   </Typography.Text>
                   <Typography.Text
                     className="text-center py-3"

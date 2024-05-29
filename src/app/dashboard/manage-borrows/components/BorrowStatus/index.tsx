@@ -4,9 +4,7 @@ import { Tag } from "antd";
 
 export default function Status({ data }: { data: Borrow }) {
   const overdued =
-    data.status === BorrowStatus.BORROWING
-      ? getDaysDiff(data.returnDate) < 0
-      : false;
+    data.status === BorrowStatus.BORROWING ? getDaysDiff(data).isLate : false;
 
   const status: any = {
     borrowing: {
@@ -22,8 +20,9 @@ export default function Status({ data }: { data: Borrow }) {
       label: "Chờ duyệt",
     },
     cancel: {
-      color: "red",
+      color: "gray",
       label: "Đã hủy",
+      textColor: "#878384",
     },
     overdue: {
       color: "red",
@@ -32,7 +31,18 @@ export default function Status({ data }: { data: Borrow }) {
   };
 
   return (
-    <Tag color={overdued ? "red" : status[data?.status]?.color}>
+    <Tag
+      color={
+        status[data?.status]?.textColor
+          ? ""
+          : overdued
+          ? "red"
+          : status[data?.status]?.color
+      }
+      style={{
+        color: status[data?.status]?.textColor,
+      }}
+    >
       {status[data?.status]?.label}
     </Tag>
   );

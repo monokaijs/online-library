@@ -1,6 +1,16 @@
-export const getDaysDiff = (dateString1?: any, dateString2?: any) => {
-  const date1 = new Date(dateString1);
-  const date2 = dateString2 ? new Date(dateString2) : new Date();
+import { Borrow } from "../models/borrow.model";
+
+export const getDaysDiff = (borrow?: Borrow | Partial<Borrow>) => {
+  if (!borrow) {
+    return {
+      diff: 0,
+      label: "-",
+    };
+  }
+  const date1 = borrow.returnDate ? new Date(borrow.returnDate) : new Date();
+  const date2 = borrow.realReturnDate
+    ? new Date(borrow.realReturnDate)
+    : new Date();
 
   const d1: any = new Date(
     date1.getFullYear(),
@@ -17,5 +27,9 @@ export const getDaysDiff = (dateString1?: any, dateString2?: any) => {
 
   const dayDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
 
-  return dayDifference;
+  return {
+    diff: dayDifference,
+    label: dayDifference > 0 ? "-" : `${Math.abs(dayDifference)} ngày`,
+    isLate: dayDifference < 0,
+  };
 };

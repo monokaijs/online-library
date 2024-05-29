@@ -85,6 +85,23 @@ export async function getAccountByIdAction(prev: any, _id: string) {
   }
 }
 
+export async function getAccountBySessionAction(prev: any, any: any) {
+  await dbService.connect();
+  try {
+    const session = await getSession();
+    return {
+      account: await accountService.getAccountById(session.account?._id),
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+      account: undefined,
+    };
+  }
+}
+
 export async function getAccountDetailAction(_prev: any, _id: string) {
   await dbService.connect();
   try {

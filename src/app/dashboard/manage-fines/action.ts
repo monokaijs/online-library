@@ -3,11 +3,12 @@
 import { Borrow, BorrowDocument } from "@/lib/models/borrow.model";
 import { borrowService } from "@/lib/services/borrow.service";
 import { dbService } from "@/lib/services/db.service";
+import { message } from "antd";
 
 export interface GetBookPayload {
   page?: number;
   limit?: number;
-  filter?: any
+  filter?: any;
 }
 
 export async function createBorrowAction(prev: any, payload: Borrow) {
@@ -93,6 +94,15 @@ export async function returnBookAction(_prev: any, borrowId: string) {
   try {
     const data = await borrowService.returnBook(borrowId);
     return { success: true, data };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+}
+
+export async function payFineAction(_prev: any, borrowId: string) {
+  try {
+    const data = await borrowService.payFine(borrowId);
+    return { success: true, data, message: "Thành công" };
   } catch (error: any) {
     return { success: false, message: error.message };
   }

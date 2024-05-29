@@ -1,10 +1,8 @@
 "use client";
 import ModalDetailInfo from "@/app/dashboard/components/ModalDetailInfo";
 import BookStatusTag from "@/app/dashboard/manage-books/components/BookStatusTag";
-import { BookStatus } from "@/lib/models/book.model";
-import { getDaysDiff } from "@/lib/utils/getDaysDiff";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Modal, Tag } from "antd";
+import { Button, Modal } from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 
@@ -18,7 +16,6 @@ interface ViewBookModalProps {
 export default function ViewBookModal(props: ViewBookModalProps) {
   const { onCancel, detail, deleteAction } = props;
   const router = useRouter();
-  const overdued = getDaysDiff(detail?.borrowRecord?.returnDate) < 0;
 
   return (
     <Modal
@@ -38,10 +35,10 @@ export default function ViewBookModal(props: ViewBookModalProps) {
           // { fieldName: "ISBN", value: detail?.isbn },
           { fieldName: "Thể loại", value: detail?.bookcase?.category },
           { fieldName: "Kệ sách", value: detail?.bookcase?.position },
-          { fieldName: "Thư viện", value: detail?.bookcase?.library?.name },
+          { fieldName: "Thư viện", value: detail?.library?.name },
           {
             fieldName: "Trạng thái",
-            value:  <BookStatusTag record={detail}  />,
+            value: <BookStatusTag record={detail} />,
           },
           {
             fieldName: "Hạn mức mượn",

@@ -187,7 +187,7 @@ export default function DashboardPageContent() {
               }}
             >
               {borrowings?.data?.map((item: Borrow) => {
-                const diff = getDaysDiff(item.returnDate);
+                const {diff, label} = getDaysDiff(item);
                 return (
                   <div
                     style={{
@@ -216,7 +216,7 @@ export default function DashboardPageContent() {
                         <div>{item.book?.authorName}</div>
                       </div>
                       <div style={{ color: diff < 0 ? "red" : "black" }}>
-                        {diff < 0 ? "Quá hạn" : "Còn"} {Math.abs(diff)} ngày
+                        {label}
                       </div>
                     </div>
                   </div>

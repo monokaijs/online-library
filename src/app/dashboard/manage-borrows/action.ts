@@ -47,7 +47,7 @@ export async function cancelBorrowAction(_prev: any, borrowId: string) {
   await dbService.connect();
   try {
     const data = await borrowService.declineBorrow(borrowId);
-    return { success: true, data, message: "Đã từ chối phiếu mượn" };
+    return { success: true, data, message: "Đã hủy phiếu mượn" };
   } catch (error: any) {
     return { success: false, message: error.message };
   }
